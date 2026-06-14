@@ -74,7 +74,7 @@ def build_match_report(
     home_name, away_name = home, away
 
     # Ganador más probable.
-    sides = [(home_name, p.home), ("Empate", p.draw), (away_name, p.away)]
+    sides = [(f"Gana {home_name}", p.home), ("Empate", p.draw), (f"Gana {away_name}", p.away)]
     win_label, win_prob = max(sides, key=lambda s: s[1])
     winner = MarketPick(win_label, win_prob)
 
@@ -118,49 +118,69 @@ def build_match_report(
     )
 
 
+def _confidence(prob: float) -> str:
+    """Etiqueta de confianza según la probabilidad."""
+    if prob >= 0.70:
+        return "🔥 Alta"
+    if prob >= 0.62:
+        return "💪 Media-alta"
+    if prob >= 0.55:
+        return "👍 Media"
+    return "🤏 Pareja (mejor evitar)"
+
+
+def best_bet(r: MatchReport) -> MarketPick:
+    """La apuesta más firme del partido = la de mayor probabilidad."""
+    picks = [r.winner]
+    picks += [m for m in (r.goals, r.corners, r.cards, r.btts) if m is not None]
+    return max(picks, key=lambda pk: pk.prob)
+
+
 def format_match_report(r: MatchReport) -> str:
-    """Formatea un reporte de partido para Telegram (HTML)."""
+    """Reporte de un partido para Telegram: a qué apostar + probabilidad."""
     raw_home, raw_away = (r.match.split(" vs ", 1) + [""])[:2]
     match = html.escape(r.match)
     home, away = html.escape(raw_home), html.escape(raw_away)
     winner = html.escape(r.winner.pick)
+
     lines = [
         f"⚽ <b>{match}</b>",
-        f"   🏆 Gana: <b>{winner}</b> ({r.winner.prob:.0%})"
-        f" · justo @ {r.winner.fair_odds:.2f}",
-        f"      [{home} {r.home_prob:.0%} · X {r.draw_prob:.0%}"
-        f" · {away} {r.away_prob:.0%}]",
+        f"   🏆 <b>{winner}</b> — {r.winner.prob:.0%}",
+        f"      [{home} {r.home_prob:.0%} · X {r.draw_prob:.0%} · {away} {r.away_prob:.0%}]",
     ]
     if r.goals:
         lines.append(
-            f"   ⚽ Goles: ~{r.goals.expected:.1f} → <b>{r.goals.pick}</b> "
-            f"({r.goals.prob:.0%}) · justo @ {r.goals.fair_odds:.2f}"
+            f"   ⚽ {html.escape(r.goals.pick)} — {r.goals.prob:.0%}"
+            f"  (esperados ~{r.goals.expected:.1f})"
         )
     if r.corners:
         lines.append(
-            f"   🚩 Córners: ~{r.corners.expected:.1f} → <b>{r.corners.pick}</b> "
-            f"({r.corners.prob:.0%}) · justo @ {r.corners.fair_odds:.2f}"
+            f"   🚩 {html.escape(r.corners.pick)} — {r.corners.prob:.0%}"
+            f"  (~{r.corners.expected:.0f})"
         )
     if r.cards:
         lines.append(
-            f"   🟨 Tarjetas: ~{r.cards.expected:.1f} → <b>{r.cards.pick}</b> "
-            f"({r.cards.prob:.0%}) · justo @ {r.cards.fair_odds:.2f}"
+            f"   🟨 {html.escape(r.cards.pick)} — {r.cards.prob:.0%}"
+            f"  (~{r.cards.expected:.1f})"
         )
     if r.btts:
-        lines.append(
-            f"   🤝 {r.btts.pick} ({r.btts.prob:.0%}) · justo @ {r.btts.fair_odds:.2f}"
-        )
+        lines.append(f"   🤝 {html.escape(r.btts.pick)} — {r.btts.prob:.0%}")
+
+    bb = best_bet(r)
+    lines.append(
+        f"   ⭐ <b>Más firme:</b> {html.escape(bb.pick)} ({bb.prob:.0%}) · {_confidence(bb.prob)}"
+    )
     return "\n".join(lines)
 
 
 def format_match_reports(reports: list[MatchReport], *, date_str: str) -> str:
     """Cartilla de predicciones multi-mercado de varios partidos."""
-    out = [f"🔮 <b>PREDICCIONES POR PARTIDO — {date_str}</b>", ""]
+    out = [f"🔮 <b>QUÉ APOSTAR HOY — {date_str}</b>", ""]
     for r in reports:
         out.append(format_match_report(r))
         out.append("")
     out.append(
-        "ℹ️ <i>'Justo @' = cuota justa del modelo. Si tu casa (Bet365/bplay/Stake) "
-        "paga MÁS, hay value. El bot sugiere; vos decidís.</i>"
+        "ℹ️ <i>Probabilidades de nuestro modelo. El bot sugiere a qué apostar; "
+        "vos decidís. Apostá con responsabilidad.</i>"
     )
     return "\n".join(out)

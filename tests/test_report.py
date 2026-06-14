@@ -31,7 +31,7 @@ def _events() -> pd.DataFrame:
 
 def test_report_sin_modelos_de_goles_solo_da_ganador():
     r = build_match_report("Brazil", "Morocco", elo=_elo())
-    assert r.winner.pick == "Brazil"          # favorito por rating
+    assert r.winner.pick == "Gana Brazil"     # favorito por rating
     assert r.winner.fair_odds == pytest.approx(round(1 / r.winner.prob, 2))
     assert r.goals is None and r.corners is None and r.cards is None
 
@@ -66,7 +66,8 @@ def test_format_match_report_arma_texto_legible():
     )
     txt = format_match_report(r)
     assert "Marruecos vs Brasil" in txt
-    assert "Gana:" in txt
-    assert "Córners" in txt
-    assert "Tarjetas" in txt
-    assert "justo @" in txt
+    assert "Gana" in txt
+    assert "córners" in txt
+    assert "tarjetas" in txt
+    assert "Más firme" in txt        # destaca la apuesta más probable
+    assert "justo @" not in txt       # ya no mostramos cuota justa

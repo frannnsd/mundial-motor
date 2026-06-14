@@ -110,7 +110,7 @@ def build_report_message(date_str: str) -> str:
     return format_match_reports(reports, date_str=date_str)
 
 
-def run_once() -> None:
+def run_once(*, dry: bool = False) -> None:
     settings = get_settings()
     print("Entrenando modelos y armando reportes por partido...")
     message = build_report_message(datetime.now().strftime("%d/%m/%Y"))
@@ -118,9 +118,9 @@ def run_once() -> None:
         message,
         token=settings.telegram_bot_token,
         chat_id=settings.telegram_chat_id,
-        dry_run=not settings.has_telegram,
+        dry_run=dry or not settings.has_telegram,
     )
-    if settings.has_telegram:
+    if settings.has_telegram and not dry:
         print("✅ Cartilla enviada a tu Telegram." if ok
               else "❌ No se pudo enviar (revisá token/chat_id).")
 
@@ -128,13 +128,18 @@ def run_once() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Predicciones multi-mercado por partido")
     parser.add_argument("--schedule", action="store_true", help="enviar a diario")
+    parser.add_argument("--dry", action="store_true", help="imprimir en consola, no enviar")
     args = parser.parse_args()
 
     if args.schedule:
         settings = get_settings()
-        start_daily_scheduler(run_once, hour=settings.daily_picks_hour, timezone=settings.timezone)
+        start_daily_scheduler(
+            lambda: run_once(dry=args.dry),
+            hour=settings.daily_picks_hour,
+            timezone=settings.timezone,
+        )
     else:
-        run_once()
+        run_once(dry=args.dry)
 
 
 if __name__ == "__main__":

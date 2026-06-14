@@ -8,18 +8,16 @@ reales, `unmatched_teams()` ayuda a detectar los que falten para agregarlos.
 
 from __future__ import annotations
 
-# Nombre como lo da The Odds API  ->  nombre como está en martj42.
+# Nombre como lo da API-Football  ->  nombre como está en martj42 (modelo Elo).
+# Verificado contra los 48 equipos del Mundial 2026 (solo estos 5 difieren).
 ALIASES: dict[str, str] = {
+    "Bosnia & Herzegovina": "Bosnia and Herzegovina",
+    "Cape Verde Islands": "Cape Verde",
+    "Congo DR": "DR Congo",
+    "Czechia": "Czech Republic",
+    "Türkiye": "Turkey",
     "USA": "United States",
-    "South Korea": "Korea Republic",
-    "North Korea": "Korea DPR",
-    "Ivory Coast": "Côte d'Ivoire",
-    "Cape Verde": "Cape Verde Islands",
-    "Czech Republic": "Czechia",
-    "DR Congo": "DR Congo",
-    "Republic of Ireland": "Ireland",
-    "Curacao": "Curaçao",
-    "Turkey": "Türkiye",
+    # Nota: martj42 ya usa "Ivory Coast" y "South Korea" → NO se remapean.
 }
 
 
