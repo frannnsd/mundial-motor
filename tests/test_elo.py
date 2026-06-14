@@ -5,7 +5,6 @@ from __future__ import annotations
 import pandas as pd
 
 from mundial_bot.models.elo_model import (
-    EloConfig,
     EloModel,
     goal_diff_multiplier,
     tournament_k,

@@ -1,0 +1,4 @@
+# Normaliza finales de línea (silencia los warnings LF/CRLF en Windows).
+* text=auto eol=lf
+*.png binary
+*.jpg binary

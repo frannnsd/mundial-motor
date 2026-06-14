@@ -11,9 +11,9 @@ from mundial_bot.staking.kelly import (
     stake_for,
 )
 from mundial_bot.staking.parlays import (
-    suggest_parlays,
     highest_payout_parlay,
     safest_parlay,
+    suggest_parlays,
 )
 from mundial_bot.value.ev import Selection, ValuePick
 

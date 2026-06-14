@@ -13,7 +13,6 @@ from mundial_bot.backtest.metrics import (
 )
 from mundial_bot.backtest.walk_forward import walk_forward_elo
 
-
 # ---------- Métricas ----------
 
 def test_outcome_index():

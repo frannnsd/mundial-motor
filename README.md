@@ -54,15 +54,31 @@ Entrega los picks por Telegram con su razonamiento y trackea el rendimiento de f
 
 ---
 
-## Roadmap
+## Roadmap — estado
 
-- [ ] **Fase 1 — Datos** (`collectors/`): resultados históricos + Elo. *(en curso)*
-- [ ] **Fase 2 — Modelo** (`models/`): Elo baseline → Dixon-Coles con time-decay, regularizado con priors de Elo.
-- [ ] **Fase 3 — Value** (`value/`): cliente The Odds API + de-vig Shin/power + cálculo de EV.
-- [ ] **Fase 4 — Staking** (`staking/`): ¼ Kelly, topes, singles + combinadas correlacionadas.
-- [ ] **Fase 5 — Backtesting** : walk-forward, CLV, ROI, Brier/log-loss. Validar que el edge es real.
-- [ ] **Fase 6 — Telegram** (`notify/`): envío diario programado de la cartilla de picks.
-- [ ] **Fase 7 — Ledger + Deploy** : tracking en vivo + deploy cloud 24/7.
+- [x] **Fase 1 — Datos** (`collectors/`): resultados históricos (descarga real de martj42).
+- [x] **Fase 2 — Modelo** (`models/`): Elo internacional + Dixon-Coles con time-decay y neutral_venue.
+- [x] **Fase 3 — Value** (`value/`): cliente The Odds API + de-vig Shin + cálculo de EV.
+- [x] **Fase 4 — Staking** (`staking/`): ¼ Kelly con topes + combinadas (conservadora y alto riesgo).
+- [x] **Fase 5 — Backtesting** (`backtest/`): walk-forward out-of-sample (RPS/Brier/log-loss).
+- [x] **Fase 6 — Telegram** (`notify/`): formato de cartilla + envío + scheduler diario.
+- [x] **Fase 7 — Ledger + Deploy** (`ledger/`, `pipeline.py`, `Dockerfile`): tracking + deploy cloud.
+- [ ] **Pendiente (necesita keys):** correr en vivo con cuotas reales + medir CLV; afinar `xi`/draw-model.
+
+### Validación del modelo (backtest real, out-of-sample)
+
+Walk-forward del Elo sobre **10.999 partidos (2015→2026)**:
+
+| Métrica | Valor | Referencia |
+|---------|-------|------------|
+| RPS | **0.174** | bueno ≈ 0.17-0.19; azar ≈ 0.22 |
+| Accuracy (1X2) | **59.8%** | azar ≈ 33% |
+
+El modelo predice con poder real (a la par de los papers publicados). ⚠️ Buen RPS
+≠ ganancia garantizada: el test definitivo es el **CLV** con cuotas en vivo.
+
+> Corré la cartilla de ejemplo sin ninguna API key:
+> `python scripts/run_daily.py --sample`
 
 > Hallazgo clave de la investigación: en datos de selecciones (poca data), un **Elo bien afinado
 > (~60% acierto, RPS 0.171) iguala o supera a Dixon-Coles y a modelos de ML**. Por eso Elo es la base
@@ -106,3 +122,22 @@ pytest
 2. **API-Football** → https://dashboard.api-football.com (gratis) → `API_FOOTBALL_KEY`
 3. **Telegram** → hablá con [@BotFather](https://t.me/BotFather), `/newbot` → `TELEGRAM_BOT_TOKEN`;
    tu chat id con [@userinfobot](https://t.me/userinfobot) → `TELEGRAM_CHAT_ID`
+
+## Cómo correr
+
+```powershell
+python scripts/run_daily.py --sample     # demo offline (sin keys, imprime la cartilla)
+python scripts/run_daily.py              # una corrida real (cuotas en vivo si hay key)
+python scripts/run_daily.py --schedule   # modo producción: envía a diario a la hora fijada
+python scripts/backtest_elo.py           # backtest del modelo sobre el histórico
+pytest -m "not network"                  # 65 tests
+```
+
+## Deploy cloud 24/7 (Railway)
+
+1. Subí el repo a GitHub y conectalo en [Railway](https://railway.app) (detecta el `Dockerfile`).
+2. Cargá las variables de entorno (las mismas del `.env`) en el panel de Railway.
+3. Montá un **volumen** en `/app/data` para que la banca y el ledger persistan entre deploys.
+4. El contenedor corre `run_daily.py --schedule` y manda la cartilla todos los días.
+
+> También hay `Procfile` (Render/Heroku) y `railway.json` con la config de arranque.
