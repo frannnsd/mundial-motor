@@ -122,8 +122,14 @@ def collect_team_stats(key: str, *, last: int = 12, season: int = DEFAULT_SEASON
             referee = fixture.get("referee")
             for tid_a, tid_b in (ids, ids[::-1]):
                 a, b = per_team[tid_a], per_team[tid_b]
+                match_date = pd.to_datetime(
+                    fixture.get("date"), utc=True, errors="coerce"
+                )
+                if match_date is not pd.NaT:
+                    match_date = match_date.tz_localize(None)
                 rows.append({
                     "match_id": int(fid),
+                    "date": match_date,
                     "team": normalize_team(id_to_name.get(tid_a, "")),
                     "opponent": normalize_team(id_to_name.get(tid_b, "")),
                     "corners_for": a["corners"],
