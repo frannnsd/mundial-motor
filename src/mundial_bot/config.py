@@ -51,6 +51,10 @@ class Settings(BaseSettings):
         return bool(self.odds_api_key)
 
     @property
+    def has_api_football(self) -> bool:
+        return bool(self.api_football_key)
+
+    @property
     def has_telegram(self) -> bool:
         return bool(self.telegram_bot_token and self.telegram_chat_id)
 

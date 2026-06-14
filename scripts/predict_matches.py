@@ -32,8 +32,36 @@ from mundial_bot.value.team_aliases import normalize_team  # noqa: E402
 SAMPLE = Path(__file__).resolve().parents[1] / "tests" / "data" / "sample_odds.json"
 
 
+def _match_specs(settings) -> list[tuple[str, str, str, str | None, bool]]:
+    """[(home, away, nombre, árbitro, knockout)] desde API-Football o el sample."""
+    if settings.has_api_football:
+        from datetime import date as _date
+
+        from mundial_bot.collectors.fixtures import FixturesClient
+
+        fixtures = FixturesClient(settings.api_football_key).get_fixtures(
+            date=_date.today().isoformat()
+        )
+        print(f"Partidos reales de hoy (API-Football): {len(fixtures)}")
+        return [
+            (
+                normalize_team(f.home_team), normalize_team(f.away_team),
+                f.match, f.referee, f.knockout,
+            )
+            for f in fixtures
+        ]
+
+    print("⚠️  Sin API_FOOTBALL_KEY → uso la lista de ejemplo (no los partidos reales).")
+    matches = load_sample(SAMPLE)
+    return [
+        (normalize_team(m.home_team), normalize_team(m.away_team), m.match, None, False)
+        for m in matches
+    ]
+
+
 def build_report_message(date_str: str) -> str:
     """Entrena los modelos, arma los reportes de los partidos y devuelve el mensaje."""
+    settings = get_settings()
     models = build_models()
 
     corners = cards = None
@@ -42,21 +70,17 @@ def build_report_message(date_str: str) -> str:
         corners = CornersModel.from_events(ev)
         cards = CardsModel.from_events(ev)
 
-    # TODO: con API-Football, reemplazar el sample por los fixtures reales del día
-    # (y pasar el árbitro asignado a cada partido para el modelo de tarjetas).
-    matches = load_sample(SAMPLE)
+    specs = _match_specs(settings)
+    if not specs:
+        return f"🔮 <b>PREDICCIONES — {date_str}</b>\n\nHoy no hay partidos del Mundial. 🟢"
+
     reports = [
         build_match_report(
-            normalize_team(m.home_team),
-            normalize_team(m.away_team),
-            elo=models.elo,
-            goals=models.goals,
-            corners=corners,
-            cards=cards,
-            neutral=True,
-            match_name=m.match,
+            home, away,
+            elo=models.elo, goals=models.goals, corners=corners, cards=cards,
+            referee=referee, knockout=knockout, neutral=True, match_name=name,
         )
-        for m in matches
+        for (home, away, name, referee, knockout) in specs
     ]
     return format_match_reports(reports, date_str=date_str)
 
@@ -65,12 +89,15 @@ def run_once() -> None:
     settings = get_settings()
     print("Entrenando modelos y armando reportes por partido...")
     message = build_report_message(datetime.now().strftime("%d/%m/%Y"))
-    send_telegram_sync(
+    ok = send_telegram_sync(
         message,
         token=settings.telegram_bot_token,
         chat_id=settings.telegram_chat_id,
         dry_run=not settings.has_telegram,
     )
+    if settings.has_telegram:
+        print("✅ Cartilla enviada a tu Telegram." if ok
+              else "❌ No se pudo enviar (revisá token/chat_id).")
 
 
 def main() -> None:
