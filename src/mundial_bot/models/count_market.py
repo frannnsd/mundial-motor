@@ -15,6 +15,18 @@ from scipy.stats import nbinom, poisson
 CORNER_LINES = (7.5, 8.5, 9.5, 10.5, 11.5, 12.5)
 CARD_LINES = (2.5, 3.5, 4.5, 5.5, 6.5)
 
+# Fuerza de regularización: equivale a "K partidos de prior" hacia la media.
+SHRINKAGE_K = 5.0
+
+
+def shrink(value: float, count: float, prior: float, k: float = SHRINKAGE_K) -> float:
+    """Regulariza una tasa hacia un prior según el tamaño de muestra.
+
+    Con pocos partidos (count bajo), tira fuerte hacia la media de la liga; con
+    muchos, confía en la tasa del equipo. Evita predicciones extremas por muestra chica.
+    """
+    return (count * value + k * prior) / (count + k)
+
 
 def _nb_params(mean: float, variance: float) -> tuple[float, float] | None:
     """Parámetros (r, p) de la Negative Binomial por método de momentos.

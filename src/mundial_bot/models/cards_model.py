@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from mundial_bot.models.count_market import CARD_LINES, closest_line, over_under
+from mundial_bot.models.count_market import CARD_LINES, closest_line, over_under, shrink
 
 # Multiplicador de importancia (calibrable).
 IMPORTANCE_GROUP = 1.0
@@ -44,16 +44,26 @@ class CardsModel:
     @classmethod
     def from_events(cls, events: pd.DataFrame) -> CardsModel:
         """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
-        team_cards = events.groupby("team")["cards"].mean().to_dict()
+        team_grp = events.groupby("team")
+        team_counts = team_grp.size()
+        team_raw = team_grp["cards"].mean()
         league_team_avg = float(events["cards"].mean())
+        team_cards = {
+            t: shrink(team_raw[t], team_counts[t], league_team_avg) for t in team_raw.index
+        }
 
         per_match = events.groupby("match_id").agg(
             total_cards=("cards", "sum"), referee=("referee", "first")
         )
-        referee_cards = per_match.groupby("referee")["total_cards"].mean().to_dict()
         league_ref_avg = float(per_match["total_cards"].mean())
+        ref_grp = per_match.groupby("referee")
+        ref_counts = ref_grp.size()
+        ref_raw = ref_grp["total_cards"].mean()
+        referee_cards = {
+            r: shrink(ref_raw[r], ref_counts[r], league_ref_avg) for r in ref_raw.index
+        }
 
-        mean_c = float(per_match["total_cards"].mean())
+        mean_c = league_ref_avg
         dispersion = max(1.0, float(per_match["total_cards"].var()) / mean_c) if mean_c > 0 else 1.0
 
         return cls(

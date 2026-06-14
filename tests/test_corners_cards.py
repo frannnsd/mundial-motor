@@ -60,10 +60,23 @@ def test_corners_model_predice_total_coherente():
     model = CornersModel.from_events(_events())
     pred = model.predict("A", "B")
 
-    # A_for(6)*B_against(6)/5 + B_for(4)*A_against(4)/5 = 7.2 + 3.2 = 10.4
-    assert pred.total == pytest.approx(10.4, abs=0.1)
+    # Con shrinkage el total se acerca un poco a la media; rango razonable ~10.
+    assert 9.0 < pred.total < 11.0
     assert pred.home_corners > pred.away_corners   # A genera más
     assert pred.p_over + pred.p_under == pytest.approx(1.0)
+
+
+def test_shrinkage_acerca_equipos_con_poca_muestra_a_la_media():
+    # Un equipo con 1 solo partido extremo no debe dominar la predicción.
+    rows = [{"match_id": 0, "team": "Loco", "opponent": "X",
+             "corners_for": 20, "corners_against": 0, "cards": 0, "fouls": 0}]
+    # Relleno con partidos "normales" de otros equipos para fijar la media.
+    for i in range(1, 30):
+        rows.append({"match_id": i, "team": f"T{i}", "opponent": "X",
+                     "corners_for": 5, "corners_against": 5, "cards": 1, "fouls": 10})
+    model = CornersModel.from_events(pd.DataFrame(rows))
+    # La tasa de 'Loco' (20, 1 partido) queda muy regularizada, no en 20.
+    assert model.team_for["Loco"] < 12
 
 
 def test_corners_equipo_desconocido_usa_promedio_liga():

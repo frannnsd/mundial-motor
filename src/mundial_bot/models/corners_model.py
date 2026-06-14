@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from mundial_bot.models.count_market import CORNER_LINES, closest_line, over_under
+from mundial_bot.models.count_market import CORNER_LINES, closest_line, over_under, shrink
 
 
 @dataclass
@@ -36,9 +36,17 @@ class CornersModel:
     @classmethod
     def from_events(cls, events: pd.DataFrame) -> CornersModel:
         """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
-        team_for = events.groupby("team")["corners_for"].mean().to_dict()
-        team_against = events.groupby("team")["corners_against"].mean().to_dict()
+        grp = events.groupby("team")
+        counts = grp.size()
+        for_mean = grp["corners_for"].mean()
+        against_mean = grp["corners_against"].mean()
         league_avg = float(events["corners_for"].mean())
+
+        # Shrinkage: equipos con pocos partidos tiran hacia la media de la liga.
+        team_for = {t: shrink(for_mean[t], counts[t], league_avg) for t in for_mean.index}
+        team_against = {
+            t: shrink(against_mean[t], counts[t], league_avg) for t in against_mean.index
+        }
 
         # Sobre-dispersión de los córners totales por partido (para Negative Binomial).
         per_match = events.drop_duplicates("match_id") if "match_id" in events else events
