@@ -40,6 +40,20 @@ def test_closest_line():
     assert closest_line(10.3, (8.5, 9.5, 10.5, 11.5)) == 10.5
 
 
+def test_over_under_sin_sobredispersion_es_poisson():
+    # variance <= mean → cae a Poisson (mismo resultado que sin variance).
+    assert over_under(10.0, 9.5, variance=8.0) == over_under(10.0, 9.5)
+
+
+def test_negative_binomial_engorda_las_colas():
+    # Con sobre-dispersión, una línea bien por encima de la media es más probable
+    # que bajo Poisson (cola más gorda).
+    p_over_nb, _ = over_under(10.0, 14.5, variance=25.0)
+    p_over_poisson, _ = over_under(10.0, 14.5)
+    assert p_over_nb > p_over_poisson
+    assert 0 < p_over_nb < 1
+
+
 # ---------- córners ----------
 
 def test_corners_model_predice_total_coherente():

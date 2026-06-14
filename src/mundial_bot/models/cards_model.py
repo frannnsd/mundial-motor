@@ -39,10 +39,11 @@ class CardsModel:
     referee_cards: dict[str, float]  # tarjetas totales promedio del árbitro
     league_team_avg: float           # tarjetas por equipo promedio (liga)
     league_ref_avg: float            # tarjetas totales por partido promedio (liga)
+    dispersion: float = 1.0          # factor de Fano (var/media) de las tarjetas totales
 
     @classmethod
     def from_events(cls, events: pd.DataFrame) -> CardsModel:
-        """Construye el modelo desde el DataFrame de eventos de StatsBomb."""
+        """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
         team_cards = events.groupby("team")["cards"].mean().to_dict()
         league_team_avg = float(events["cards"].mean())
 
@@ -52,11 +53,15 @@ class CardsModel:
         referee_cards = per_match.groupby("referee")["total_cards"].mean().to_dict()
         league_ref_avg = float(per_match["total_cards"].mean())
 
+        mean_c = float(per_match["total_cards"].mean())
+        dispersion = max(1.0, float(per_match["total_cards"].var()) / mean_c) if mean_c > 0 else 1.0
+
         return cls(
             team_cards=team_cards,
             referee_cards=referee_cards,
             league_team_avg=league_team_avg,
             league_ref_avg=league_ref_avg,
+            dispersion=dispersion,
         )
 
     def predict(
@@ -79,7 +84,7 @@ class CardsModel:
 
         total = importance * (0.5 * team_base + 0.5 * ref_base)
         line = closest_line(total, CARD_LINES)
-        p_over, p_under = over_under(total, line)
+        p_over, p_under = over_under(total, line, variance=total * self.dispersion)
         return CardsPrediction(
             total=total, line=line, p_over=p_over, p_under=p_under, referee=referee
         )

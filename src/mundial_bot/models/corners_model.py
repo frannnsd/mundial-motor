@@ -31,14 +31,25 @@ class CornersModel:
     team_for: dict[str, float]      # córners a favor promedio por equipo
     team_against: dict[str, float]  # córners en contra promedio por equipo
     league_avg: float               # córners por equipo promedio (liga)
+    dispersion: float = 1.0         # factor de Fano (var/media) de los córners totales
 
     @classmethod
     def from_events(cls, events: pd.DataFrame) -> CornersModel:
-        """Construye el modelo desde el DataFrame de eventos de StatsBomb."""
+        """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
         team_for = events.groupby("team")["corners_for"].mean().to_dict()
         team_against = events.groupby("team")["corners_against"].mean().to_dict()
         league_avg = float(events["corners_for"].mean())
-        return cls(team_for=team_for, team_against=team_against, league_avg=league_avg)
+
+        # Sobre-dispersión de los córners totales por partido (para Negative Binomial).
+        per_match = events.drop_duplicates("match_id") if "match_id" in events else events
+        totals = per_match["corners_for"] + per_match["corners_against"]
+        mean_t = float(totals.mean())
+        dispersion = max(1.0, float(totals.var()) / mean_t) if mean_t > 0 else 1.0
+
+        return cls(
+            team_for=team_for, team_against=team_against,
+            league_avg=league_avg, dispersion=dispersion,
+        )
 
     def _expected_side(self, attacker: str, defender: str) -> float:
         att = self.team_for.get(attacker, self.league_avg)
@@ -52,7 +63,7 @@ class CornersModel:
         away_c = self._expected_side(away, home)
         total = home_c + away_c
         line = closest_line(total, CORNER_LINES)
-        p_over, p_under = over_under(total, line)
+        p_over, p_under = over_under(total, line, variance=total * self.dispersion)
         return CornersPrediction(
             home_corners=home_c, away_corners=away_c, total=total,
             line=line, p_over=p_over, p_under=p_under,

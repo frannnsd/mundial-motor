@@ -19,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from mundial_bot.collectors.statsbomb_stats import EVENTS_CACHE, load_events  # noqa: E402
+from mundial_bot.collectors.team_stats import TEAM_STATS_CACHE, load_team_stats  # noqa: E402
 from mundial_bot.config import get_settings  # noqa: E402
 from mundial_bot.models.cards_model import CardsModel  # noqa: E402
 from mundial_bot.models.corners_model import CornersModel  # noqa: E402
@@ -89,11 +90,18 @@ def build_report_message(date_str: str) -> str:
     settings = get_settings()
     models = build_models()
 
+    # Preferir la forma reciente de API-Football (más rica) sobre StatsBomb.
     corners = cards = None
-    if EVENTS_CACHE.exists():
-        ev = load_events(build_if_missing=False)
-        corners = CornersModel.from_events(ev)
-        cards = CardsModel.from_events(ev)
+    stats_df = None
+    if TEAM_STATS_CACHE.exists():
+        stats_df = load_team_stats()
+        print(f"Cerebro: forma reciente de API-Football ({len(stats_df)} filas)")
+    elif EVENTS_CACHE.exists():
+        stats_df = load_events(build_if_missing=False)
+        print(f"Cerebro: StatsBomb histórico ({len(stats_df)} filas)")
+    if stats_df is not None and not stats_df.empty:
+        corners = CornersModel.from_events(stats_df)
+        cards = CardsModel.from_events(stats_df)
 
     specs = _match_specs(settings)
     if not specs:
