@@ -126,8 +126,10 @@ def load_market_models() -> tuple[CornersModel | None, CardsModel | None]:
 
 
 def load_brain() -> BotBrain:
-    """Entrena/carga todos los modelos en memoria."""
-    models = build_models()
+    """Entrena/carga todos los modelos en memoria (Elo autoalimentado con el Mundial)."""
+    from mundial_bot.collectors.wc_results import load_wc_results
+
+    models = build_models(extra_results=load_wc_results())
     corners, cards = load_market_models()
     return BotBrain(models=models, corners=corners, cards=cards)
 

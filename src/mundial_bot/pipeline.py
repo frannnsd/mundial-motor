@@ -58,9 +58,21 @@ class PipelineResult:
     message: str
 
 
-def build_models(*, since: str = "1994-01-01", fit_goals: bool = True) -> Models:
-    """Entrena Elo (1X2) y, opcionalmente, Dixon-Coles (mercados de goles)."""
+def build_models(
+    *, since: str = "1994-01-01", fit_goals: bool = True,
+    extra_results: pd.DataFrame | None = None,
+) -> Models:
+    """Entrena Elo (1X2) y, opcionalmente, Dixon-Coles (mercados de goles).
+
+    ``extra_results`` (ej. resultados del Mundial 2026) se suman al histórico para que
+    el Elo se autoalimente con lo que va pasando.
+    """
     df = load_results(since=since)
+    if extra_results is not None and not extra_results.empty:
+        common = [c for c in df.columns if c in extra_results.columns]
+        df = pd.concat([df, extra_results[common]], ignore_index=True)
+        df = df.drop_duplicates(subset=["date", "home_team", "away_team"], keep="last")
+        df = df.sort_values("date").reset_index(drop=True)
     elo = EloModel().fit(df)
     goals = None
     if fit_goals:
