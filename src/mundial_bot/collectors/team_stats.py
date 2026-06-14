@@ -156,4 +156,7 @@ def load_team_stats() -> pd.DataFrame:
     """Carga las estadísticas cacheadas (error si no existen)."""
     if not TEAM_STATS_CACHE.exists():
         raise FileNotFoundError("Cache de team stats ausente. Corré fetch_team_stats.py.")
-    return pd.read_csv(TEAM_STATS_CACHE, encoding="utf-8")
+    df = pd.read_csv(TEAM_STATS_CACHE, encoding="utf-8")
+    if "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    return df

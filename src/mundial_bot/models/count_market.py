@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
+import pandas as pd
 from scipy.stats import nbinom, poisson
 
 # Líneas típicas que ofrecen las casas.
@@ -17,6 +19,38 @@ CARD_LINES = (2.5, 3.5, 4.5, 5.5, 6.5)
 
 # Fuerza de regularización: equivale a "K partidos de prior" hacia la media.
 SHRINKAGE_K = 5.0
+
+
+DEFAULT_HALFLIFE_DAYS = 200.0
+
+
+def weighted_means(
+    events: pd.DataFrame, cols: list[str], *, halflife_days: float = DEFAULT_HALFLIFE_DAYS
+) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+    """Media ponderada por recencia de varias columnas, por equipo.
+
+    Los partidos recientes pesan más (decaimiento exponencial por fecha). Devuelve
+    ({col: {team: media}}, {team: muestra_efectiva}). Si no hay fecha, peso uniforme.
+    """
+    ev = events.copy()
+    if "date" in ev.columns:
+        dates = pd.to_datetime(ev["date"], errors="coerce")
+        if dates.notna().any():
+            ref = dates.max()
+            days = (ref - dates).dt.days.clip(lower=0)
+            days = days.fillna(days.max() if days.notna().any() else 0.0)
+            ev["_w"] = np.exp(-np.log(2) / halflife_days * days)
+        else:
+            ev["_w"] = 1.0
+    else:
+        ev["_w"] = 1.0
+
+    eff_count = ev.groupby("team")["_w"].sum()
+    out: dict[str, dict[str, float]] = {}
+    for col in cols:
+        num = ev.assign(_vw=ev[col] * ev["_w"]).groupby("team")["_vw"].sum()
+        out[col] = (num / eff_count).to_dict()
+    return out, eff_count.to_dict()
 
 
 def shrink(value: float, count: float, prior: float, k: float = SHRINKAGE_K) -> float:

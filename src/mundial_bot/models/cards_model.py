@@ -17,7 +17,13 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from mundial_bot.models.count_market import CARD_LINES, best_line, over_under, shrink
+from mundial_bot.models.count_market import (
+    CARD_LINES,
+    best_line,
+    over_under,
+    shrink,
+    weighted_means,
+)
 
 # Multiplicador de importancia (calibrable).
 IMPORTANCE_GROUP = 1.0
@@ -44,13 +50,10 @@ class CardsModel:
     @classmethod
     def from_events(cls, events: pd.DataFrame) -> CardsModel:
         """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
-        team_grp = events.groupby("team")
-        team_counts = team_grp.size()
-        team_raw = team_grp["cards"].mean()
+        means, eff = weighted_means(events, ["cards"])
+        cards_w = means["cards"]
         league_team_avg = float(events["cards"].mean())
-        team_cards = {
-            t: shrink(team_raw[t], team_counts[t], league_team_avg) for t in team_raw.index
-        }
+        team_cards = {t: shrink(cards_w[t], eff[t], league_team_avg) for t in cards_w}
 
         per_match = events.groupby("match_id").agg(
             total_cards=("cards", "sum"), referee=("referee", "first")

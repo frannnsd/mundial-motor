@@ -13,7 +13,13 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from mundial_bot.models.count_market import CORNER_LINES, best_line, over_under, shrink
+from mundial_bot.models.count_market import (
+    CORNER_LINES,
+    best_line,
+    over_under,
+    shrink,
+    weighted_means,
+)
 
 
 @dataclass
@@ -36,17 +42,12 @@ class CornersModel:
     @classmethod
     def from_events(cls, events: pd.DataFrame) -> CornersModel:
         """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
-        grp = events.groupby("team")
-        counts = grp.size()
-        for_mean = grp["corners_for"].mean()
-        against_mean = grp["corners_against"].mean()
+        # Media ponderada por recencia (partidos recientes pesan más) + shrinkage.
+        means, eff = weighted_means(events, ["corners_for", "corners_against"])
+        for_w, against_w = means["corners_for"], means["corners_against"]
         league_avg = float(events["corners_for"].mean())
-
-        # Shrinkage: equipos con pocos partidos tiran hacia la media de la liga.
-        team_for = {t: shrink(for_mean[t], counts[t], league_avg) for t in for_mean.index}
-        team_against = {
-            t: shrink(against_mean[t], counts[t], league_avg) for t in against_mean.index
-        }
+        team_for = {t: shrink(for_w[t], eff[t], league_avg) for t in for_w}
+        team_against = {t: shrink(against_w[t], eff[t], league_avg) for t in against_w}
 
         # Sobre-dispersión de los córners totales por partido (para Negative Binomial).
         per_match = events.drop_duplicates("match_id") if "match_id" in events else events
