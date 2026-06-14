@@ -16,11 +16,24 @@ from dataclasses import dataclass
 
 from mundial_bot.models.cards_model import CardsModel
 from mundial_bot.models.corners_model import CornersModel
-from mundial_bot.models.count_market import closest_line
 from mundial_bot.models.elo_model import EloModel
 from mundial_bot.models.goals_model import GoalsModel, GoalsModelError
 
-GOAL_LINES = (1.5, 2.5, 3.5)
+# Confianza máxima al elegir línea de goles (firme pero no trivial).
+_LINE_CONF_CAP = 0.78
+
+
+def _best_line_from(
+    lines: dict[float, tuple[float, float]], *, cap: float = _LINE_CONF_CAP
+) -> float:
+    """Elige la línea de goles con la predicción más firme (no la más pareja)."""
+    best, best_score = next(iter(lines)), -1.0
+    for line, (over, under) in lines.items():
+        conf = max(over, under)
+        score = conf if conf <= cap else 2 * cap - conf
+        if score > best_score:
+            best, best_score = line, score
+    return best
 
 
 @dataclass(frozen=True)
@@ -91,7 +104,9 @@ def build_match_report(
     if goals is not None and goals.can_predict(home, away):
         try:
             m = goals.predict(home, away, neutral=neutral)
-            line = closest_line(m.exp_goals, GOAL_LINES)
+            # Solo líneas estándar (1.5/2.5/3.5): 0.5 sería trivial (casi siempre over).
+            standard = {ln: m.lines[ln] for ln in (1.5, 2.5, 3.5) if ln in m.lines}
+            line = _best_line_from(standard or m.lines)
             over, under = m.lines.get(line, (m.over_2_5, m.under_2_5))
             goals_pick = _favored(
                 f"Over {line} goles", over, f"Under {line} goles", under,
