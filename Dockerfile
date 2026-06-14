@@ -21,5 +21,5 @@ VOLUME ["/app/data"]
 
 ENV PYTHONUNBUFFERED=1 PYTHONIOENCODING=utf-8
 
-# Corre el scheduler: envía la cartilla todos los días a la hora configurada.
-CMD ["python", "scripts/run_daily.py", "--schedule"]
+# Servicio 24/7: bot conversable + scheduler (diario + pre-partido) en un proceso.
+CMD ["python", "scripts/run_bot.py"]

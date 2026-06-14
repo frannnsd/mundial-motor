@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS predictions (
     actual      REAL,
     UNIQUE(fixture_id, market, pred_date)
 );
+CREATE TABLE IF NOT EXISTS prematch_alerts (
+    fixture_id INTEGER PRIMARY KEY,
+    sent_at    TEXT NOT NULL
+);
 """
 
 _MARKETS = ("winner", "goals", "btts", "corners", "cards")
@@ -128,6 +132,20 @@ class PredictionStore:
             by_market={m: (a, t) for m, (a, t) in by_market.items() if t > 0},
             brier=(brier_sum / n) if n else None,
         )
+
+    def was_alerted(self, fixture_id: int) -> bool:
+        """¿Ya se mandó la alerta pre-partido de este fixture?"""
+        row = self.conn.execute(
+            "SELECT 1 FROM prematch_alerts WHERE fixture_id=?", (fixture_id,)
+        ).fetchone()
+        return row is not None
+
+    def mark_alerted(self, fixture_id: int, sent_at: str) -> None:
+        self.conn.execute(
+            "INSERT OR IGNORE INTO prematch_alerts (fixture_id, sent_at) VALUES (?,?)",
+            (fixture_id, sent_at),
+        )
+        self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
