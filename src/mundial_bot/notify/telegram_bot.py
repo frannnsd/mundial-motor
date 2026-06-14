@@ -52,8 +52,28 @@ def _split_message(text: str, limit: int = TELEGRAM_MAX_CHARS) -> list[str]:
     return chunks
 
 
+def _make_bot(token: str, api_base: str | None = None):
+    """Crea el Bot de aiogram. ``api_base`` permite apuntar a un servidor de prueba."""
+    from aiogram import Bot
+    from aiogram.client.default import DefaultBotProperties
+    from aiogram.enums import ParseMode
+
+    session = None
+    if api_base:
+        from aiogram.client.session.aiohttp import AiohttpSession
+        from aiogram.client.telegram import TelegramAPIServer
+
+        session = AiohttpSession(api=TelegramAPIServer.from_base(api_base))
+    return Bot(token, session=session, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+
 async def send_telegram(
-    text: str, *, token: str, chat_id: str, dry_run: bool = False
+    text: str,
+    *,
+    token: str,
+    chat_id: str,
+    dry_run: bool = False,
+    api_base: str | None = None,
 ) -> bool:
     """Envía un mensaje (HTML) por Telegram. Devuelve True si se envió/imprimió.
 
@@ -66,12 +86,9 @@ async def send_telegram(
         print("──────────────────────────")
         return True
 
-    from aiogram import Bot
-    from aiogram.client.default import DefaultBotProperties
-    from aiogram.enums import ParseMode
     from aiogram.exceptions import TelegramRetryAfter
 
-    bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = _make_bot(token, api_base)
     try:
         for chunk in _split_message(text):
             try:
@@ -92,7 +109,9 @@ def send_telegram_sync(text: str, *, token: str, chat_id: str, dry_run: bool = F
     return asyncio.run(send_telegram(text, token=token, chat_id=chat_id, dry_run=dry_run))
 
 
-async def verify_connection(token: str, chat_id: str) -> tuple[bool, str]:
+async def verify_connection(
+    token: str, chat_id: str, *, api_base: str | None = None
+) -> tuple[bool, str]:
     """Valida el token y el chat_id enviando un mensaje de prueba.
 
     Devuelve (ok, mensaje_legible). Pensado para el script de setup.
@@ -102,15 +121,12 @@ async def verify_connection(token: str, chat_id: str) -> tuple[bool, str]:
     if not chat_id:
         return False, "Falta TELEGRAM_CHAT_ID en el .env."
 
-    from aiogram import Bot
-    from aiogram.client.default import DefaultBotProperties
-    from aiogram.enums import ParseMode
     from aiogram.exceptions import (
         TelegramBadRequest,
         TelegramUnauthorizedError,
     )
 
-    bot = Bot(token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = _make_bot(token, api_base)
     try:
         me = await bot.get_me()
         await bot.send_message(
