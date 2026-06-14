@@ -1,0 +1,26 @@
+# Entorno
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Secrets
+.env
+*.key
+serviceAccount*.json
+
+# Datos cacheados y base de datos local
+data/cache/*
+!data/cache/.gitkeep
+*.sqlite
+*.db
+ledger.sqlite
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

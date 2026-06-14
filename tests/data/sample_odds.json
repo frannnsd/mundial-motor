@@ -1,0 +1,64 @@
+[
+  {
+    "id": "evt_arg_mex",
+    "sport_key": "soccer_fifa_world_cup",
+    "sport_title": "FIFA World Cup",
+    "commence_time": "2026-06-20T18:00:00Z",
+    "home_team": "Argentina",
+    "away_team": "Mexico",
+    "bookmakers": [
+      {
+        "key": "bet365",
+        "title": "Bet365",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Argentina", "price": 1.95 },
+              { "name": "Mexico", "price": 4.2 },
+              { "name": "Draw", "price": 3.4 }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "pinnacle",
+        "title": "Pinnacle",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Argentina", "price": 2.0 },
+              { "name": "Mexico", "price": 4.1 },
+              { "name": "Draw", "price": 3.5 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_esp_bra",
+    "sport_key": "soccer_fifa_world_cup",
+    "sport_title": "FIFA World Cup",
+    "commence_time": "2026-06-21T21:00:00Z",
+    "home_team": "Spain",
+    "away_team": "Brazil",
+    "bookmakers": [
+      {
+        "key": "williamhill",
+        "title": "William Hill",
+        "markets": [
+          {
+            "key": "h2h",
+            "outcomes": [
+              { "name": "Spain", "price": 2.5 },
+              { "name": "Brazil", "price": 2.9 },
+              { "name": "Draw", "price": 3.2 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
