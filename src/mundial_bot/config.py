@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     # --- API keys (opcionales en dev; requeridas en operación real) ---
     odds_api_key: str = Field(default="", alias="ODDS_API_KEY")
     api_football_key: str = Field(default="", alias="API_FOOTBALL_KEY")
+    football_data_key: str = Field(default="", alias="FOOTBALL_DATA_KEY")
     telegram_bot_token: str = Field(default="", alias="TELEGRAM_BOT_TOKEN")
     telegram_chat_id: str = Field(default="", alias="TELEGRAM_CHAT_ID")
 
@@ -53,6 +54,10 @@ class Settings(BaseSettings):
     @property
     def has_api_football(self) -> bool:
         return bool(self.api_football_key)
+
+    @property
+    def has_football_data(self) -> bool:
+        return bool(self.football_data_key)
 
     @property
     def has_telegram(self) -> bool:

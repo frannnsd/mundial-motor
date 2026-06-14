@@ -45,3 +45,34 @@ def test_parse_fixtures_respuesta_vacia():
 def test_fixture_knockout_grupos_es_false():
     f = Fixture(home_team="A", away_team="B", date="", round="Group Stage - 1")
     assert f.knockout is False
+
+
+# ---- football-data.org (fuente alternativa gratis) ----
+
+FDORG_SAMPLE = {
+    "matches": [
+        {
+            "utcDate": "2026-06-14T18:00:00Z", "stage": "GROUP_STAGE",
+            "homeTeam": {"name": "Morocco"}, "awayTeam": {"name": "Brazil"},
+            "referees": [{"name": "Raphael Claus"}],
+        },
+        {
+            "utcDate": "2026-06-14T21:00:00Z", "stage": "LAST_16",
+            "homeTeam": {"name": "Argentina"}, "awayTeam": {"name": "France"},
+            "referees": [],
+        },
+    ]
+}
+
+
+def test_parse_fdorg_extrae_equipos_arbitro_y_stage():
+    from mundial_bot.collectors.fixtures_fdorg import parse_fdorg_matches
+
+    fixtures = parse_fdorg_matches(FDORG_SAMPLE)
+
+    assert len(fixtures) == 2
+    assert fixtures[0].match == "Morocco vs Brazil"
+    assert fixtures[0].referee == "Raphael Claus"
+    assert fixtures[0].knockout is False        # GROUP_STAGE
+    assert fixtures[1].knockout is True          # LAST_16 = eliminación
+    assert fixtures[1].referee is None           # sin árbitro asignado

@@ -32,17 +32,42 @@ from mundial_bot.value.team_aliases import normalize_team  # noqa: E402
 SAMPLE = Path(__file__).resolve().parents[1] / "tests" / "data" / "sample_odds.json"
 
 
-def _match_specs(settings) -> list[tuple[str, str, str, str | None, bool]]:
-    """[(home, away, nombre, árbitro, knockout)] desde API-Football o el sample."""
+def _fetch_real_fixtures(settings):
+    """Intenta traer los fixtures reales de hoy. Devuelve (lista, fuente)."""
+    from datetime import date as _date
+
+    today = _date.today().isoformat()
+
+    # football-data.org (gratis, soporta el Mundial 2026 + árbitro).
+    if settings.has_football_data:
+        try:
+            from mundial_bot.collectors.fixtures_fdorg import FootballDataClient
+
+            fixtures = FootballDataClient(settings.football_data_key).get_fixtures(date=today)
+            if fixtures:
+                return fixtures, "football-data.org"
+        except Exception as exc:  # noqa: BLE001
+            print(f"   football-data.org no respondió: {exc}")
+
+    # API-Football (OJO: el plan gratis NO da acceso a 2026).
     if settings.has_api_football:
-        from datetime import date as _date
+        try:
+            from mundial_bot.collectors.fixtures import FixturesClient
 
-        from mundial_bot.collectors.fixtures import FixturesClient
+            fixtures = FixturesClient(settings.api_football_key).get_fixtures(date=today)
+            if fixtures:
+                return fixtures, "API-Football"
+        except Exception as exc:  # noqa: BLE001
+            print(f"   API-Football no respondió: {exc}")
 
-        fixtures = FixturesClient(settings.api_football_key).get_fixtures(
-            date=_date.today().isoformat()
-        )
-        print(f"Partidos reales de hoy (API-Football): {len(fixtures)}")
+    return [], None
+
+
+def _match_specs(settings) -> list[tuple[str, str, str, str | None, bool]]:
+    """[(home, away, nombre, árbitro, knockout)] desde una fuente real o el sample."""
+    fixtures, source = _fetch_real_fixtures(settings)
+    if fixtures:
+        print(f"Partidos reales de hoy ({source}): {len(fixtures)}")
         return [
             (
                 normalize_team(f.home_team), normalize_team(f.away_team),
@@ -51,7 +76,7 @@ def _match_specs(settings) -> list[tuple[str, str, str, str | None, bool]]:
             for f in fixtures
         ]
 
-    print("⚠️  Sin API_FOOTBALL_KEY → uso la lista de ejemplo (no los partidos reales).")
+    print("⚠️  Sin fixtures reales disponibles → uso la lista de ejemplo.")
     matches = load_sample(SAMPLE)
     return [
         (normalize_team(m.home_team), normalize_team(m.away_team), m.match, None, False)
