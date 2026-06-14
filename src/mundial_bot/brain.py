@@ -42,7 +42,9 @@ HELP = (
     "• <b>Argentina vs México</b>\n"
     "• <b>Brasil - Croacia</b>\n"
     "• <b>/hoy</b> → predicciones de todos los partidos de hoy\n"
-    "• <b>/balance</b> → cuánto vengo acertando 📊\n\n"
+    "• <b>/balance</b> → cuánto vengo acertando 📊\n"
+    "• <b>/apuesta 5 2.10 Argentina gana</b> → registrá una apuesta tuya\n"
+    "• <b>/roi</b> → tu ganancia y ROI real 💰\n\n"
     "Te respondo con ganador, goles, córners y tarjetas más probables."
 )
 

@@ -60,6 +60,63 @@ async def main() -> None:
         with PredictionStore() as store:
             await message.answer(format_balance(store.balance()))
 
+    @dp.message(Command("apuesta"))
+    async def _apuesta(message: Message) -> None:
+        from datetime import date
+
+        from mundial_bot.betlog import BetStore, parse_bet_command
+
+        try:
+            stake, odds, desc = parse_bet_command(message.text or "")
+        except ValueError as exc:
+            await message.answer(f"❌ {exc}\nEjemplo: <code>/apuesta 5 2.10 Argentina gana</code>")
+            return
+        with BetStore() as store:
+            bet_id = store.log(
+                created_at=date.today().isoformat(), description=desc, stake=stake, odds=odds
+            )
+        await message.answer(
+            f"✅ Anotada #{bet_id}: {desc} · ${stake:.2f} @ {odds:.2f}\n"
+            f"Cuando se defina: /gane {bet_id} o /perdi {bet_id}"
+        )
+
+    async def _settle_bet(message: Message, *, won: bool) -> None:
+        from mundial_bot.betlog import BetStore
+
+        parts = (message.text or "").split()
+        if len(parts) < 2 or not parts[1].isdigit():
+            await message.answer("Decime el número. Ej: <code>/gane 3</code>")
+            return
+        with BetStore() as store:
+            try:
+                store.settle(int(parts[1]), won=won)
+            except KeyError:
+                await message.answer(f"No existe la apuesta #{parts[1]}.")
+                return
+        await message.answer(f"✅ #{parts[1]} marcada como {'GANADA 🟢' if won else 'perdida 🔴'}.")
+
+    @dp.message(Command("gane", "gano"))
+    async def _gane(message: Message) -> None:
+        await _settle_bet(message, won=True)
+
+    @dp.message(Command("perdi", "perdio"))
+    async def _perdi(message: Message) -> None:
+        await _settle_bet(message, won=False)
+
+    @dp.message(Command("roi", "apuestas"))
+    async def _roi(message: Message) -> None:
+        from mundial_bot.betlog import BetStore, format_roi
+
+        with BetStore() as store:
+            opens = store.open_bets()
+            msg = format_roi(store.summary())
+        if opens:
+            msg += "\n\n<b>Abiertas:</b>\n" + "\n".join(
+                f"#{b['id']}: {b['description']} (${b['stake']:.0f} @ {b['odds']:.2f})"
+                for b in opens
+            )
+        await message.answer(msg)
+
     @dp.message()
     async def _any(message: Message) -> None:
         await message.answer(brain.handle_text(message.text or ""))
