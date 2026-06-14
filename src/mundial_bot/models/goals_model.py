@@ -15,7 +15,7 @@ elevamos `GoalsModelError` para que el pipeline caiga a Elo en ese partido.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pandas as pd
 from penaltyblog.models import DixonColesGoalModel, dixon_coles_weights
@@ -45,9 +45,15 @@ class MatchMarkets:
     btts_no: float
     home_xg: float
     away_xg: float
+    # Over/Under por línea de goles: {strike: (prob_over, prob_under)}
+    lines: dict[float, tuple[float, float]] = field(default_factory=dict)
 
     def one_x_two(self) -> dict[str, float]:
         return {"home": self.home, "draw": self.draw, "away": self.away}
+
+    @property
+    def exp_goals(self) -> float:
+        return self.home_xg + self.away_xg
 
 
 class GoalsModel:
@@ -89,16 +95,24 @@ class GoalsModel:
         try:
             grid = self._model.predict(home, away, neutral_venue=neutral)
             hda = grid.home_draw_away
+            lines = {
+                strike: (
+                    float(grid.total_goals("over", strike)),
+                    float(grid.total_goals("under", strike)),
+                )
+                for strike in (0.5, 1.5, 2.5, 3.5, 4.5)
+            }
             return MatchMarkets(
                 home=float(hda[0]),
                 draw=float(hda[1]),
                 away=float(hda[2]),
-                over_2_5=float(grid.total_goals("over", 2.5)),
-                under_2_5=float(grid.total_goals("under", 2.5)),
+                over_2_5=lines[2.5][0],
+                under_2_5=lines[2.5][1],
                 btts_yes=_val(grid.btts_yes),
                 btts_no=_val(grid.btts_no),
                 home_xg=_val(grid.home_goal_expectation),
                 away_xg=_val(grid.away_goal_expectation),
+                lines=lines,
             )
         except (ValueError, KeyError) as e:
             raise GoalsModelError(f"Dixon-Coles falló para {home} vs {away}: {e}") from e
