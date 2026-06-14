@@ -27,9 +27,11 @@ GOAL_LINES = (1.5, 2.5, 3.5)
 class MarketPick:
     """La opción más probable de un mercado, con su cuota justa."""
 
-    pick: str                      # "Brasil", "Under 2.5 goles", "Over 9.5 córners"
+    pick: str                      # "Gana Brasil", "Under 2.5 goles", "Over 9.5 córners"
     prob: float
     expected: float | None = None  # valor esperado (goles/córners/tarjetas)
+    side: str = ""                 # home/draw/away/over/under/yes/no (para calificar)
+    line: float | None = None      # línea del over/under (None para 1X2 y BTTS)
 
     @property
     def fair_odds(self) -> float:
@@ -49,11 +51,14 @@ class MatchReport:
     cards: MarketPick | None = None
 
 
-def _favored(over_label: str, p_over: float, under_label: str, p_under: float,
-             *, expected: float | None = None) -> MarketPick:
+def _favored(
+    over_label: str, p_over: float, under_label: str, p_under: float,
+    *, expected: float | None = None, line: float | None = None,
+    over_side: str = "over", under_side: str = "under",
+) -> MarketPick:
     if p_over >= p_under:
-        return MarketPick(over_label, p_over, expected)
-    return MarketPick(under_label, p_under, expected)
+        return MarketPick(over_label, p_over, expected, side=over_side, line=line)
+    return MarketPick(under_label, p_under, expected, side=under_side, line=line)
 
 
 def build_match_report(
@@ -74,9 +79,13 @@ def build_match_report(
     home_name, away_name = home, away
 
     # Ganador más probable.
-    sides = [(f"Gana {home_name}", p.home), ("Empate", p.draw), (f"Gana {away_name}", p.away)]
-    win_label, win_prob = max(sides, key=lambda s: s[1])
-    winner = MarketPick(win_label, win_prob)
+    sides = [
+        (f"Gana {home_name}", p.home, "home"),
+        ("Empate", p.draw, "draw"),
+        (f"Gana {away_name}", p.away, "away"),
+    ]
+    win_label, win_prob, win_side = max(sides, key=lambda s: s[1])
+    winner = MarketPick(win_label, win_prob, side=win_side)
 
     goals_pick = btts_pick = None
     if goals is not None and goals.can_predict(home, away):
@@ -86,10 +95,11 @@ def build_match_report(
             over, under = m.lines.get(line, (m.over_2_5, m.under_2_5))
             goals_pick = _favored(
                 f"Over {line} goles", over, f"Under {line} goles", under,
-                expected=m.exp_goals,
+                expected=m.exp_goals, line=line,
             )
             btts_pick = _favored(
-                "Ambos marcan: Sí", m.btts_yes, "Ambos marcan: No", m.btts_no
+                "Ambos marcan: Sí", m.btts_yes, "Ambos marcan: No", m.btts_no,
+                over_side="yes", under_side="no",
             )
         except GoalsModelError:
             pass
@@ -99,7 +109,7 @@ def build_match_report(
         cp = corners.predict(home, away)
         corners_pick = _favored(
             f"Over {cp.line} córners", cp.p_over, f"Under {cp.line} córners", cp.p_under,
-            expected=cp.total,
+            expected=cp.total, line=cp.line,
         )
 
     cards_pick = None
@@ -107,7 +117,7 @@ def build_match_report(
         cdp = cards.predict(home, away, referee=referee, knockout=knockout)
         cards_pick = _favored(
             f"Over {cdp.line} tarjetas", cdp.p_over, f"Under {cdp.line} tarjetas", cdp.p_under,
-            expected=cdp.total,
+            expected=cdp.total, line=cdp.line,
         )
 
     return MatchReport(

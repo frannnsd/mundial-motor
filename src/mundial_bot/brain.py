@@ -41,7 +41,8 @@ HELP = (
     "👋 Soy el bot del Mundial. Escribime un partido y te digo a qué apostar:\n\n"
     "• <b>Argentina vs México</b>\n"
     "• <b>Brasil - Croacia</b>\n"
-    "• <b>/hoy</b> → predicciones de todos los partidos de hoy\n\n"
+    "• <b>/hoy</b> → predicciones de todos los partidos de hoy\n"
+    "• <b>/balance</b> → cuánto vengo acertando 📊\n\n"
     "Te respondo con ganador, goles, córners y tarjetas más probables."
 )
 
@@ -131,24 +132,55 @@ def load_brain() -> BotBrain:
     return BotBrain(models=models, corners=corners, cards=cards)
 
 
-def build_today_message(brain: BotBrain, settings: Settings, *, date_str: str) -> str:
-    """Arma la cartilla de los partidos reales de hoy."""
-    from mundial_bot.collectors.fixtures import FixturesClient
+def fetch_today_fixtures(settings: Settings) -> list:
+    """Fixtures reales de hoy (football-data.org → API-Football)."""
+    today = date.today().isoformat()
+    if settings.has_football_data:
+        try:
+            from mundial_bot.collectors.fixtures_fdorg import FootballDataClient
 
-    if not settings.has_api_football:
-        return "Falta API_FOOTBALL_KEY para traer los partidos de hoy."
+            fixtures = FootballDataClient(settings.football_data_key).get_fixtures(date=today)
+            if fixtures:
+                return fixtures
+        except Exception:  # noqa: BLE001
+            pass
+    if settings.has_api_football:
+        try:
+            from mundial_bot.collectors.fixtures import FixturesClient
 
-    fixtures = FixturesClient(settings.api_football_key).get_fixtures(date=date.today().isoformat())
+            fixtures = FixturesClient(settings.api_football_key).get_fixtures(date=today)
+            if fixtures:
+                return fixtures
+        except Exception:  # noqa: BLE001
+            pass
+    return []
+
+
+def build_today_message(
+    brain: BotBrain, settings: Settings, *, date_str: str, log: bool = True
+) -> str:
+    """Arma la cartilla de los partidos reales de hoy y (opcional) loguea las predicciones."""
+    fixtures = fetch_today_fixtures(settings)
     if not fixtures:
-        return f"🔮 <b>QUÉ APOSTAR HOY — {date_str}</b>\n\nNo hay partidos del Mundial hoy. 🟢"
+        return f"🔮 <b>QUÉ APOSTAR HOY — {date_str}</b>\n\nHoy no hay partidos del Mundial. 🟢"
 
-    reports = [
-        build_match_report(
-            normalize_team(f.home_team), normalize_team(f.away_team),
-            elo=brain.models.elo, goals=brain.models.goals,
-            corners=brain.corners, cards=brain.cards,
-            referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
-        )
-        for f in fixtures
-    ]
+    from mundial_bot.tracking import PredictionStore
+
+    today = date.today().isoformat()
+    store = PredictionStore() if log else None
+    reports = []
+    try:
+        for f in fixtures:
+            report = build_match_report(
+                normalize_team(f.home_team), normalize_team(f.away_team),
+                elo=brain.models.elo, goals=brain.models.goals,
+                corners=brain.corners, cards=brain.cards,
+                referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
+            )
+            reports.append(report)
+            if store is not None:
+                store.log_report(f.fixture_id, report, pred_date=today, created_at=today)
+    finally:
+        if store is not None:
+            store.close()
     return format_match_reports(reports, date_str=date_str)

@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from mundial_bot.brain import load_brain  # noqa: E402
+from mundial_bot.brain import build_today_message, load_brain  # noqa: E402
 from mundial_bot.config import get_settings  # noqa: E402
 from mundial_bot.notify.scheduler import start_daily_scheduler  # noqa: E402
 from mundial_bot.notify.telegram_bot import send_telegram_sync  # noqa: E402
@@ -29,75 +29,25 @@ from mundial_bot.value.team_aliases import normalize_team  # noqa: E402
 SAMPLE = Path(__file__).resolve().parents[1] / "tests" / "data" / "sample_odds.json"
 
 
-def _fetch_real_fixtures(settings):
-    """Intenta traer los fixtures reales de hoy. Devuelve (lista, fuente)."""
-    from datetime import date as _date
-
-    today = _date.today().isoformat()
-
-    # football-data.org (gratis, soporta el Mundial 2026 + árbitro).
-    if settings.has_football_data:
-        try:
-            from mundial_bot.collectors.fixtures_fdorg import FootballDataClient
-
-            fixtures = FootballDataClient(settings.football_data_key).get_fixtures(date=today)
-            if fixtures:
-                return fixtures, "football-data.org"
-        except Exception as exc:  # noqa: BLE001
-            print(f"   football-data.org no respondió: {exc}")
-
-    # API-Football (OJO: el plan gratis NO da acceso a 2026).
-    if settings.has_api_football:
-        try:
-            from mundial_bot.collectors.fixtures import FixturesClient
-
-            fixtures = FixturesClient(settings.api_football_key).get_fixtures(date=today)
-            if fixtures:
-                return fixtures, "API-Football"
-        except Exception as exc:  # noqa: BLE001
-            print(f"   API-Football no respondió: {exc}")
-
-    return [], None
-
-
-def _match_specs(settings) -> list[tuple[str, str, str, str | None, bool]]:
-    """[(home, away, nombre, árbitro, knockout)] desde una fuente real o el sample."""
-    fixtures, source = _fetch_real_fixtures(settings)
-    if fixtures:
-        print(f"Partidos reales de hoy ({source}): {len(fixtures)}")
-        return [
-            (
-                normalize_team(f.home_team), normalize_team(f.away_team),
-                f.match, f.referee, f.knockout,
-            )
-            for f in fixtures
-        ]
-
-    print("⚠️  Sin fixtures reales disponibles → uso la lista de ejemplo.")
-    matches = load_sample(SAMPLE)
-    return [
-        (normalize_team(m.home_team), normalize_team(m.away_team), m.match, None, False)
-        for m in matches
-    ]
-
-
 def build_report_message(date_str: str) -> str:
-    """Carga el cerebro, arma los reportes de los partidos y devuelve el mensaje."""
+    """Arma la cartilla del día. Con key real usa los fixtures de hoy (y loguea); sino, ejemplo."""
     settings = get_settings()
     brain = load_brain()
 
-    specs = _match_specs(settings)
-    if not specs:
-        return f"🔮 <b>QUÉ APOSTAR HOY — {date_str}</b>\n\nHoy no hay partidos del Mundial. 🟢"
+    if settings.has_api_football or settings.has_football_data:
+        return build_today_message(brain, settings, date_str=date_str)
 
+    # Sin keys de fixtures → lista de ejemplo (modo dev).
+    print("⚠️  Sin API_FOOTBALL_KEY → uso la lista de ejemplo.")
+    matches = load_sample(SAMPLE)
     reports = [
         build_match_report(
-            home, away,
+            normalize_team(m.home_team), normalize_team(m.away_team),
             elo=brain.models.elo, goals=brain.models.goals,
             corners=brain.corners, cards=brain.cards,
-            referee=referee, knockout=knockout, neutral=True, match_name=name,
+            neutral=True, match_name=m.match,
         )
-        for (home, away, name, referee, knockout) in specs
+        for m in matches
     ]
     return format_match_reports(reports, date_str=date_str)
 

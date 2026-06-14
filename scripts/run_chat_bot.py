@@ -51,6 +51,15 @@ async def main() -> None:
         date_str = datetime.now().strftime("%d/%m/%Y")
         await message.answer(build_today_message(brain, settings, date_str=date_str))
 
+    @dp.message(Command("balance"))
+    async def _balance(message: Message) -> None:
+        from mundial_bot.tracking import PredictionStore, format_balance, grade_pending
+
+        if settings.has_api_football:
+            grade_pending(settings.api_football_key)
+        with PredictionStore() as store:
+            await message.answer(format_balance(store.balance()))
+
     @dp.message()
     async def _any(message: Message) -> None:
         await message.answer(brain.handle_text(message.text or ""))

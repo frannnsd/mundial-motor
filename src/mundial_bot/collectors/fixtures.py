@@ -27,6 +27,7 @@ class Fixture:
     date: str
     referee: str | None = None
     round: str = ""
+    fixture_id: int | None = None
 
     @property
     def match(self) -> str:
@@ -57,6 +58,7 @@ def parse_fixtures(raw: dict) -> list[Fixture]:
                 date=fixture.get("date", ""),
                 referee=fixture.get("referee"),
                 round=league.get("round", "") or "",
+                fixture_id=fixture.get("id"),
             )
         )
     return out
