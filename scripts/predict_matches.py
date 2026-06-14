@@ -18,14 +18,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from mundial_bot.collectors.statsbomb_stats import EVENTS_CACHE, load_events  # noqa: E402
-from mundial_bot.collectors.team_stats import TEAM_STATS_CACHE, load_team_stats  # noqa: E402
+from mundial_bot.brain import load_brain  # noqa: E402
 from mundial_bot.config import get_settings  # noqa: E402
-from mundial_bot.models.cards_model import CardsModel  # noqa: E402
-from mundial_bot.models.corners_model import CornersModel  # noqa: E402
 from mundial_bot.notify.scheduler import start_daily_scheduler  # noqa: E402
 from mundial_bot.notify.telegram_bot import send_telegram_sync  # noqa: E402
-from mundial_bot.pipeline import build_models  # noqa: E402
 from mundial_bot.report import build_match_report, format_match_reports  # noqa: E402
 from mundial_bot.value.odds import load_sample  # noqa: E402
 from mundial_bot.value.team_aliases import normalize_team  # noqa: E402
@@ -86,31 +82,19 @@ def _match_specs(settings) -> list[tuple[str, str, str, str | None, bool]]:
 
 
 def build_report_message(date_str: str) -> str:
-    """Entrena los modelos, arma los reportes de los partidos y devuelve el mensaje."""
+    """Carga el cerebro, arma los reportes de los partidos y devuelve el mensaje."""
     settings = get_settings()
-    models = build_models()
-
-    # Preferir la forma reciente de API-Football (más rica) sobre StatsBomb.
-    corners = cards = None
-    stats_df = None
-    if TEAM_STATS_CACHE.exists():
-        stats_df = load_team_stats()
-        print(f"Cerebro: forma reciente de API-Football ({len(stats_df)} filas)")
-    elif EVENTS_CACHE.exists():
-        stats_df = load_events(build_if_missing=False)
-        print(f"Cerebro: StatsBomb histórico ({len(stats_df)} filas)")
-    if stats_df is not None and not stats_df.empty:
-        corners = CornersModel.from_events(stats_df)
-        cards = CardsModel.from_events(stats_df)
+    brain = load_brain()
 
     specs = _match_specs(settings)
     if not specs:
-        return f"🔮 <b>PREDICCIONES — {date_str}</b>\n\nHoy no hay partidos del Mundial. 🟢"
+        return f"🔮 <b>QUÉ APOSTAR HOY — {date_str}</b>\n\nHoy no hay partidos del Mundial. 🟢"
 
     reports = [
         build_match_report(
             home, away,
-            elo=models.elo, goals=models.goals, corners=corners, cards=cards,
+            elo=brain.models.elo, goals=brain.models.goals,
+            corners=brain.corners, cards=brain.cards,
             referee=referee, knockout=knockout, neutral=True, match_name=name,
         )
         for (home, away, name, referee, knockout) in specs
