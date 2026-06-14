@@ -126,12 +126,41 @@ pytest
 ## Cómo correr
 
 ```powershell
-python scripts/run_daily.py --sample     # demo offline (sin keys, imprime la cartilla)
-python scripts/run_daily.py              # una corrida real (cuotas en vivo si hay key)
-python scripts/run_daily.py --schedule   # modo producción: envía a diario a la hora fijada
-python scripts/backtest_elo.py           # backtest del modelo sobre el histórico
-pytest -m "not network"                  # 65 tests
+python scripts/fetch_statsbomb.py        # baja datos de córners/tarjetas (1 vez, ~min)
+python scripts/predict_matches.py        # ⭐ reporte multi-mercado por partido (Telegram)
+python scripts/predict_matches.py --schedule  # envía las predicciones a diario
+python scripts/run_daily.py --sample     # cartilla de value betting (singles + combinadas)
+python scripts/backtest_elo.py           # backtest del modelo de goles/ganador
+pytest -m "not network"                  # 76 tests
 ```
+
+### El predictor multi-mercado (lo principal)
+
+Por cada partido te dice lo más probable en **ganador, goles, córners, tarjetas y
+ambos marcan**, con la **cuota justa** de cada uno:
+
+```
+⚽ Argentina vs Mexico
+   🏆 Gana: Argentina (64%) · justo @ 1.55
+   ⚽ Goles: ~1.8 → Over 1.5 goles (55%) · justo @ 1.80
+   🚩 Córners: ~8.7 → Under 8.5 córners (50%) · justo @ 1.99
+   🟨 Tarjetas: ~4.0 → Under 4.5 tarjetas (62%) · justo @ 1.60
+   🤝 Ambos marcan: No (69%) · justo @ 1.46
+```
+
+Modelos: Elo (ganador) · Dixon-Coles (goles/BTTS) · córners y tarjetas (Poisson sobre
+datos de StatsBomb: WC 2018/2022, Euro, Copa América, AFCON — 314 partidos, 100 árbitros).
+
+## Casas de apuestas (Argentina · Prov. de Buenos Aires)
+
+Las cuotas de córners/tarjetas de las casas `.bet.ar` **no están en ninguna API barata**
+(los feeds que las tienen son enterprise, ~US$5.000/mes). Por eso el flujo es:
+
+> **El bot te da la cuota justa → vos la comparás en tu casa → si paga más, apostás.**
+
+Casas recomendadas (todas con goles + córners + tarjetas, toman pesos):
+- **Bet365** y **bplay** — abrí las dos para comparar líneas (en córners/tarjetas varían mucho).
+- **Stake** (`pba.stake.bet.ar`) — si querés cripto; ahora con licencia en Prov. de Buenos Aires.
 
 ## Deploy cloud 24/7 (Railway)
 
