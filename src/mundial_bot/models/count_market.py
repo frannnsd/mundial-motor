@@ -64,3 +64,23 @@ def over_under(
 def closest_line(expected: float, lines: tuple[float, ...]) -> float:
     """La línea .5 más cercana al valor esperado (la más 'pareja')."""
     return min(lines, key=lambda line: abs(line - expected))
+
+
+# Confianza objetivo para elegir la línea: firme pero no trivial.
+_CONF_CAP = 0.78
+
+
+def best_line(expected: float, lines: tuple[float, ...], *, variance: float | None = None) -> float:
+    """Elige la línea con la predicción más FIRME (no la más pareja).
+
+    Maximiza la confianza del lado favorito sin pasar de ~0.78 (evita líneas
+    triviales tipo 99%). Así el bot apuesta donde tiene convicción, no en el ~50/50.
+    """
+    best, best_score = lines[0], -1.0
+    for line in lines:
+        p_over, p_under = over_under(expected, line, variance=variance)
+        conf = max(p_over, p_under)
+        score = conf if conf <= _CONF_CAP else (2 * _CONF_CAP - conf)
+        if score > best_score:
+            best, best_score = line, score
+    return best

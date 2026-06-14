@@ -15,6 +15,7 @@ import pandas as pd
 
 from mundial_bot.models.cards_model import CardsModel
 from mundial_bot.models.corners_model import CornersModel
+from mundial_bot.models.count_market import over_under
 
 
 @dataclass
@@ -66,7 +67,8 @@ def _score(p_over: float, over: bool) -> tuple[int, float, float]:
 
 
 def _backtest(
-    df: pd.DataFrame, market: str, *, start_frac: float, min_train: int
+    df: pd.DataFrame, market: str, *, start_frac: float, min_train: int,
+    fixed_line: float | None = None,
 ) -> CountBacktestResult:
     matches = _per_match_table(df)
     total_col = "corners_total" if market == "córners" else "cards_total"
@@ -90,15 +92,23 @@ def _backtest(
             model = CardsModel.from_events(train)
             pred = model.predict(m["home"], m["away"], referee=m["referee"])
 
+        # A línea fija evaluamos la estimación de total del modelo (no la línea más
+        # cercana, que siempre queda ~50/50).
+        if fixed_line is not None:
+            line = fixed_line
+            p_over, _ = over_under(pred.total, line, variance=pred.total * model.dispersion)
+        else:
+            line, p_over = pred.line, pred.p_over
+
         actual_total = m[total_col]
-        over = actual_total > pred.line
-        c, brier, ll = _score(pred.p_over, over)
+        over = actual_total > line
+        c, brier, ll = _score(p_over, over)
         correct += c
         brier_sum += brier
         ll_sum += ll
 
         # Baseline ingenuo: predecir según la media histórica vs la misma línea.
-        naive_over = train_matches[total_col].mean() > pred.line
+        naive_over = train_matches[total_col].mean() > line
         naive_correct += int(naive_over == over)
         n += 1
 
@@ -112,12 +122,16 @@ def _backtest(
 
 
 def backtest_corners(
-    df: pd.DataFrame, *, start_frac: float = 0.4, min_train: int = 100
+    df: pd.DataFrame, *, start_frac: float = 0.4, min_train: int = 100,
+    fixed_line: float | None = None,
 ) -> CountBacktestResult:
-    return _backtest(df, "córners", start_frac=start_frac, min_train=min_train)
+    return _backtest(df, "córners", start_frac=start_frac, min_train=min_train,
+                     fixed_line=fixed_line)
 
 
 def backtest_cards(
-    df: pd.DataFrame, *, start_frac: float = 0.4, min_train: int = 100
+    df: pd.DataFrame, *, start_frac: float = 0.4, min_train: int = 100,
+    fixed_line: float | None = None,
 ) -> CountBacktestResult:
-    return _backtest(df, "tarjetas", start_frac=start_frac, min_train=min_train)
+    return _backtest(df, "tarjetas", start_frac=start_frac, min_train=min_train,
+                     fixed_line=fixed_line)

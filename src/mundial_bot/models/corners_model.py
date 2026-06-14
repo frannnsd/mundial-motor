@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from mundial_bot.models.count_market import CORNER_LINES, closest_line, over_under, shrink
+from mundial_bot.models.count_market import CORNER_LINES, best_line, over_under, shrink
 
 
 @dataclass
@@ -70,8 +70,9 @@ class CornersModel:
         home_c = self._expected_side(home, away)
         away_c = self._expected_side(away, home)
         total = home_c + away_c
-        line = closest_line(total, CORNER_LINES)
-        p_over, p_under = over_under(total, line, variance=total * self.dispersion)
+        variance = total * self.dispersion
+        line = best_line(total, CORNER_LINES, variance=variance)
+        p_over, p_under = over_under(total, line, variance=variance)
         return CornersPrediction(
             home_corners=home_c, away_corners=away_c, total=total,
             line=line, p_over=p_over, p_under=p_under,

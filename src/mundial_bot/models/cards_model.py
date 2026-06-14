@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from mundial_bot.models.count_market import CARD_LINES, closest_line, over_under, shrink
+from mundial_bot.models.count_market import CARD_LINES, best_line, over_under, shrink
 
 # Multiplicador de importancia (calibrable).
 IMPORTANCE_GROUP = 1.0
@@ -93,8 +93,9 @@ class CardsModel:
         importance = IMPORTANCE_KNOCKOUT if knockout else IMPORTANCE_GROUP
 
         total = importance * (0.5 * team_base + 0.5 * ref_base)
-        line = closest_line(total, CARD_LINES)
-        p_over, p_under = over_under(total, line, variance=total * self.dispersion)
+        variance = total * self.dispersion
+        line = best_line(total, CARD_LINES, variance=variance)
+        p_over, p_under = over_under(total, line, variance=variance)
         return CardsPrediction(
             total=total, line=line, p_over=p_over, p_under=p_under, referee=referee
         )
