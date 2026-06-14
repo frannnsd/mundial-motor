@@ -70,7 +70,8 @@ def parse_results(csv_text: str) -> pd.DataFrame:
         raise ValueError(f"Faltan columnas en el dataset de resultados: {sorted(missing)}")
 
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    df["neutral"] = df["neutral"].astype(bool)
+    # NaN en 'neutral' → False explícito (no dejar que astype lo haga implícito).
+    df["neutral"] = df["neutral"].fillna(False).astype(bool)
 
     # Descartar filas sin marcador o sin fecha (partidos futuros / datos sucios).
     df = df.dropna(subset=["date", "home_score", "away_score"])

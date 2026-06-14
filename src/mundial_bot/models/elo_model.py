@@ -18,6 +18,7 @@ Fase 5; los defaults vienen de la literatura).
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 
 import pandas as pd
@@ -121,9 +122,7 @@ class EloModel:
         dr = self._rating_diff(home, away, neutral=neutral)
 
         # Empate decrece (gaussiana) a medida que crece la diferencia de rating.
-        p_draw = self.config.draw_max * 2.718281828459045 ** (
-            -((dr / self.config.draw_width) ** 2)
-        )
+        p_draw = self.config.draw_max * math.exp(-((dr / self.config.draw_width) ** 2))
         p_home = we - p_draw / 2.0
         p_away = (1.0 - we) - p_draw / 2.0
 

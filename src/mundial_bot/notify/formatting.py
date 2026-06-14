@@ -7,6 +7,8 @@ probabilidad del modelo vs mercado, edge, y stake (¼ Kelly).
 
 from __future__ import annotations
 
+import html
+
 from mundial_bot.staking.kelly import StakedPick
 from mundial_bot.staking.parlays import Parlay
 from mundial_bot.value.ev import Selection
@@ -14,7 +16,8 @@ from mundial_bot.value.ev import Selection
 
 def render_selection(sel: Selection) -> str:
     """Texto legible de la selección (ej. 'Argentina (local)', 'Empate', 'Over 2.5')."""
-    home, away = (sel.match.split(" vs ", 1) + [""])[:2] if " vs " in sel.match else ("", "")
+    parts = (sel.match.split(" vs ", 1) + [""])[:2] if " vs " in sel.match else ("", "")
+    home, away = html.escape(parts[0]), html.escape(parts[1])
     mapping = {
         "home": f"{home} (local)",
         "away": f"{away} (visita)",
@@ -32,8 +35,8 @@ def format_single(staked: StakedPick) -> str:
     pick = staked.pick
     sel = pick.selection
     lines = [
-        f"⚽ <b>{sel.match}</b>",
-        f"   🎯 {render_selection(sel)} @ <b>{sel.odds:.2f}</b> · {sel.bookmaker}",
+        f"⚽ <b>{html.escape(sel.match)}</b>",
+        f"   🎯 {render_selection(sel)} @ <b>{sel.odds:.2f}</b> · {html.escape(sel.bookmaker)}",
     ]
     if pick.fair_prob is not None:
         lines.append(

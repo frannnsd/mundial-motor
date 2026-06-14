@@ -11,6 +11,7 @@ Cada modelo es opcional: si falta, ese mercado simplemente no aparece.
 
 from __future__ import annotations
 
+import html
 from dataclasses import dataclass
 
 from mundial_bot.models.cards_model import CardsModel
@@ -119,10 +120,13 @@ def build_match_report(
 
 def format_match_report(r: MatchReport) -> str:
     """Formatea un reporte de partido para Telegram (HTML)."""
-    home, away = (r.match.split(" vs ", 1) + [""])[:2]
+    raw_home, raw_away = (r.match.split(" vs ", 1) + [""])[:2]
+    match = html.escape(r.match)
+    home, away = html.escape(raw_home), html.escape(raw_away)
+    winner = html.escape(r.winner.pick)
     lines = [
-        f"⚽ <b>{r.match}</b>",
-        f"   🏆 Gana: <b>{r.winner.pick}</b> ({r.winner.prob:.0%})"
+        f"⚽ <b>{match}</b>",
+        f"   🏆 Gana: <b>{winner}</b> ({r.winner.prob:.0%})"
         f" · justo @ {r.winner.fair_odds:.2f}",
         f"      [{home} {r.home_prob:.0%} · X {r.draw_prob:.0%}"
         f" · {away} {r.away_prob:.0%}]",

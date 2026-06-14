@@ -15,6 +15,7 @@ elevamos `GoalsModelError` para que el pipeline caiga a Elo en ese partido.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 import pandas as pd
@@ -27,7 +28,7 @@ class GoalsModelError(RuntimeError):
     """El modelo de goles no pudo predecir este partido (cae a Elo)."""
 
 
-def _val(x):
+def _val(x: float | Callable[[], float]) -> float:
     """Algunos atributos de la grilla son propiedades; otros, métodos. Normaliza."""
     return x() if callable(x) else float(x)
 
@@ -64,8 +65,13 @@ class GoalsModel:
         self._model: DixonColesGoalModel | None = None
         self._teams: set[str] = set()
 
+    REQUIRED_COLUMNS = {"date", "home_team", "away_team", "home_score", "away_score", "neutral"}
+
     def fit(self, df: pd.DataFrame) -> GoalsModel:
         """Entrena el modelo. df: date, home_team, away_team, home_score, away_score, neutral."""
+        missing = self.REQUIRED_COLUMNS - set(df.columns)
+        if missing:
+            raise GoalsModelError(f"GoalsModel.fit() faltan columnas: {sorted(missing)}")
         weights = dixon_coles_weights(df["date"], xi=self.xi)
         self._model = DixonColesGoalModel(
             df["home_score"].to_numpy(),

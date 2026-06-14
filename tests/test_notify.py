@@ -66,6 +66,14 @@ def test_split_message_parte_textos_largos():
     assert all(len(c) <= 4096 for c in chunks)
 
 
+def test_split_message_corta_linea_unica_gigante():
+    # Una sola línea más larga que el límite debe partirse, sin chunks vacíos.
+    huge_line = "x" * 5000
+    chunks = _split_message(huge_line, limit=4096)
+    assert all(0 < len(c) <= 4096 for c in chunks)   # ninguno vacío ni excedido
+    assert "".join(chunks) == huge_line              # no se pierde contenido
+
+
 async def test_send_telegram_dry_run_no_necesita_token():
     ok = await send_telegram("hola", token="", chat_id="", dry_run=True)
     assert ok is True

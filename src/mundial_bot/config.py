@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     telegram_chat_id: str = Field(default="", alias="TELEGRAM_CHAT_ID")
 
     # --- Gestión de banca ---
-    bankroll_usd: float = Field(default=100.0, alias="BANKROLL_USD", ge=0)
+    bankroll_usd: float = Field(default=100.0, alias="BANKROLL_USD", gt=0)
     kelly_fraction: float = Field(default=0.25, alias="KELLY_FRACTION", gt=0, le=1)
     max_stake_pct: float = Field(default=0.03, alias="MAX_STAKE_PCT", gt=0, le=1)
     max_total_exposure_pct: float = Field(

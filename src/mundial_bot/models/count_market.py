@@ -18,6 +18,9 @@ CARD_LINES = (2.5, 3.5, 4.5, 5.5, 6.5)
 
 def over_under(expected: float, line: float) -> tuple[float, float]:
     """Probabilidad de (over, under) de una línea, asumiendo Poisson(expected)."""
+    # poisson.cdf exige mu > 0; sin eventos esperados, el over es imposible.
+    if expected <= 0:
+        return 0.0, 1.0
     k = math.floor(line)
     p_over = float(1.0 - poisson.cdf(k, expected))
     return p_over, 1.0 - p_over

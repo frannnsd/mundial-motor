@@ -9,6 +9,7 @@ real, los partidos salen del feed de The Odds API (que ya trae fixtures + cuotas
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -31,6 +32,8 @@ from mundial_bot.value.devig import devig
 from mundial_bot.value.ev import Selection, ValuePick, evaluate
 from mundial_bot.value.odds import MatchOdds, OddsClient, best_1x2, best_book_for
 from mundial_bot.value.team_aliases import normalize_team
+
+logger = logging.getLogger(__name__)
 
 # Los partidos del Mundial se juegan en cancha neutral.
 WORLD_CUP_NEUTRAL = True
@@ -64,8 +67,9 @@ def build_models(*, since: str = "1994-01-01", fit_goals: bool = True) -> Models
         recent = df[df["date"] >= pd.Timestamp("2018-01-01")].reset_index(drop=True)
         try:
             goals = GoalsModel().fit(recent)
-        except Exception:
-            goals = None  # si falla, seguimos solo con Elo
+        except Exception as exc:  # noqa: BLE001 — fallback a Elo, pero logueamos
+            logger.warning("GoalsModel.fit falló; sigo solo con Elo: %s", exc)
+            goals = None
     return Models(elo=elo, goals=goals)
 
 
@@ -138,8 +142,9 @@ def run_pipeline(
     for m in matches:
         try:
             value_picks.extend(value_picks_for_match(m, models, min_edge=settings.min_edge))
-        except Exception:
-            continue  # equipo sin rating, mercado raro, etc. → se saltea ese partido
+        except Exception as exc:  # noqa: BLE001 — equipo sin rating, mercado raro, etc.
+            logger.debug("Salteo partido %s: %s", getattr(m, "match", "?"), exc)
+            continue
     value_picks.sort(key=lambda p: p.edge, reverse=True)
 
     cfg = StakeConfig(
@@ -177,8 +182,7 @@ def _record_to_ledger(
     date_str: str,
 ) -> None:
     """Persiste los picks sugeridos en el ledger (status pending)."""
-    lg = Ledger()
-    try:
+    with Ledger() as lg:
         for s in staked:
             sel = s.pick.selection
             lg.record(
@@ -194,5 +198,3 @@ def _record_to_ledger(
                 odds=par.combined_odds, model_prob=par.combined_prob,
                 edge=par.combined_ev, stake=stake, kind="parlay",
             )
-    finally:
-        lg.close()

@@ -127,12 +127,20 @@ pytest
 
 ```powershell
 python scripts/fetch_statsbomb.py        # baja datos de córners/tarjetas (1 vez, ~min)
+python scripts/test_telegram.py          # 🔌 prueba la conexión con Telegram (token + chat_id)
 python scripts/predict_matches.py        # ⭐ reporte multi-mercado por partido (Telegram)
 python scripts/predict_matches.py --schedule  # envía las predicciones a diario
 python scripts/run_daily.py --sample     # cartilla de value betting (singles + combinadas)
 python scripts/backtest_elo.py           # backtest del modelo de goles/ganador
-pytest -m "not network"                  # 76 tests
+pytest -m "not network"                  # 79 tests
 ```
+
+### Conectar Telegram (3 pasos)
+
+1. [@BotFather](https://t.me/BotFather) → `/newbot` → copiá el **token** → `TELEGRAM_BOT_TOKEN` en `.env`.
+2. [@userinfobot](https://t.me/userinfobot) → copiá tu **id** numérico → `TELEGRAM_CHAT_ID` en `.env`.
+   Abrí un chat con tu bot nuevo y mandale `/start` (si no, no te puede escribir).
+3. Corré `python scripts/test_telegram.py` → si todo está bien, te llega un mensaje de prueba. ✅
 
 ### El predictor multi-mercado (lo principal)
 

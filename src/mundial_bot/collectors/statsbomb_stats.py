@@ -16,6 +16,7 @@ resultado agregado a CSV: se baja una sola vez.
 
 from __future__ import annotations
 
+import logging
 import warnings
 from pathlib import Path
 
@@ -23,7 +24,7 @@ import pandas as pd
 
 from mundial_bot.config import CACHE_DIR
 
-warnings.filterwarnings("ignore")
+logger = logging.getLogger(__name__)
 
 # (competition_id, season_id) de torneos masculinos internacionales modernos.
 MENS_TOURNAMENTS: list[tuple[int, int]] = [
@@ -71,32 +72,37 @@ def collect_events(tournaments: list[tuple[int, int]] | None = None) -> pd.DataF
     tournaments = tournaments or MENS_TOURNAMENTS
     rows: list[dict] = []
 
-    for comp_id, season_id in tournaments:
-        try:
-            matches = sb.matches(competition_id=comp_id, season_id=season_id)
-        except Exception:
-            continue
-        for mt in matches.itertuples(index=False):
+    # Scope la supresión de warnings ruidosos de statsbombpy a este bloque.
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", module="statsbombpy")
+        for comp_id, season_id in tournaments:
             try:
-                events = sb.events(int(mt.match_id))
-            except Exception:
+                matches = sb.matches(competition_id=comp_id, season_id=season_id)
+            except Exception as exc:  # noqa: BLE001 — red/API inestable; logueamos y seguimos
+                logger.warning("Salteo torneo (%d, %d): %s", comp_id, season_id, exc)
                 continue
-            counts = _counts_by_team(events)
-            home, away = mt.home_team, mt.away_team
-            referee = getattr(mt, "referee", None)
-            for team, opp in ((home, away), (away, home)):
-                c = counts.get(team, {})
-                opp_c = counts.get(opp, {})
-                rows.append({
-                    "match_id": int(mt.match_id),
-                    "team": team,
-                    "opponent": opp,
-                    "corners_for": c.get("corners", 0),
-                    "corners_against": opp_c.get("corners", 0),
-                    "cards": c.get("cards", 0),
-                    "fouls": c.get("fouls", 0),
-                    "referee": referee,
-                })
+            for mt in matches.itertuples(index=False):
+                try:
+                    events = sb.events(int(mt.match_id))
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("Salteo partido %s: %s", mt.match_id, exc)
+                    continue
+                counts = _counts_by_team(events)
+                home, away = mt.home_team, mt.away_team
+                referee = getattr(mt, "referee", None)
+                for team, opp in ((home, away), (away, home)):
+                    c = counts.get(team, {})
+                    opp_c = counts.get(opp, {})
+                    rows.append({
+                        "match_id": int(mt.match_id),
+                        "team": team,
+                        "opponent": opp,
+                        "corners_for": c.get("corners", 0),
+                        "corners_against": opp_c.get("corners", 0),
+                        "cards": c.get("cards", 0),
+                        "fouls": c.get("fouls", 0),
+                        "referee": referee,
+                    })
     return pd.DataFrame(rows)
 
 

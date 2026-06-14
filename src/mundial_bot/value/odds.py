@@ -43,21 +43,28 @@ def parse_events(raw_events: list[dict]) -> list[MatchOdds]:
     """Parsea la respuesta cruda de The Odds API a una lista de MatchOdds (puro)."""
     matches: list[MatchOdds] = []
     for ev in raw_events:
+        # Evento malformado (sin equipos) → se saltea en vez de tumbar todo.
+        home_team = ev.get("home_team")
+        away_team = ev.get("away_team")
+        if not home_team or not away_team:
+            continue
         books: dict[str, dict[str, float]] = {}
         for bk in ev.get("bookmakers", []):
             for market in bk.get("markets", []):
                 if market.get("key") != "h2h":
                     continue
                 outcomes = {
-                    o["name"]: float(o["price"]) for o in market.get("outcomes", [])
+                    o["name"]: float(o["price"])
+                    for o in market.get("outcomes", [])
+                    if o.get("name") and o.get("price")
                 }
                 if outcomes:
                     books[bk.get("title", bk.get("key", "?"))] = outcomes
         matches.append(
             MatchOdds(
                 event_id=ev.get("id", ""),
-                home_team=ev["home_team"],
-                away_team=ev["away_team"],
+                home_team=home_team,
+                away_team=away_team,
                 commence_time=ev.get("commence_time", ""),
                 books_h2h=books,
             )
