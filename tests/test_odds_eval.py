@@ -1,9 +1,9 @@
-"""Tests del lector de cuotas + evaluador (cuotas buenas + combinadas)."""
+"""Tests del lector de cuotas + escáner probabilístico (sin value)."""
 
 from __future__ import annotations
 
 from mundial_bot.collectors.odds_af import parse_odds
-from mundial_bot.evaluator import GoodBet, build_parlays, evaluate_match
+from mundial_bot.evaluator import Play, build_combos, scan_match
 from mundial_bot.report import MarketPick, MatchReport
 
 ODDS_RAW = {
@@ -33,13 +33,6 @@ ODDS_RAW = {
 }
 
 
-def test_parse_odds_toma_la_mejor_cuota():
-    odds = parse_odds(ODDS_RAW)
-    assert "Match Winner" in odds
-    # Away: Bet365 2.40 vs Pinnacle 2.65 → mejor 2.65.
-    assert odds["Match Winner"].best["Away"] == (2.65, "Pinnacle")
-
-
 def _report(match: str, away_prob: float) -> MatchReport:
     return MatchReport(
         match=match, home_prob=0.30, draw_prob=0.25, away_prob=away_prob,
@@ -49,36 +42,62 @@ def _report(match: str, away_prob: float) -> MatchReport:
     )
 
 
-def test_evaluate_match_encuentra_cuotas_buenas():
+def test_parse_odds_toma_la_mejor_cuota():
     odds = parse_odds(ODDS_RAW)
-    bets = evaluate_match(_report("A vs B", away_prob=0.45), odds, min_ev=0.0)
-
-    # Visitante: 0.45 * 2.65 - 1 = +0.19 → buena. Over 2.5: 0.55*1.95-1 = +0.07 → buena.
-    markets = {b.market for b in bets}
-    assert "Ganador" in markets
-    assert "Goles" in markets
-    winner = next(b for b in bets if b.market == "Ganador")
-    assert winner.ev > 0.15
-    assert winner.book == "Pinnacle"
+    # Away: Bet365 2.40 vs Pinnacle 2.65 → mejor 2.65.
+    assert odds["Match Winner"].best["Away"] == (2.65, "Pinnacle")
 
 
-def test_evaluate_match_descarta_cuotas_malas():
+def test_scan_match_adjunta_la_cuota_y_no_descarta():
     odds = parse_odds(ODDS_RAW)
-    # Visitante con prob baja (0.30): 0.30*2.65-1 = -0.20 → no es buena.
-    bets = evaluate_match(_report("A vs B", away_prob=0.30), odds, min_ev=0.0)
-    assert all(b.market != "Ganador" for b in bets)
+    plays = scan_match(_report("A vs B", away_prob=0.45), odds)
+    by_market = {p.market: p for p in plays}
+
+    winner = by_market["Ganador"]
+    assert winner.pick == "Gana visitante"
+    assert winner.odd == 2.65 and winner.book == "Pinnacle"
+    assert winner.prob == 0.45
+
+    goles = by_market["Goles"]
+    assert goles.odd == 1.95
+    assert goles.implied == 1.0 / 1.95
 
 
-def test_build_parlays_combina_partidos_distintos():
-    b1 = GoodBet("A vs B", "Ganador", "Gana B", 0.55, 2.0, "x")
-    b2 = GoodBet("C vs D", "Ganador", "Gana C", 0.55, 2.0, "y")
-    parlays = build_parlays([b1, b2], sizes=(2,))
-    assert len(parlays) == 1
-    assert parlays[0].combined_odds == 4.0
-    assert parlays[0].ev > 0  # 0.3025*4 - 1 = +0.21
+def test_scan_match_muestra_aunque_la_cuota_pague_poco():
+    # Sin "value": la jugada poco probable IGUAL se muestra (Franco decide).
+    odds = parse_odds(ODDS_RAW)
+    plays = scan_match(_report("A vs B", away_prob=0.30), odds)
+    winner = next(p for p in plays if p.market == "Ganador")
+    assert winner.odd == 2.65          # se muestra igual
+    assert winner.prob == 0.30
 
 
-def test_build_parlays_no_combina_mismo_partido():
-    b1 = GoodBet("A vs B", "Ganador", "Gana B", 0.6, 2.0, "x")
-    b2 = GoodBet("A vs B", "Goles", "Over 2.5", 0.6, 2.0, "y")
-    assert build_parlays([b1, b2], sizes=(2,)) == []
+def test_scan_match_sin_cuota_listada_usa_cuota_del_modelo():
+    plays = scan_match(_report("A vs B", away_prob=0.50), odds={})
+    winner = next(p for p in plays if p.market == "Ganador")
+    assert winner.odd is None
+    assert winner.model_odds == 2.0    # 1 / 0.50
+
+
+def test_build_combos_mas_probables_y_de_mayor_pago():
+    p1 = Play("A vs B", "Ganador", "Gana B", 0.60, 2.0, "x")
+    p2 = Play("C vs D", "Ganador", "Gana C", 0.55, 3.0, "y")
+    likely, payout = build_combos([p1, p2], sizes=(2,))
+    assert len(likely) == 1
+    assert likely[0].combined_odds == 6.0
+    assert likely[0].combined_prob == 0.60 * 0.55
+    assert payout[0].combined_odds == 6.0
+
+
+def test_build_combos_no_combina_mismo_partido():
+    p1 = Play("A vs B", "Ganador", "Gana B", 0.6, 2.0, "x")
+    p2 = Play("A vs B", "Goles", "Over 2.5", 0.6, 2.0, "y")
+    likely, payout = build_combos([p1, p2], sizes=(2,))
+    assert likely == [] and payout == []
+
+
+def test_build_combos_ignora_patas_sin_cuota():
+    p1 = Play("A vs B", "Ganador", "Gana B", 0.6, 2.0, "x")
+    p2 = Play("C vs D", "Córners", "Over 8.5", 0.7, None, "")  # sin cuota
+    likely, _ = build_combos([p1, p2], sizes=(2,))
+    assert likely == []

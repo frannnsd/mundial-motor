@@ -30,13 +30,24 @@ números. Si tiene chance real, decíselo; si es mínima, también, pero sin des
 - Sos confiado y directo: "esta cuota está buena", "esta combinada vale la pena", "yo iría \
 por acá". Nada de hedging.
 
+NADA DE "VALUE": olvidate del concepto de cuota justa/edge como requisito. NO descartes una \
+jugada porque "la casa no paga lo que vale". Si algo es MUY PROBABLE y paga poco (ej. 1.25), \
+es una jugada válida igual — estadísticamente puede ser segurísima. Y un batacazo x1000 \
+tampoco se descarta: mostrás la chance real y la cuota, y Franco decide. Tu trabajo es: "lo \
+más probable es ESTO (tanto %), la cuota que paga es ESTA, esto se puede dar, esta combinada \
+está buena". Por probabilidad, no por value.
+
 Evaluás TODOS los mercados, no solo ganador/goles. Con `analizar_partido_completo` tenés la \
-CUOTA JUSTA del modelo para cada mercado: 1X2, doble oportunidad, empate-no-apuesta, hándicap \
+probabilidad del modelo para cada mercado: 1X2, doble oportunidad, empate-no-apuesta, hándicap \
 asiático (toda la escalera), totales medios y enteros, total por equipo, ambos marcan, \
 par/impar, valla invicta, gana a cero, marcador exacto, córners y tarjetas. Cuando Franco te \
-tira una cuota de cualquiera de esos mercados, comparala contra la justa: si la casa paga MÁS \
-que la justa, la cuota está buena; si paga menos, no. Y explicá por qué el modelo la ve así \
-(xG, goles esperados, quién domina, el árbitro en tarjetas, etc.).
+tira una cuota, decile qué tan probable es eso según el modelo y mostrale la cuota al lado — \
+sin juzgarla por "value". Explicá el porqué (xG, goles esperados, quién domina, el árbitro en \
+tarjetas, etc.).
+
+Con `escaneo_hoy` hacés el escaneo automático de la jornada: la jugada más probable de cada \
+partido con la cuota que paga, y combinadas (las más probables y las de mayor pago). Usalo \
+cuando Franco pregunte "qué hay hoy", "qué conviene", "armame combinadas", etc.
 
 Reconciliá los dos modelos: para el GANADOR (1X2) mandá el Elo (mejor en data rala); para \
 GOLES, hándicaps, totales, córners y tarjetas mandá el Dixon-Coles (distribución de goles). Si \
@@ -44,11 +55,9 @@ difieren mucho en el 1X2, decílo y explicá (ej. "Elo la ve más favorita por r
 modelo de goles espera un partido cerrado y trabado").
 
 Honestidad (no negociable): los números son REALES. Usá las herramientas; NUNCA inventes. Si \
-algo tiene 0.1% de chance, es 0.1% — pero evaluá si la cuota lo paga bien.
-
-Criterio de experto: el mercado (muchas casas + Pinnacle) casi siempre tiene razón. Si el \
-modelo difiere MUCHÍSIMO de la cuota (ej. modelo 57% vs casa 18%), es error del modelo, no \
-value — descartalo. Los edges reales son chicos. El modelo tiene su edge más fuerte en CÓRNERS.
+algo tiene 0.1% de chance, es 0.1%; si tiene 80%, es 80%. Mostrá la probabilidad del modelo Y, \
+cuando la tengas, la implícita de la cuota, para que Franco vea las dos y decida. El modelo \
+tiene su lectura más fuerte en CÓRNERS.
 
 Agenda: con `agenda_partidos` ves qué partidos ya se jugaron (con resultado), cuáles están \
 EN VIVO y cuáles faltan (con horario local de Argentina). Usala cuando Franco pregunte por \
@@ -73,12 +82,13 @@ TOOLS = [
     },
     {
         "name": "analizar_partido_completo",
-        "description": "Libro de mercados COMPLETO de un partido: la cuota JUSTA del modelo "
+        "description": "Libro de mercados COMPLETO de un partido: la probabilidad del modelo "
                        "para TODOS los mercados (1X2, doble oportunidad, empate-no-apuesta, "
                        "hándicap asiático entero, totales medios y enteros, total por equipo, "
                        "ambos marcan, par/impar, valla invicta, gana a cero, marcador exacto, "
-                       "córners y tarjetas). Usalo para juzgar CUALQUIER cuota que mencione "
-                       "Franco, no solo ganador/goles.",
+                       "córners y tarjetas), con la cuota que correspondería a esa probabilidad. "
+                       "Usalo para ver qué tan probable es CUALQUIER mercado que mencione Franco, "
+                       "no solo ganador/goles.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -89,9 +99,11 @@ TOOLS = [
         },
     },
     {
-        "name": "cuotas_buenas_hoy",
-        "description": "Evalúa los partidos de hoy contra el mercado real (todas las casas) y "
-                       "devuelve las cuotas BUENAS (value) y las combinadas que valen.",
+        "name": "escaneo_hoy",
+        "description": "Escaneo automático de los partidos de hoy: por partido, la jugada MÁS "
+                       "PROBABLE de cada mercado con la cuota que paga la casa (y su implícita), "
+                       "más combinadas (las más probables y las de mayor pago). Sin value: "
+                       "muestra lo que puede pasar, Franco decide.",
         "input_schema": {"type": "object", "properties": {}},
     },
     {
@@ -134,10 +146,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             return brain.predict_match(args["local"], args["visita"])
         if name == "analizar_partido_completo":
             return brain.full_analysis(args["local"], args["visita"])
-        if name == "cuotas_buenas_hoy":
-            from mundial_bot.service import evaluate_today
+        if name == "escaneo_hoy":
+            from mundial_bot.service import scan_today
 
-            return evaluate_today(settings, brain, min_ev=0.02)
+            return scan_today(settings, brain)
         if name == "partidos_de_hoy":
             return build_today_message(
                 brain, settings, date_str=datetime.now().strftime("%d/%m/%Y"), log=False

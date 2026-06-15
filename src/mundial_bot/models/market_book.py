@@ -278,5 +278,5 @@ def format_market_book(book: MarketBook, *, min_prob: float = 0.0) -> str:
         lines.append(f"\n[{market}]")
         for s in shown:
             extra = f" · push {s.push:.0%}" if s.push > 0.01 else ""
-            lines.append(f"  {s.pick}: {s.prob:.0%} (justa {s.fair:.2f}){extra}")
+            lines.append(f"  {s.pick}: {s.prob:.0%} (cuota s/modelo {s.fair:.2f}){extra}")
     return "\n".join(lines)

@@ -47,14 +47,14 @@ def daily_cycle(settings: Settings) -> tuple[str, BotBrain]:
     return balance + "\n\n" + today, brain
 
 
-def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) -> str:
-    """Evalúa todos los partidos de hoy contra el mercado real → cuotas buenas + combinadas.
+def scan_today(settings: Settings, brain: BotBrain) -> str:
+    """Escaneo del día: por partido, lo MÁS PROBABLE + la cuota que paga + combinadas.
 
-    Junta las casas de API-Football con las de odds-api.io (si hay key) y se queda con la
-    cuota más alta de cada resultado: lee desde la primera hasta la última cuota.
+    Sin value: no exige edge. Junta las casas de API-Football con las de odds-api.io
+    (si hay key) y se queda con la cuota más alta de cada resultado.
     """
     from mundial_bot.collectors.odds_af import fetch_odds, merge_odds
-    from mundial_bot.evaluator import build_parlays, evaluate_match, format_evaluation
+    from mundial_bot.evaluator import format_scan, scan_match
 
     key = settings.api_football_key
     fixtures = fetch_today_fixtures(settings)
@@ -69,7 +69,7 @@ def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) 
         except Exception as exc:  # noqa: BLE001
             logger.warning("odds-api.io sin eventos: %s", exc)
 
-    all_bets = []
+    all_plays = []
     for f in fixtures:
         if not f.fixture_id:
             continue
@@ -79,11 +79,11 @@ def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) 
             corners=brain.corners, cards=brain.cards,
             referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
         )
+        odds: dict = {}
         try:
             odds = fetch_odds(key, f.fixture_id)
         except Exception as exc:  # noqa: BLE001
             logger.warning("Sin cuotas para %s: %s", f.match, exc)
-            continue
         if extra_events is not None:
             try:
                 from mundial_bot.collectors.odds_oddspapi import fetch_match_odds
@@ -92,13 +92,12 @@ def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) 
                     settings.oddspapi_key, f.home_team, f.away_team, events=extra_events
                 )
                 if extra:
-                    odds = merge_odds(odds, extra)
+                    odds = merge_odds(odds, extra) if odds else extra
             except Exception as exc:  # noqa: BLE001
                 logger.warning("odds-api.io sin cuotas para %s: %s", f.match, exc)
-        all_bets.extend(evaluate_match(report, odds, min_ev=min_ev))
+        all_plays.extend(scan_match(report, odds))
 
-    parlays = build_parlays(all_bets, min_ev=min_ev)
-    return format_evaluation(all_bets, parlays, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
+    return format_scan(all_plays, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
 
 
 def get_schedule(settings: Settings, *, days_back: int = 1, days_ahead: int = 4):
