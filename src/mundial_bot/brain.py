@@ -42,6 +42,7 @@ HELP = (
     "• <b>Argentina vs México</b>\n"
     "• <b>Brasil - Croacia</b>\n"
     "• <b>/hoy</b> → predicciones de todos los partidos de hoy\n"
+    "• <b>/agenda</b> → qué se jugó, qué hay en vivo y qué falta (horario AR) 📅\n"
     "• <b>/balance</b> → cuánto vengo acertando 📊\n"
     "• <b>/apuesta 5 2.10 Argentina gana</b> → registrá una apuesta tuya\n"
     "• <b>/roi</b> → tu ganancia y ROI real 💰\n\n"
@@ -104,6 +105,26 @@ class BotBrain:
             match_name=match_name or f"{home} vs {away}",
         )
         return format_match_report(report)
+
+    def full_analysis(
+        self, home: str, away: str, *, referee: str | None = None,
+        knockout: bool = False, match_name: str | None = None,
+    ) -> str:
+        """Libro de mercados COMPLETO: cuota justa de TODOS los mercados del partido.
+
+        Es el cerebro matemático para que Claude juzgue cualquier cuota que vea Franco
+        (1X2, hándicap asiático, totales, por equipo, ambos marcan, córners, tarjetas…).
+        """
+        from mundial_bot.models.market_book import build_market_book, format_market_book
+
+        book = build_market_book(
+            normalize_team(home), normalize_team(away),
+            elo=self.models.elo, goals=self.models.goals,
+            corners=self.corners, cards=self.cards,
+            referee=referee, knockout=knockout, neutral=True,
+            match_name=match_name or f"{home} vs {away}",
+        )
+        return format_market_book(book)
 
     def handle_text(self, text: str) -> str:
         """Responde a un mensaje de texto libre."""

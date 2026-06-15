@@ -9,7 +9,8 @@ Centraliza la lógica que corre sola en producción:
 from __future__ import annotations
 
 import logging
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
@@ -47,12 +48,27 @@ def daily_cycle(settings: Settings) -> tuple[str, BotBrain]:
 
 
 def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) -> str:
-    """Evalúa todos los partidos de hoy contra el mercado real → cuotas buenas + combinadas."""
-    from mundial_bot.collectors.odds_af import fetch_odds
+    """Evalúa todos los partidos de hoy contra el mercado real → cuotas buenas + combinadas.
+
+    Junta las casas de API-Football con las de odds-api.io (si hay key) y se queda con la
+    cuota más alta de cada resultado: lee desde la primera hasta la última cuota.
+    """
+    from mundial_bot.collectors.odds_af import fetch_odds, merge_odds
     from mundial_bot.evaluator import build_parlays, evaluate_match, format_evaluation
 
     key = settings.api_football_key
     fixtures = fetch_today_fixtures(settings)
+
+    # Cuotas extra de odds-api.io (una sola bajada de eventos del Mundial, reutilizada).
+    extra_events = None
+    if settings.has_oddspapi:
+        try:
+            from mundial_bot.collectors.odds_oddspapi import fetch_wc_events
+
+            extra_events = fetch_wc_events(settings.oddspapi_key)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("odds-api.io sin eventos: %s", exc)
+
     all_bets = []
     for f in fixtures:
         if not f.fixture_id:
@@ -68,10 +84,59 @@ def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) 
         except Exception as exc:  # noqa: BLE001
             logger.warning("Sin cuotas para %s: %s", f.match, exc)
             continue
+        if extra_events is not None:
+            try:
+                from mundial_bot.collectors.odds_oddspapi import fetch_match_odds
+
+                extra = fetch_match_odds(
+                    settings.oddspapi_key, f.home_team, f.away_team, events=extra_events
+                )
+                if extra:
+                    odds = merge_odds(odds, extra)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("odds-api.io sin cuotas para %s: %s", f.match, exc)
         all_bets.extend(evaluate_match(report, odds, min_ev=min_ev))
 
     parlays = build_parlays(all_bets, min_ev=min_ev)
     return format_evaluation(all_bets, parlays, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
+
+
+def get_schedule(settings: Settings, *, days_back: int = 1, days_ahead: int = 4):
+    """Trae los partidos del Mundial en una ventana (jugados + en vivo + por jugar)."""
+    from mundial_bot.collectors.fixtures import FixturesClient
+
+    today = datetime.now(UTC).date()
+    return FixturesClient(settings.api_football_key).get_range(
+        date_from=(today - timedelta(days=days_back)).isoformat(),
+        date_to=(today + timedelta(days=days_ahead)).isoformat(),
+    )
+
+
+def format_schedule(fixtures, *, tz_name: str, date_str: str) -> str:
+    """Agenda: en vivo / por jugar (con horario local) / jugados (con resultado)."""
+    tz = ZoneInfo(tz_name)
+
+    def local_time(f) -> str:
+        try:
+            return pd.to_datetime(f.date, utc=True).tz_convert(tz).strftime("%d/%m %H:%M")
+        except Exception:  # noqa: BLE001
+            return "?"
+
+    live = [f for f in fixtures if f.live]
+    upcoming = sorted((f for f in fixtures if f.upcoming), key=lambda f: f.date)
+    played = sorted((f for f in fixtures if f.played), key=lambda f: f.date)
+
+    lines = [f"📅 <b>AGENDA MUNDIAL — {date_str}</b>"]
+    if live:
+        lines.append("\n🔴 <b>EN VIVO</b>")
+        lines += [f"   {f.match} ({f.home_goals}-{f.away_goals})" for f in live]
+    if upcoming:
+        lines.append("\n⏳ <b>POR JUGAR</b>")
+        lines += [f"   {local_time(f)} · {f.match}" for f in upcoming]
+    if played:
+        lines.append("\n✅ <b>JUGADOS</b>")
+        lines += [f"   {f.match} <b>{f.home_goals}-{f.away_goals}</b>" for f in played[-12:]]
+    return "\n".join(lines)
 
 
 def _minutes_to_kickoff(date_str: str) -> float | None:

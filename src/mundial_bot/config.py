@@ -71,6 +71,10 @@ class Settings(BaseSettings):
         return bool(self.news_api_key)
 
     @property
+    def has_oddspapi(self) -> bool:
+        return bool(self.oddspapi_key)
+
+    @property
     def has_telegram(self) -> bool:
         return bool(self.telegram_bot_token and self.telegram_chat_id)
 

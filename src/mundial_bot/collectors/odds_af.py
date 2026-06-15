@@ -68,3 +68,20 @@ def num_bookmakers(raw: dict) -> int:
     """Cuántas casas devolvió el partido (para saber la cobertura)."""
     resp = raw.get("response", [])
     return len(resp[0].get("bookmakers", [])) if resp else 0
+
+
+def merge_odds(*sources: dict[str, MarketOdds]) -> dict[str, MarketOdds]:
+    """Une varias fuentes de cuotas quedándose con la MEJOR (más alta) por resultado.
+
+    Así sumamos casas de API-Football + odds-api.io y "leemos desde la primera hasta la
+    última cuota": para cada mercado/resultado queda la que más paga.
+    """
+    out: dict[str, MarketOdds] = {}
+    for src in sources:
+        for market, mo in src.items():
+            dest = out.setdefault(market, MarketOdds(market=market))
+            for outcome, (odd, book) in mo.best.items():
+                cur = dest.best.get(outcome)
+                if cur is None or odd > cur[0]:
+                    dest.best[outcome] = (odd, book)
+    return out

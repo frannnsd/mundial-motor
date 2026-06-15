@@ -35,6 +35,21 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
         date_str = datetime.now().strftime("%d/%m/%Y")
         await message.answer(build_today_message(holder.brain, settings, date_str=date_str))
 
+    @dp.message(Command("agenda", "fixture", "partidos"))
+    async def _agenda(message: Message) -> None:
+        from mundial_bot.service import format_schedule, get_schedule
+
+        try:
+            fixtures = await asyncio.to_thread(get_schedule, settings)
+            text = format_schedule(
+                fixtures,
+                tz_name=settings.timezone,
+                date_str=datetime.now().strftime("%d/%m/%Y"),
+            )
+        except Exception as exc:  # noqa: BLE001
+            text = f"No pude traer la agenda: {html.escape(str(exc))}"
+        await message.answer(text)
+
     @dp.message(Command("balance"))
     async def _balance(message: Message) -> None:
         from mundial_bot.tracking import PredictionStore, format_balance, grade_pending

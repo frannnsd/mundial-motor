@@ -18,6 +18,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+import numpy as np
 import pandas as pd
 from penaltyblog.models import DixonColesGoalModel, dixon_coles_weights
 
@@ -119,6 +120,32 @@ class GoalsModel:
                 home_xg=_val(grid.home_goal_expectation),
                 away_xg=_val(grid.away_goal_expectation),
                 lines=lines,
+            )
+        except (ValueError, KeyError) as e:
+            raise GoalsModelError(f"Dixon-Coles falló para {home} vs {away}: {e}") from e
+
+    def score_matrix(
+        self, home: str, away: str, *, neutral: bool = False
+    ) -> tuple[np.ndarray, float, float]:
+        """Matriz de marcadores P[i,j]=P(local i, visita j) + xG local/visita.
+
+        De acá se derivan TODOS los mercados de goles (1X2, asiáticos, totales,
+        ambos marcan, hándicaps, marcadores exactos…). Eleva GoalsModelError si no puede.
+        """
+        if self._model is None:
+            raise GoalsModelError("El modelo de goles no fue entrenado.")
+        if not self.can_predict(home, away):
+            raise GoalsModelError(f"Equipo sin datos de entrenamiento: {home} o {away}.")
+        try:
+            grid = self._model.predict(home, away, neutral_venue=neutral)
+            matrix = np.asarray(grid.grid, dtype=float)
+            total = matrix.sum()
+            if total <= 0:
+                raise GoalsModelError(f"Matriz inválida para {home} vs {away}.")
+            return (
+                matrix / total,
+                _val(grid.home_goal_expectation),
+                _val(grid.away_goal_expectation),
             )
         except (ValueError, KeyError) as e:
             raise GoalsModelError(f"Dixon-Coles falló para {home} vs {away}: {e}") from e

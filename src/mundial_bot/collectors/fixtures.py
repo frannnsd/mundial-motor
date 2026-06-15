@@ -20,6 +20,10 @@ DEFAULT_SEASON = 2026
 TIMEOUT_S = 20
 
 
+_FINISHED = {"FT", "AET", "PEN"}
+_LIVE = {"1H", "HT", "2H", "ET", "BT", "P", "SUSP", "INT", "LIVE"}
+
+
 @dataclass(frozen=True)
 class Fixture:
     home_team: str
@@ -28,6 +32,9 @@ class Fixture:
     referee: str | None = None
     round: str = ""
     fixture_id: int | None = None
+    status: str = ""              # NS, 1H, HT, FT, etc. (API-Football)
+    home_goals: int | None = None
+    away_goals: int | None = None
 
     @property
     def match(self) -> str:
@@ -38,6 +45,18 @@ class Fixture:
         """True si es eliminación directa (octavos en adelante)."""
         r = self.round.lower()
         return bool(r) and "group" not in r and "qualif" not in r
+
+    @property
+    def played(self) -> bool:
+        return self.status in _FINISHED
+
+    @property
+    def live(self) -> bool:
+        return self.status in _LIVE
+
+    @property
+    def upcoming(self) -> bool:
+        return not self.played and not self.live
 
 
 def parse_fixtures(raw: dict) -> list[Fixture]:
@@ -51,6 +70,7 @@ def parse_fixtures(raw: dict) -> list[Fixture]:
             continue
         fixture = item.get("fixture", {})
         league = item.get("league", {})
+        goals = item.get("goals", {}) or {}
         out.append(
             Fixture(
                 home_team=home,
@@ -59,6 +79,9 @@ def parse_fixtures(raw: dict) -> list[Fixture]:
                 referee=fixture.get("referee"),
                 round=league.get("round", "") or "",
                 fixture_id=fixture.get("id"),
+                status=(fixture.get("status") or {}).get("short", "") or "",
+                home_goals=goals.get("home"),
+                away_goals=goals.get("away"),
             )
         )
     return out
@@ -98,3 +121,19 @@ class FixturesClient:
     ) -> list[Fixture]:
         """Trae y parsea los fixtures de una fecha."""
         return parse_fixtures(self.fetch(date=date, season=season))
+
+    def get_range(
+        self, *, date_from: str, date_to: str,
+        season: int = DEFAULT_SEASON, league: int = WORLD_CUP_LEAGUE_ID,
+    ) -> list[Fixture]:
+        """Fixtures entre dos fechas (incluye jugados, en vivo y por jugar)."""
+        if not self.api_key:
+            raise RuntimeError("Falta API_FOOTBALL_KEY.")
+        resp = requests.get(
+            f"{API_FOOTBALL_BASE}/fixtures",
+            params={"league": league, "season": season, "from": date_from, "to": date_to},
+            headers={"x-apisports-key": self.api_key},
+            timeout=TIMEOUT_S,
+        )
+        resp.raise_for_status()
+        return parse_fixtures(resp.json())

@@ -18,6 +18,10 @@ MAX_TOOL_LOOPS = 6
 SYSTEM = """Sos "Apu", analista EXPERTO en apuestas deportivas, especializado en el \
 Mundial 2026. Hablás con Franco por Telegram, en español argentino, directo y canchero.
 
+SOS UN CEREBRO UNIFICADO: tu razonamiento (Claude) + el modelo matemático del bot. El modelo \
+te da los NÚMEROS de todos los mercados; vos los interpretás, los reconciliás y explicás el \
+PORQUÉ de cada chance. Juntos dan el panorama completo del partido.
+
 Reglas de tu personalidad:
 - Franco es el dueño de la plata y el que decide. NO le manejes el dinero, NO le digas \
 cuánto apostar, NO le adviertas que "es arriesgado" ni le des sermones — él ya lo sabe.
@@ -26,13 +30,29 @@ números. Si tiene chance real, decíselo; si es mínima, también, pero sin des
 - Sos confiado y directo: "esta cuota está buena", "esta combinada vale la pena", "yo iría \
 por acá". Nada de hedging.
 
-Honestidad (no negociable): los números son REALES. Usá las herramientas para sacar las \
-probabilidades del modelo y las cuotas; NUNCA inventes. Si algo tiene 0.1% de chance, es 0.1% \
-— pero evaluá si la cuota lo paga bien.
+Evaluás TODOS los mercados, no solo ganador/goles. Con `analizar_partido_completo` tenés la \
+CUOTA JUSTA del modelo para cada mercado: 1X2, doble oportunidad, empate-no-apuesta, hándicap \
+asiático (toda la escalera), totales medios y enteros, total por equipo, ambos marcan, \
+par/impar, valla invicta, gana a cero, marcador exacto, córners y tarjetas. Cuando Franco te \
+tira una cuota de cualquiera de esos mercados, comparala contra la justa: si la casa paga MÁS \
+que la justa, la cuota está buena; si paga menos, no. Y explicá por qué el modelo la ve así \
+(xG, goles esperados, quién domina, el árbitro en tarjetas, etc.).
+
+Reconciliá los dos modelos: para el GANADOR (1X2) mandá el Elo (mejor en data rala); para \
+GOLES, hándicaps, totales, córners y tarjetas mandá el Dixon-Coles (distribución de goles). Si \
+difieren mucho en el 1X2, decílo y explicá (ej. "Elo la ve más favorita por ranking, pero el \
+modelo de goles espera un partido cerrado y trabado").
+
+Honestidad (no negociable): los números son REALES. Usá las herramientas; NUNCA inventes. Si \
+algo tiene 0.1% de chance, es 0.1% — pero evaluá si la cuota lo paga bien.
 
 Criterio de experto: el mercado (muchas casas + Pinnacle) casi siempre tiene razón. Si el \
 modelo difiere MUCHÍSIMO de la cuota (ej. modelo 57% vs casa 18%), es error del modelo, no \
 value — descartalo. Los edges reales son chicos. El modelo tiene su edge más fuerte en CÓRNERS.
+
+Agenda: con `agenda_partidos` ves qué partidos ya se jugaron (con resultado), cuáles están \
+EN VIVO y cuáles faltan (con horario local de Argentina). Usala cuando Franco pregunte por \
+fechas, horarios, "qué se jugó", "qué falta" o "qué hay hoy/mañana".
 
 Usá las herramientas para responder con datos reales. Respondé en TEXTO PLANO (sin HTML), \
 conciso y con onda."""
@@ -42,6 +62,23 @@ TOOLS = [
         "name": "predecir_partido",
         "description": "Predice un partido: ganador, goles, córners, tarjetas y ambos marcan, "
                        "con las probabilidades del modelo.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "local": {"type": "string", "description": "equipo local"},
+                "visita": {"type": "string", "description": "equipo visitante"},
+            },
+            "required": ["local", "visita"],
+        },
+    },
+    {
+        "name": "analizar_partido_completo",
+        "description": "Libro de mercados COMPLETO de un partido: la cuota JUSTA del modelo "
+                       "para TODOS los mercados (1X2, doble oportunidad, empate-no-apuesta, "
+                       "hándicap asiático entero, totales medios y enteros, total por equipo, "
+                       "ambos marcan, par/impar, valla invicta, gana a cero, marcador exacto, "
+                       "córners y tarjetas). Usalo para juzgar CUALQUIER cuota que mencione "
+                       "Franco, no solo ganador/goles.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -72,6 +109,21 @@ TOOLS = [
         "description": "El ROI real de las apuestas que registró Franco.",
         "input_schema": {"type": "object", "properties": {}},
     },
+    {
+        "name": "agenda_partidos",
+        "description": "Agenda del Mundial: qué partidos ya se jugaron (con resultado), cuáles "
+                       "están EN VIVO y cuáles faltan (con horario local de Argentina). Permite "
+                       "elegir cuántos días para atrás y para adelante.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "dias_atras": {"type": "integer", "description": "días hacia atrás (default 1)"},
+                "dias_adelante": {
+                    "type": "integer", "description": "días hacia adelante (default 4)"
+                },
+            },
+        },
+    },
 ]
 
 
@@ -80,6 +132,8 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
     try:
         if name == "predecir_partido":
             return brain.predict_match(args["local"], args["visita"])
+        if name == "analizar_partido_completo":
+            return brain.full_analysis(args["local"], args["visita"])
         if name == "cuotas_buenas_hoy":
             from mundial_bot.service import evaluate_today
 
@@ -100,6 +154,19 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
 
             with BetStore() as store:
                 return format_roi(store.summary())
+        if name == "agenda_partidos":
+            from mundial_bot.service import format_schedule, get_schedule
+
+            fixtures = get_schedule(
+                settings,
+                days_back=int(args.get("dias_atras", 1)),
+                days_ahead=int(args.get("dias_adelante", 4)),
+            )
+            return format_schedule(
+                fixtures,
+                tz_name=settings.timezone,
+                date_str=datetime.now().strftime("%d/%m/%Y"),
+            )
     except Exception as exc:  # noqa: BLE001
         return f"(error ejecutando {name}: {exc})"
     return f"(herramienta desconocida: {name})"
