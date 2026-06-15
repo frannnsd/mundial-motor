@@ -30,6 +30,20 @@ def _brain() -> BotBrain:
     return BotBrain(models=Models(elo=elo, goals=None), corners=None, cards=None)
 
 
+def test_resolve_mapea_espanol_para_las_herramientas_del_agente():
+    """Los tools del agente reciben texto libre: 'Brasil' debe resolver a 'Brazil'."""
+    b = _brain()
+    assert b.resolve("Brasil") == "Brazil"           # español
+    assert b.resolve("Argentina") == "Argentina"     # ya canónico
+    assert b.resolve("xyz123") == "xyz123"            # desconocido → se devuelve igual
+
+
+def test_predict_match_resuelve_nombres_en_espanol():
+    # Antes daba un 50/50 inútil con 'Brasil'; ahora lo resuelve a Brazil.
+    txt = _brain().predict_match("Argentina", "Brasil")
+    assert "Brazil" in txt and "Brasil" not in txt
+
+
 def test_handle_text_predice_partido_valido():
     txt = _brain().handle_text("Argentina vs Brasil")
     assert "Argentina" in txt

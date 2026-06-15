@@ -93,16 +93,29 @@ class BotBrain:
     def known(self) -> set[str]:
         return set(self.models.elo.ratings)
 
+    def resolve(self, name: str) -> str:
+        """Resuelve un nombre escrito (español, API-Football o con typo) al equipo del
+        modelo. Las herramientas del agente reciben texto libre, así que hay que mapearlo
+        igual que en el chat (si no, el modelo no lo reconoce y da un 50/50 inútil)."""
+        hit = resolve_team(name, self.known)
+        if hit:
+            return hit
+        norm = normalize_team(name)
+        if norm in self.known:
+            return norm
+        return resolve_team(norm, self.known) or norm
+
     def predict_match(
         self, home: str, away: str, *, referee: str | None = None,
         knockout: bool = False, match_name: str | None = None,
     ) -> str:
+        rh, ra = self.resolve(home), self.resolve(away)
         report = build_match_report(
-            normalize_team(home), normalize_team(away),
+            rh, ra,
             elo=self.models.elo, goals=self.models.goals,
             corners=self.corners, cards=self.cards,
             referee=referee, knockout=knockout, neutral=True,
-            match_name=match_name or f"{home} vs {away}",
+            match_name=match_name or f"{rh} vs {ra}",
         )
         return format_match_report(report)
 
@@ -118,12 +131,13 @@ class BotBrain:
         """
         from mundial_bot.models.market_book import build_market_book, format_market_book
 
+        rh, ra = self.resolve(home), self.resolve(away)
         book = build_market_book(
-            normalize_team(home), normalize_team(away),
+            rh, ra,
             elo=self.models.elo, goals=self.models.goals,
             corners=self.corners, cards=self.cards,
             referee=referee, knockout=knockout, neutral=True,
-            match_name=match_name or f"{home} vs {away}",
+            match_name=match_name or f"{rh} vs {ra}",
         )
         return format_market_book(book, odds=odds)
 
