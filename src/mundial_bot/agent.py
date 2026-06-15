@@ -7,6 +7,7 @@ manejarle la plata, pensando fuera de la caja — pero honesto con los números.
 
 from __future__ import annotations
 
+import base64
 from datetime import datetime
 
 from mundial_bot.brain import BotBrain, build_today_message
@@ -74,6 +75,10 @@ aproximación pero aclarás que están correlacionadas (no son del todo independ
 Agenda: con `agenda_partidos` ves qué partidos ya se jugaron (con resultado), cuáles están \
 EN VIVO y cuáles faltan (con horario local de Argentina). Usala cuando Franco pregunte por \
 fechas, horarios, "qué se jugó", "qué falta" o "qué hay hoy/mañana".
+
+Imágenes: Franco te puede mandar una FOTO (ticket de apuesta, cuotas, captura). Leéla, \
+sacá los equipos / mercados / cuotas que veas y evaluala con tus herramientas (resolvé los \
+nombres y traé las probabilidades reales). Si algo de la foto no se entiende, decíselo.
 
 Usá las herramientas para responder con datos reales. Respondé en TEXTO PLANO (sin HTML), \
 conciso y con onda."""
@@ -219,15 +224,40 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
     return f"(herramienta desconocida: {name})"
 
 
+_IMAGE_PROMPT = (
+    "Franco te mandó una imagen (puede ser un ticket de apuesta, una cuota o una captura). "
+    "Leéla: identificá equipos, mercados y cuotas, y evaluámela con tus herramientas "
+    "(resolvé los nombres y sacá las probabilidades reales del modelo). Si no se entiende "
+    "algo, decíselo."
+)
+
+
 def ask_agent(
-    text: str, *, settings: Settings, brain: BotBrain, history: list[dict] | None = None
+    text: str, *, settings: Settings, brain: BotBrain, history: list[dict] | None = None,
+    image: tuple[bytes, str] | None = None,
 ) -> str:
-    """Manda el mensaje a Claude (con herramientas) y devuelve la respuesta en texto plano."""
+    """Manda el mensaje a Claude (con herramientas) y devuelve la respuesta en texto plano.
+
+    `image` opcional = (bytes, media_type) de una foto que mandó Franco (ej. un ticket).
+    """
     import anthropic
 
     client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
     messages: list[dict] = list(history or [])
-    messages.append({"role": "user", "content": text})
+
+    if image is not None:
+        img_bytes, media_type = image
+        b64 = base64.standard_b64encode(img_bytes).decode("ascii")
+        caption = text.strip() or _IMAGE_PROMPT
+        messages.append({"role": "user", "content": [
+            {"type": "image", "source": {
+                "type": "base64", "media_type": media_type, "data": b64}},
+            {"type": "text", "text": caption},
+        ]})
+        hist_text = f"[imagen] {text}".strip()   # en el historial no reenviamos la foto
+    else:
+        messages.append({"role": "user", "content": text})
+        hist_text = text
 
     for _ in range(MAX_TOOL_LOOPS):
         resp = client.messages.create(
@@ -238,9 +268,9 @@ def ask_agent(
             answer = answer or "No te entendí, dale de nuevo."
             if history is not None:
                 # Guardamos SOLO turnos de texto limpios (sin los bloques tool_use/
-                # tool_result internos): si no, podar el historial puede cortar un par
-                # a la mitad y la API tira 400 (tool_result sin su tool_use).
-                history.append({"role": "user", "content": text})
+                # tool_result internos ni la imagen): si no, podar el historial puede
+                # cortar un par a la mitad y la API tira 400 (tool_result sin tool_use).
+                history.append({"role": "user", "content": hist_text or "(imagen)"})
                 history.append({"role": "assistant", "content": answer})
                 if len(history) > MAX_HISTORY_MSGS:
                     del history[: len(history) - MAX_HISTORY_MSGS]

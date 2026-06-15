@@ -23,6 +23,7 @@ class BrainHolder:
 
 def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
     """Registra todos los handlers en el Dispatcher de aiogram."""
+    from aiogram import F
     from aiogram.filters import Command
     from aiogram.types import Message
 
@@ -113,6 +114,29 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
                 for b in opens
             )
         await message.answer(msg)
+
+    @dp.message(F.photo)
+    async def _photo(message: Message) -> None:
+        """Franco manda una foto (ticket de apuesta, cuotas) → Apu la lee y la evalúa."""
+        if not settings.has_anthropic:
+            await message.answer("Para leer imágenes necesito la IA configurada (Anthropic).")
+            return
+        from io import BytesIO
+
+        from mundial_bot.agent import ask_agent
+
+        buf = BytesIO()
+        try:
+            await message.bot.download(message.photo[-1], destination=buf)
+        except Exception as exc:  # noqa: BLE001
+            await message.answer(f"No pude bajar la imagen: {html.escape(str(exc))}")
+            return
+        caption = message.caption or ""
+        reply = await asyncio.to_thread(
+            ask_agent, caption, settings=settings, brain=holder.brain,
+            history=holder.history, image=(buf.getvalue(), "image/jpeg"),
+        )
+        await message.answer(html.escape(reply))
 
     @dp.message()
     async def _any(message: Message) -> None:

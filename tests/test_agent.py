@@ -66,6 +66,22 @@ def test_history_solo_guarda_texto_no_scaffolding_de_tools(monkeypatch):
     assert all(isinstance(m["content"], str) for m in history)
 
 
+def test_ask_agent_con_imagen_manda_bloque_image_y_no_la_guarda(monkeypatch):
+    fake = _FakeClient([_Resp("end_turn", [_Blk("text", text="veo el ticket")])])
+    monkeypatch.setattr(anthropic, "Anthropic", lambda api_key=None: fake)
+    history: list[dict] = []
+    out = agent.ask_agent("mirá", settings=_Settings(), brain=None, history=history,
+                          image=(b"\xff\xd8\xfffake", "image/jpeg"))
+    assert out == "veo el ticket"
+    # La primera consulta a Claude lleva un bloque image.
+    content = fake.messages.seen[0][0]["content"]
+    assert isinstance(content, list) and content[0]["type"] == "image"
+    assert content[0]["source"]["media_type"] == "image/jpeg"
+    # El historial NO guarda la imagen (solo un marcador de texto).
+    assert all(isinstance(m["content"], str) for m in history)
+    assert history[0]["content"].startswith("[imagen]")
+
+
 def test_resolve_or_missing_avisa_cuando_falta_el_equipo():
     from mundial_bot.models.elo_model import EloModel
     from mundial_bot.pipeline import Models

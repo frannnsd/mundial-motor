@@ -45,7 +45,8 @@ HELP = (
     "• <b>/agenda</b> → qué se jugó, qué hay en vivo y qué falta (horario AR) 📅\n"
     "• <b>/balance</b> → cuánto vengo acertando 📊\n"
     "• <b>/apuesta 5 2.10 Argentina gana</b> → registrá una apuesta tuya\n"
-    "• <b>/roi</b> → tu ganancia y ROI real 💰\n\n"
+    "• <b>/roi</b> → tu ganancia y ROI real 💰\n"
+    "• 📸 <b>Mandame una foto</b> de tu ticket o de las cuotas y te la leo/evalúo\n\n"
     "Te respondo con ganador, goles, córners y tarjetas más probables."
 )
 
