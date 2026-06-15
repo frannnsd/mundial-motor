@@ -14,6 +14,7 @@ from mundial_bot.config import Settings
 
 MODEL = "claude-sonnet-4-6"
 MAX_TOOL_LOOPS = 6
+MAX_HISTORY_MSGS = 10  # memoria corta: últimos ~5 turnos de texto (sin scaffolding de tools)
 
 SYSTEM = """Sos "Apu", analista EXPERTO en apuestas deportivas, especializado en el \
 Mundial 2026. Hablás con Franco por Telegram, en español argentino, directo y canchero.
@@ -204,11 +205,16 @@ def ask_agent(
         )
         if resp.stop_reason != "tool_use":
             answer = "".join(b.text for b in resp.content if b.type == "text").strip()
-            messages.append({"role": "assistant", "content": answer})
+            answer = answer or "No te entendí, dale de nuevo."
             if history is not None:
-                history.clear()
-                history.extend(messages[-10:])  # memoria corta para charlar
-            return answer or "No te entendí, dale de nuevo."
+                # Guardamos SOLO turnos de texto limpios (sin los bloques tool_use/
+                # tool_result internos): si no, podar el historial puede cortar un par
+                # a la mitad y la API tira 400 (tool_result sin su tool_use).
+                history.append({"role": "user", "content": text})
+                history.append({"role": "assistant", "content": answer})
+                if len(history) > MAX_HISTORY_MSGS:
+                    del history[: len(history) - MAX_HISTORY_MSGS]
+            return answer
 
         assistant_content = []
         tool_results = []
