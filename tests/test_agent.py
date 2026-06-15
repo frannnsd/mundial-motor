@@ -66,6 +66,21 @@ def test_history_solo_guarda_texto_no_scaffolding_de_tools(monkeypatch):
     assert all(isinstance(m["content"], str) for m in history)
 
 
+def test_resolve_or_missing_avisa_cuando_falta_el_equipo():
+    from mundial_bot.models.elo_model import EloModel
+    from mundial_bot.pipeline import Models
+
+    elo = EloModel()
+    elo.ratings.update({"Argentina": 2100, "Brazil": 2050})
+    brain = agent.BotBrain(models=Models(elo=elo, goals=None), corners=None, cards=None)
+
+    ok = agent._resolve_or_missing(brain, "Argentina", "Brasil")   # Brasil → Brazil
+    assert ok == ("Argentina", "Brazil")
+
+    bad = agent._resolve_or_missing(brain, "Argentina", "Wakanda")
+    assert isinstance(bad, str) and "NO ENCONTRÉ" in bad and "Wakanda" in bad
+
+
 def test_history_se_poda_y_sigue_siendo_valido(monkeypatch):
     # Arranca con un historial largo; tras responder, queda acotado y empieza en 'user'.
     fake = _FakeClient([_Resp("end_turn", [_Blk("text", text="ok")])])

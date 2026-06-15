@@ -55,10 +55,21 @@ GOLES, hándicaps, totales, córners y tarjetas mandá el Dixon-Coles (distribuc
 difieren mucho en el 1X2, decílo y explicá (ej. "Elo la ve más favorita por ranking, pero el \
 modelo de goles espera un partido cerrado y trabado").
 
-Honestidad (no negociable): los números son REALES. Usá las herramientas; NUNCA inventes. Si \
-algo tiene 0.1% de chance, es 0.1%; si tiene 80%, es 80%. Mostrá la probabilidad del modelo Y, \
-cuando la tengas, la implícita de la cuota, para que Franco vea las dos y decida. El modelo \
+Honestidad (NO NEGOCIABLE, candados duros):
+- SIEMPRE llamá a una herramienta antes de hablar de un partido, una cuota o una apuesta. Si \
+no llamaste a ninguna, NO tenés los números: no inventes.
+- NUNCA inventes marcadores, resultados ni datos EN VIVO. NO tenés feed en vivo. Tus números \
+son PRE-PARTIDO. Si el partido está en juego, podés ver el estado y el marcador con \
+`agenda_partidos`, y aclarás que tu análisis es pre-partido (no ajustado al resultado actual).
+- Los 48 equipos del Mundial están en el modelo. NUNCA digas que un equipo "no está" sin haber \
+probado la herramienta. Solo si la herramienta te devuelve "NO ENCONTRÉ", recién ahí pedile a \
+Franco el nombre exacto. No te contradigas.
+- Los números son REALES: si algo tiene 0.1%, es 0.1%; si tiene 80%, es 80%. Mostrá la \
+probabilidad del modelo Y, cuando la tengas, la implícita de la cuota, para que Franco vea las \
+dos y decida. NO hables de "cuota justa": no es value, es la chance y lo que paga. El modelo \
 tiene su lectura más fuerte en CÓRNERS.
+- Para una combinada de patas del MISMO partido, multiplicás las probabilidades como \
+aproximación pero aclarás que están correlacionadas (no son del todo independientes).
 
 Agenda: con `agenda_partidos` ves qué partidos ya se jugaron (con resultado), cuáles están \
 EN VIVO y cuáles faltan (con horario local de Argentina). Usala cuando Franco pregunte por \
@@ -140,15 +151,34 @@ TOOLS = [
 ]
 
 
+def _resolve_or_missing(brain: BotBrain, local: str, visita: str) -> tuple[str, str] | str:
+    """Resuelve los dos equipos; si alguno no está en el modelo, devuelve un aviso claro
+    (en vez de un 50/50 inútil que haría confabular al agente)."""
+    rl, rv = brain.resolve(local), brain.resolve(visita)
+    missing = [orig for orig, res in ((local, rl), (visita, rv)) if res not in brain.known]
+    if missing:
+        return (
+            f"(NO ENCONTRÉ a {', '.join(missing)} en el modelo del Mundial. NO inventes datos: "
+            f"pedile a Franco el nombre exacto del equipo según el fixture.)"
+        )
+    return rl, rv
+
+
 def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str:
     """Ejecuta una herramienta y devuelve su resultado como texto."""
     try:
         if name == "predecir_partido":
-            return brain.predict_match(args["local"], args["visita"])
+            resolved = _resolve_or_missing(brain, args["local"], args["visita"])
+            if isinstance(resolved, str):
+                return resolved
+            return brain.predict_match(*resolved)
         if name == "analizar_partido_completo":
             from mundial_bot.service import odds_for_match
 
-            local, visita = brain.resolve(args["local"]), brain.resolve(args["visita"])
+            resolved = _resolve_or_missing(brain, args["local"], args["visita"])
+            if isinstance(resolved, str):
+                return resolved
+            local, visita = resolved
             odds = odds_for_match(settings, local, visita)
             return brain.full_analysis(local, visita, odds=odds)
         if name == "escaneo_hoy":
