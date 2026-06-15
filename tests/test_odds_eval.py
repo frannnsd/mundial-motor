@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from mundial_bot.collectors.odds_af import parse_odds
-from mundial_bot.evaluator import Play, build_combos, scan_match
+from mundial_bot.evaluator import Play, best_plays, build_combos, scan_match
 from mundial_bot.report import MarketPick, MatchReport
 
 ODDS_RAW = {
@@ -101,3 +101,25 @@ def test_build_combos_ignora_patas_sin_cuota():
     p2 = Play("C vs D", "Córners", "Over 8.5", 0.7, None, "")  # sin cuota
     likely, _ = build_combos([p1, p2], sizes=(2,))
     assert likely == []
+
+
+def test_build_combos_dedup_no_repite_patas():
+    p1 = Play("A vs B", "Ganador", "Gana B", 0.6, 2.0, "x")
+    p2 = Play("C vs D", "Ganador", "Gana C", 0.6, 2.0, "y")
+    likely, _ = build_combos([p1, p2, p1], sizes=(2,))   # p1 repetida
+    assert len(likely) == 1
+
+
+def test_best_plays_descarta_cuota_rota():
+    # modelo 99% pero la casa paga 13 (implícita ~8%): gap imposible → dato roto, fuera.
+    roto = Play("A vs B", "Hándicap asiático", "B +2", 0.99, 13.0, "x")
+    firme = Play("C vs D", "Ganador", "Gana C", 0.70, 1.60, "y")
+    firmes, mejor, batacazos = best_plays([roto, firme])
+    assert roto not in (firmes + mejor + batacazos)
+    assert firme in firmes
+
+
+def test_best_plays_batacazo_es_poco_probable_y_paga_fuerte():
+    bat = Play("A vs B", "Ganador", "Empate", 0.28, 6.0, "x")
+    _, _, batacazos = best_plays([bat])
+    assert bat in batacazos

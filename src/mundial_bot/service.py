@@ -48,16 +48,26 @@ def daily_cycle(settings: Settings) -> tuple[str, BotBrain]:
 
 
 def scan_today(settings: Settings, brain: BotBrain) -> str:
-    """Escaneo del día: por partido, lo MÁS PROBABLE + la cuota que paga + combinadas.
+    """Escaneo del día: analiza TODOS los mercados de todos los partidos y devuelve las
+    mejores jugadas (más firmes / modelo>casa / batacazos) + combinadas.
 
-    Sin value: no exige edge. Junta las casas de API-Football con las de odds-api.io
-    (si hay key) y se queda con la cuota más alta de cada resultado.
+    Sin value gatekeeping: no descarta nada por falta de edge, solo ordena qué mostrar.
+    Junta las casas de API-Football con las de odds-api.io (si hay key).
     """
     from mundial_bot.collectors.odds_af import fetch_odds, merge_odds
-    from mundial_bot.evaluator import format_scan, scan_match
+    from mundial_bot.evaluator import best_plays, build_combos, format_full_scan, plays_from_book
+    from mundial_bot.models.market_book import build_market_book
 
     key = settings.api_football_key
-    fixtures = fetch_today_fixtures(settings)
+    # Partidos POR JUGAR de los próximos días (los terminados/en vivo tienen cuotas
+    # viejas o de in-play que no sirven para apostar pre-partido). Acotado para no
+    # disparar demasiadas consultas ni mensajes gigantes.
+    try:
+        window = get_schedule(settings, days_back=0, days_ahead=2)
+        fixtures = sorted((f for f in window if f.upcoming), key=lambda f: f.date)[:10]
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("No pude traer la agenda; uso fixtures de hoy: %s", exc)
+        fixtures = [f for f in fetch_today_fixtures(settings) if getattr(f, "upcoming", True)]
 
     # Cuotas extra de odds-api.io (una sola bajada de eventos del Mundial, reutilizada).
     extra_events = None
@@ -73,7 +83,7 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
     for f in fixtures:
         if not f.fixture_id:
             continue
-        report = build_match_report(
+        book = build_market_book(
             normalize_team(f.home_team), normalize_team(f.away_team),
             elo=brain.models.elo, goals=brain.models.goals,
             corners=brain.corners, cards=brain.cards,
@@ -95,9 +105,14 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
                     odds = merge_odds(odds, extra) if odds else extra
             except Exception as exc:  # noqa: BLE001
                 logger.warning("odds-api.io sin cuotas para %s: %s", f.match, exc)
-        all_plays.extend(scan_match(report, odds))
+        all_plays.extend(plays_from_book(book, odds))
 
-    return format_scan(all_plays, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
+    firmes, mejor, batacazos = best_plays(all_plays)
+    likely, payout = build_combos(firmes + mejor)
+    return format_full_scan(
+        firmes, mejor, batacazos, likely, payout,
+        date_str=datetime.now(UTC).strftime("%d/%m/%Y"),
+    )
 
 
 def odds_for_match(settings: Settings, home: str, away: str) -> dict:
