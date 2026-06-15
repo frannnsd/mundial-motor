@@ -10,6 +10,16 @@ from mundial_bot.models.corners_model import CornersModel
 from mundial_bot.models.count_market import closest_line, over_under
 
 
+def test_corners_calibration_escala_el_total():
+    """El factor de calibración multiplica el total esperado (corrige el sesgo)."""
+    kw = dict(team_for={"A": 5.0, "B": 5.0}, team_against={"A": 5.0, "B": 5.0},
+              league_avg=5.0, dispersion=1.2)
+    base = CornersModel(**kw, calibration=1.0)
+    cal = CornersModel(**kw, calibration=1.10)
+    assert base.predict("A", "B").total == pytest.approx(10.0)
+    assert cal.predict("A", "B").total == pytest.approx(11.0)
+
+
 def _events() -> pd.DataFrame:
     """Eventos sintéticos: A genera más córners y recibe más tarjetas que B."""
     rows = []
