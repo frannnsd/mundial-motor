@@ -108,12 +108,13 @@ class BotBrain:
 
     def full_analysis(
         self, home: str, away: str, *, referee: str | None = None,
-        knockout: bool = False, match_name: str | None = None,
+        knockout: bool = False, match_name: str | None = None, odds: dict | None = None,
     ) -> str:
-        """Libro de mercados COMPLETO: cuota justa de TODOS los mercados del partido.
+        """Libro de mercados COMPLETO de un partido (todos los mercados).
 
-        Es el cerebro matemático para que Claude juzgue cualquier cuota que vea Franco
-        (1X2, hándicap asiático, totales, por equipo, ambos marcan, córners, tarjetas…).
+        Es el cerebro matemático para que Claude lea cualquier mercado (1X2, hándicap
+        asiático, totales, por equipo, ambos marcan, córners, tarjetas…). Si se pasan
+        `odds`, muestra la CUOTA REAL de la casa al lado de la probabilidad del modelo.
         """
         from mundial_bot.models.market_book import build_market_book, format_market_book
 
@@ -124,7 +125,7 @@ class BotBrain:
             referee=referee, knockout=knockout, neutral=True,
             match_name=match_name or f"{home} vs {away}",
         )
-        return format_market_book(book)
+        return format_market_book(book, odds=odds)
 
     def handle_text(self, text: str) -> str:
         """Responde a un mensaje de texto libre."""

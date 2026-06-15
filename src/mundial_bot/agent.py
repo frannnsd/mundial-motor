@@ -145,7 +145,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
         if name == "predecir_partido":
             return brain.predict_match(args["local"], args["visita"])
         if name == "analizar_partido_completo":
-            return brain.full_analysis(args["local"], args["visita"])
+            from mundial_bot.service import odds_for_match
+
+            odds = odds_for_match(settings, args["local"], args["visita"])
+            return brain.full_analysis(args["local"], args["visita"], odds=odds)
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 

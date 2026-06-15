@@ -7,8 +7,9 @@ totales (medias y enteras con push), totales por equipo, ambos marcan, par/impar
 valla invicta, gana a cero, marcador exacto y goles exactos. Más córners y tarjetas
 desde sus distribuciones (Negative Binomial).
 
-Cada selección trae su probabilidad efectiva y su CUOTA JUSTA (push-aware): así Claude
-—el otro cerebro— razona sobre el panorama entero y explica el porqué de cada chance.
+Cada selección lleva su `odds_key` = (mercado, resultado) en el formato de API-Football,
+para poder pegarle la CUOTA REAL de la casa. Así Claude —el otro cerebro— ve, de cada
+mercado, la probabilidad del modelo y lo que paga la casa, y razona el panorama entero.
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from mundial_bot.models.cards_model import CardsModel
+from mundial_bot.collectors.odds_af import MarketOdds
 from mundial_bot.models.corners_model import CornersModel
 from mundial_bot.models.count_market import over_under
 from mundial_bot.models.elo_model import EloModel
@@ -39,9 +40,10 @@ class Selection:
     market: str        # grupo, ej. "Hándicap asiático"
     pick: str          # ej. "Brazil -1.5"
     prob: float        # prob. efectiva de ganar (condicional a que no haya push/devolución)
-    fair: float        # cuota decimal justa = (1 - push) / prob_ganar
+    fair: float        # cuota decimal del modelo = (1 - push) / prob_ganar
     push: float = 0.0  # prob. de empate-devolución (líneas enteras)
     note: str = ""     # el porqué, corto
+    odds_key: tuple[str, str] | None = None  # (mercado, resultado) en API-Football
 
 
 @dataclass(frozen=True)
@@ -69,12 +71,25 @@ class MarketBook:
         return out
 
 
-def _sel(market: str, pick: str, p_win: float, *, push: float = 0.0, note: str = "") -> Selection:
-    """Arma una Selection con cuota justa push-aware. p_win = prob bruta de ganar."""
+def _sel(
+    market: str, pick: str, p_win: float, *,
+    push: float = 0.0, note: str = "", odds_key: tuple[str, str] | None = None,
+) -> Selection:
+    """Arma una Selection con cuota del modelo push-aware. p_win = prob bruta de ganar."""
     live = 1.0 - push
     eff = p_win / live if live > 1e-9 else 0.0
     fair = round(live / p_win, 2) if p_win > 1e-9 else 0.0
-    return Selection(market=market, pick=pick, prob=eff, fair=fair, push=push, note=note)
+    return Selection(market=market, pick=pick, prob=eff, fair=fair, push=push,
+                     note=note, odds_key=odds_key)
+
+
+def _ah_sign(h: float) -> str:
+    """Signo de la línea como lo escribe API-Football: '+0', '-0.5', '-1', '+1.5'."""
+    if h > 0:
+        return f"+{h:g}"
+    if h == 0:
+        return "+0"
+    return f"{h:g}"
 
 
 def _goals_selections(
@@ -97,72 +112,88 @@ def _goals_selections(
     p_away = float(matrix[margin < 0].sum())
     drv = f"xG {home_xg:.1f}-{away_xg:.1f}"
     out += [
-        _sel("Ganador (1X2)", f"Gana {home}", p_home, note=drv),
-        _sel("Ganador (1X2)", "Empate", p_draw, note=drv),
-        _sel("Ganador (1X2)", f"Gana {away}", p_away, note=drv),
+        _sel("Ganador (1X2)", f"Gana {home}", p_home, note=drv,
+             odds_key=("Match Winner", "Home")),
+        _sel("Ganador (1X2)", "Empate", p_draw, note=drv,
+             odds_key=("Match Winner", "Draw")),
+        _sel("Ganador (1X2)", f"Gana {away}", p_away, note=drv,
+             odds_key=("Match Winner", "Away")),
     ]
 
     # --- Doble oportunidad ---
     out += [
-        _sel("Doble oportunidad", f"{home} o empate", p_home + p_draw),
-        _sel("Doble oportunidad", f"{home} o {away}", p_home + p_away),
-        _sel("Doble oportunidad", f"empate o {away}", p_draw + p_away),
+        _sel("Doble oportunidad", f"{home} o empate", p_home + p_draw,
+             odds_key=("Double Chance", "Home/Draw")),
+        _sel("Doble oportunidad", f"{home} o {away}", p_home + p_away,
+             odds_key=("Double Chance", "Home/Away")),
+        _sel("Doble oportunidad", f"empate o {away}", p_draw + p_away,
+             odds_key=("Double Chance", "Draw/Away")),
     ]
 
     # --- Empate no apuesta (push en empate) ---
     out += [
-        _sel("Empate no apuesta", f"{home}", p_home, push=p_draw),
-        _sel("Empate no apuesta", f"{away}", p_away, push=p_draw),
+        _sel("Empate no apuesta", f"{home}", p_home, push=p_draw,
+             odds_key=("Draw No Bet", "Home")),
+        _sel("Empate no apuesta", f"{away}", p_away, push=p_draw,
+             odds_key=("Draw No Bet", "Away")),
     ]
 
     # --- Hándicap asiático (local; el visitante toma la línea opuesta) ---
     for h in _AH_LINES:
         win = float(matrix[(margin + h) > 0].sum())
         push = float(matrix[(margin + h) == 0].sum()) if float(h).is_integer() else 0.0
-        sign = f"+{h:g}" if h > 0 else f"{h:g}"
-        out.append(_sel("Hándicap asiático", f"{home} {sign}", win, push=push, note=f"fav {fav}"))
+        out.append(_sel("Hándicap asiático", f"{home} {_ah_sign(h)}", win, push=push,
+                        note=f"fav {fav}", odds_key=("Asian Handicap", f"Home {_ah_sign(h)}")))
     for h in _AH_LINES:
         win = float(matrix[(-margin + h) > 0].sum())
         push = float(matrix[(-margin + h) == 0].sum()) if float(h).is_integer() else 0.0
-        sign = f"+{h:g}" if h > 0 else f"{h:g}"
-        out.append(_sel("Hándicap asiático", f"{away} {sign}", win, push=push, note=f"fav {fav}"))
+        out.append(_sel("Hándicap asiático", f"{away} {_ah_sign(h)}", win, push=push,
+                        note=f"fav {fav}", odds_key=("Asian Handicap", f"Away {_ah_sign(h)}")))
 
     # --- Totales (medias: sin push) ---
     tnote = f"~{exp_goals:.1f} goles esperados"
     for line in _TOTAL_HALF:
         over = float(matrix[total > line].sum())
-        out.append(_sel("Goles Más/Menos", f"Más de {line:g}", over, note=tnote))
-        out.append(_sel("Goles Más/Menos", f"Menos de {line:g}", 1.0 - over, note=tnote))
+        out.append(_sel("Goles Más/Menos", f"Más de {line:g}", over, note=tnote,
+                        odds_key=("Goals Over/Under", f"Over {line:g}")))
+        out.append(_sel("Goles Más/Menos", f"Menos de {line:g}", 1.0 - over, note=tnote,
+                        odds_key=("Goals Over/Under", f"Under {line:g}")))
     # --- Totales enteras (con push) ---
     for line in _TOTAL_WHOLE:
         over = float(matrix[total > line].sum())
         push = float(matrix[total == line].sum())
         under = float(matrix[total < line].sum())
-        out.append(_sel("Goles asiáticos", f"Más de {line:g}", over, push=push, note=tnote))
-        out.append(_sel("Goles asiáticos", f"Menos de {line:g}", under, push=push, note=tnote))
+        out.append(_sel("Goles asiáticos", f"Más de {line:g}", over, push=push, note=tnote,
+                        odds_key=("Goals Over/Under", f"Over {line:g}")))
+        out.append(_sel("Goles asiáticos", f"Menos de {line:g}", under, push=push, note=tnote,
+                        odds_key=("Goals Over/Under", f"Under {line:g}")))
 
     # --- Totales por equipo ---
     home_dist = matrix.sum(axis=1)   # goles del local
     away_dist = matrix.sum(axis=0)   # goles de la visita
-    for team, dist, xg in ((home, home_dist, home_xg), (away, away_dist, away_xg)):
+    teams = ((home, home_dist, home_xg, "Total - Home"), (away, away_dist, away_xg, "Total - Away"))
+    for team, dist, xg, mkt in teams:
         nt = f"~{xg:.1f} del equipo"
         for line in _TEAM_TOTAL:
             over = float(dist[idx > line].sum())
-            out.append(_sel("Total por equipo", f"{team} Más de {line:g}", over, note=nt))
-            out.append(_sel("Total por equipo", f"{team} Menos de {line:g}", 1.0 - over, note=nt))
+            out.append(_sel("Total por equipo", f"{team} Más de {line:g}", over, note=nt,
+                            odds_key=(mkt, f"Over {line:g}")))
+            out.append(_sel("Total por equipo", f"{team} Menos de {line:g}", 1.0 - over, note=nt,
+                            odds_key=(mkt, f"Under {line:g}")))
 
     # --- Ambos marcan ---
     btts_yes = float(matrix[(i >= 1) & (j >= 1)].sum())
     out += [
-        _sel("Ambos marcan", "Sí", btts_yes, note=tnote),
-        _sel("Ambos marcan", "No", 1.0 - btts_yes, note=tnote),
+        _sel("Ambos marcan", "Sí", btts_yes, note=tnote, odds_key=("Both Teams Score", "Yes")),
+        _sel("Ambos marcan", "No", 1.0 - btts_yes, note=tnote,
+             odds_key=("Both Teams Score", "No")),
     ]
 
     # --- Par / Impar (total de goles) ---
     even = float(matrix[(total % 2) == 0].sum())
     out += [
-        _sel("Par/Impar", "Par", even),
-        _sel("Par/Impar", "Impar", 1.0 - even),
+        _sel("Par/Impar", "Par", even, odds_key=("Odd/Even", "Even")),
+        _sel("Par/Impar", "Impar", 1.0 - even, odds_key=("Odd/Even", "Odd")),
     ]
 
     # --- Valla invicta / gana a cero ---
@@ -171,13 +202,17 @@ def _goals_selections(
     wtn_home = float(matrix[(margin > 0) & (j == 0)].sum())
     wtn_away = float(matrix[(margin < 0) & (i == 0)].sum())
     out += [
-        _sel("Valla invicta", f"{home} sin recibir", cs_home),
-        _sel("Valla invicta", f"{away} sin recibir", cs_away),
-        _sel("Gana a cero", f"{home} gana sin recibir", wtn_home),
-        _sel("Gana a cero", f"{away} gana sin recibir", wtn_away),
+        _sel("Valla invicta", f"{home} sin recibir", cs_home,
+             odds_key=("Clean Sheet - Home", "Yes")),
+        _sel("Valla invicta", f"{away} sin recibir", cs_away,
+             odds_key=("Clean Sheet - Away", "Yes")),
+        _sel("Gana a cero", f"{home} gana sin recibir", wtn_home,
+             odds_key=("Win to Nil - Home", "Yes")),
+        _sel("Gana a cero", f"{away} gana sin recibir", wtn_away,
+             odds_key=("Win to Nil - Away", "Yes")),
     ]
 
-    # --- Goles exactos (0,1,2,3,4,5+) ---
+    # --- Goles exactos (0,1,2,3,4,5+) — sin cuota mapeada limpia ---
     for n_goals in range(5):
         out.append(_sel("Goles exactos", f"{n_goals}", float(matrix[total == n_goals].sum())))
     out.append(_sel("Goles exactos", "5+", float(matrix[total >= 5].sum())))
@@ -186,21 +221,24 @@ def _goals_selections(
     flat = [(matrix[a, b], a, b) for a in range(n) for b in range(n)]
     flat.sort(reverse=True)
     for prob, a, b in flat[:6]:
-        out.append(_sel("Marcador exacto", f"{a}-{b}", float(prob)))
+        out.append(_sel("Marcador exacto", f"{a}-{b}", float(prob),
+                        odds_key=("Exact Score", f"{a}:{b}")))
 
     return out
 
 
 def _count_selections(
-    label: str, total: float, variance: float, ladder: tuple[float, ...]
+    label: str, total: float, variance: float, ladder: tuple[float, ...], odds_market: str
 ) -> list[Selection]:
     """Over/Under de un mercado de conteo (córners/tarjetas) en toda su escalera."""
     note = f"~{total:.1f} esperados"
     out: list[Selection] = []
     for line in ladder:
         over, under = over_under(total, line, variance=variance)
-        out.append(_sel(label, f"Más de {line:g}", over, note=note))
-        out.append(_sel(label, f"Menos de {line:g}", under, note=note))
+        out.append(_sel(label, f"Más de {line:g}", over, note=note,
+                        odds_key=(odds_market, f"Over {line:g}")))
+        out.append(_sel(label, f"Menos de {line:g}", under, note=note,
+                        odds_key=(odds_market, f"Under {line:g}")))
     return out
 
 
@@ -211,13 +249,13 @@ def build_market_book(
     elo: EloModel,
     goals: GoalsModel | None,
     corners: CornersModel | None = None,
-    cards: CardsModel | None = None,
+    cards=None,
     referee: str | None = None,
     knockout: bool = False,
     neutral: bool = True,
     match_name: str | None = None,
 ) -> MarketBook:
-    """Arma el libro de mercados completo de un partido (todos los mercados + cuota justa)."""
+    """Arma el libro de mercados completo de un partido (todos los mercados + cuota del modelo)."""
     p = elo.predict(home, away, neutral=neutral)
     selections: list[Selection] = []
     home_xg = away_xg = 0.0
@@ -238,13 +276,16 @@ def build_market_book(
     if corners is not None:
         cp = corners.predict(home, away)
         selections += _count_selections(
-            "Córners Más/Menos", cp.total, cp.total * corners.dispersion, _CORNER_LADDER
+            "Córners Más/Menos", cp.total, cp.total * corners.dispersion,
+            _CORNER_LADDER, "Corners Over Under",
         )
 
     if cards is not None:
         cdp = cards.predict(home, away, referee=referee, knockout=knockout)
         variance = cdp.total * getattr(cards, "dispersion", 1.0)
-        selections += _count_selections("Tarjetas Más/Menos", cdp.total, variance, _CARD_LADDER)
+        selections += _count_selections(
+            "Tarjetas Más/Menos", cdp.total, variance, _CARD_LADDER, "Cards Over/Under",
+        )
 
     return MarketBook(
         match=match_name or f"{home} vs {away}",
@@ -256,8 +297,20 @@ def build_market_book(
     )
 
 
-def format_market_book(book: MarketBook, *, min_prob: float = 0.0) -> str:
-    """Texto plano del libro completo (para que Claude razone). Cuota justa por selección."""
+def real_odd(sel: Selection, odds: dict[str, MarketOdds] | None) -> tuple[float, str] | None:
+    """Cuota REAL de la casa para una selección (vía su odds_key). None si no está."""
+    if not odds or not sel.odds_key:
+        return None
+    mo = odds.get(sel.odds_key[0])
+    if mo and sel.odds_key[1] in mo.best:
+        return mo.best[sel.odds_key[1]]
+    return None
+
+
+def format_market_book(
+    book: MarketBook, *, odds: dict[str, MarketOdds] | None = None, min_prob: float = 0.0
+) -> str:
+    """Texto plano del libro completo. Si se pasan `odds`, muestra la cuota REAL de la casa."""
     head = (
         f"PANORAMA — {book.match}\n"
         f"1X2 (Elo, baseline ganador): {book.home} {book.p_home:.0%} / "
@@ -268,7 +321,7 @@ def format_market_book(book: MarketBook, *, min_prob: float = 0.0) -> str:
         f"(total ~{book.exp_goals:.2f})\n"
         "Nota: si Elo y Dixon-Coles difieren mucho en el ganador, Elo manda en 1X2; "
         "DC manda en goles/hándicaps/totales. Las selecciones de abajo salen de la "
-        "matriz de goles (DC).\n"
+        "matriz de goles (DC). 'modelo X%' = prob del modelo; 'casa Y.YY' = lo que paga.\n"
     )
     lines = [head]
     for market, sels in book.by_market().items():
@@ -278,5 +331,9 @@ def format_market_book(book: MarketBook, *, min_prob: float = 0.0) -> str:
         lines.append(f"\n[{market}]")
         for s in shown:
             extra = f" · push {s.push:.0%}" if s.push > 0.01 else ""
-            lines.append(f"  {s.pick}: {s.prob:.0%} (cuota s/modelo {s.fair:.2f}){extra}")
+            found = real_odd(s, odds)
+            casa = f" · casa {found[0]:.2f} ({found[1]})" if found else ""
+            lines.append(
+                f"  {s.pick}: modelo {s.prob:.0%} (cuota s/modelo {s.fair:.2f}){casa}{extra}"
+            )
     return "\n".join(lines)

@@ -81,6 +81,24 @@ def test_asian_handicap_half_line_equals_winner():
 
 def test_asian_handicap_level_has_push():
     b = _book()
-    level = b[("Hándicap asiático", "Local 0")]
+    level = b[("Hándicap asiático", "Local +0")]
     assert level.push == pytest.approx(0.6)      # empate devuelve
     assert level.prob == pytest.approx(0.5)       # 0.2 / 0.4
+
+
+def test_selections_carry_api_football_odds_key():
+    b = _book()
+    assert b[("Ganador (1X2)", "Gana Local")].odds_key == ("Match Winner", "Home")
+    assert b[("Doble oportunidad", "Local o empate")].odds_key == ("Double Chance", "Home/Draw")
+    assert b[("Hándicap asiático", "Local -0.5")].odds_key == ("Asian Handicap", "Home -0.5")
+    assert b[("Ambos marcan", "Sí")].odds_key == ("Both Teams Score", "Yes")
+
+
+def test_real_odd_lookup_via_odds_key():
+    from mundial_bot.collectors.odds_af import MarketOdds
+    from mundial_bot.models.market_book import real_odd
+
+    odds = {"Match Winner": MarketOdds(market="Match Winner", best={"Home": (2.5, "Casa")})}
+    sel = _book()[("Ganador (1X2)", "Gana Local")]
+    assert real_odd(sel, odds) == (2.5, "Casa")
+    assert real_odd(sel, {}) is None       # sin cuota listada

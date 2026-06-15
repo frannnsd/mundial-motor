@@ -100,6 +100,46 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
     return format_scan(all_plays, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
 
 
+def odds_for_match(settings: Settings, home: str, away: str) -> dict:
+    """Cuotas REALES de un partido (API-Football por fixture + odds-api.io), fusionadas.
+
+    Resuelve el fixture buscando el partido en una ventana de fechas por nombre de equipo.
+    Devuelve {mercado: MarketOdds} en el formato de API-Football (o {} si no hay).
+    """
+    from mundial_bot.collectors.odds_af import fetch_odds, merge_odds
+
+    key = settings.api_football_key
+    want = frozenset({normalize_team(home), normalize_team(away)})
+    odds: dict = {}
+
+    try:
+        fixtures = get_schedule(settings, days_back=0, days_ahead=7)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("No pude resolver fixture para %s vs %s: %s", home, away, exc)
+        fixtures = []
+    fixture_id = next(
+        (f.fixture_id for f in fixtures
+         if frozenset({normalize_team(f.home_team), normalize_team(f.away_team)}) == want
+         and f.fixture_id),
+        None,
+    )
+    if fixture_id and key:
+        try:
+            odds = fetch_odds(key, fixture_id)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Sin cuotas API-Football para %s vs %s: %s", home, away, exc)
+    if settings.has_oddspapi:
+        try:
+            from mundial_bot.collectors.odds_oddspapi import fetch_match_odds
+
+            extra = fetch_match_odds(settings.oddspapi_key, home, away)
+            if extra:
+                odds = merge_odds(odds, extra) if odds else extra
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Sin cuotas odds-api.io para %s vs %s: %s", home, away, exc)
+    return odds
+
+
 def get_schedule(settings: Settings, *, days_back: int = 1, days_ahead: int = 4):
     """Trae los partidos del Mundial en una ventana (jugados + en vivo + por jugar)."""
     from mundial_bot.collectors.fixtures import FixturesClient
