@@ -6,7 +6,9 @@ reiniciar el bot: los handlers siempre leen `holder.brain`.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import asyncio
+import html
+from dataclasses import dataclass, field
 from datetime import date, datetime
 
 from mundial_bot.brain import HELP, BotBrain, build_today_message
@@ -16,6 +18,7 @@ from mundial_bot.config import Settings
 @dataclass
 class BrainHolder:
     brain: BotBrain
+    history: list = field(default_factory=list)  # memoria de la charla con el agente
 
 
 def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
@@ -98,4 +101,14 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
 
     @dp.message()
     async def _any(message: Message) -> None:
-        await message.answer(holder.brain.handle_text(message.text or ""))
+        text = message.text or ""
+        if settings.has_anthropic:
+            from mundial_bot.agent import ask_agent
+
+            reply = await asyncio.to_thread(
+                ask_agent, text, settings=settings, brain=holder.brain, history=holder.history
+            )
+            # El agente responde en texto plano; lo escapamos para que el modo HTML no rompa.
+            await message.answer(html.escape(reply))
+        else:
+            await message.answer(holder.brain.handle_text(text))

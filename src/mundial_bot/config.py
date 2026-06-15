@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     football_data_key: str = Field(default="", alias="FOOTBALL_DATA_KEY")
     anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
     news_api_key: str = Field(default="", alias="NEWS_API_KEY")
+    oddspapi_key: str = Field(default="", alias="ODDSPAPI_KEY")
     telegram_bot_token: str = Field(default="", alias="TELEGRAM_BOT_TOKEN")
     telegram_chat_id: str = Field(default="", alias="TELEGRAM_CHAT_ID")
 

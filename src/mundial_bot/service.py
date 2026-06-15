@@ -46,6 +46,34 @@ def daily_cycle(settings: Settings) -> tuple[str, BotBrain]:
     return balance + "\n\n" + today, brain
 
 
+def evaluate_today(settings: Settings, brain: BotBrain, *, min_ev: float = 0.0) -> str:
+    """Evalúa todos los partidos de hoy contra el mercado real → cuotas buenas + combinadas."""
+    from mundial_bot.collectors.odds_af import fetch_odds
+    from mundial_bot.evaluator import build_parlays, evaluate_match, format_evaluation
+
+    key = settings.api_football_key
+    fixtures = fetch_today_fixtures(settings)
+    all_bets = []
+    for f in fixtures:
+        if not f.fixture_id:
+            continue
+        report = build_match_report(
+            normalize_team(f.home_team), normalize_team(f.away_team),
+            elo=brain.models.elo, goals=brain.models.goals,
+            corners=brain.corners, cards=brain.cards,
+            referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
+        )
+        try:
+            odds = fetch_odds(key, f.fixture_id)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Sin cuotas para %s: %s", f.match, exc)
+            continue
+        all_bets.extend(evaluate_match(report, odds, min_ev=min_ev))
+
+    parlays = build_parlays(all_bets, min_ev=min_ev)
+    return format_evaluation(all_bets, parlays, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
+
+
 def _minutes_to_kickoff(date_str: str) -> float | None:
     try:
         kickoff = pd.to_datetime(date_str, utc=True)
