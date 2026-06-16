@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from mundial_bot.collectors.odds_af import MarketOdds
+from mundial_bot.models.blend import blend_1x2
 from mundial_bot.models.corners_model import CornersModel
 from mundial_bot.models.count_market import over_under
 from mundial_bot.models.elo_model import EloModel
@@ -55,10 +56,13 @@ class MarketBook:
     away: str
     home_xg: float
     away_xg: float
-    p_home: float          # 1X2 según Elo (mejor baseline de ganador en data rala)
+    p_home: float          # 1X2 CANÓNICO = blend Elo+DC (lo que usan las selecciones)
     p_draw: float
     p_away: float
     exp_goals: float
+    elo_home: float = 0.0  # 1X2 según Elo (para mostrar el desglose)
+    elo_draw: float = 0.0
+    elo_away: float = 0.0
     dc_home: float = 0.0   # 1X2 implícito por la matriz Dixon-Coles (de goles)
     dc_draw: float = 0.0
     dc_away: float = 0.0
@@ -93,9 +97,15 @@ def _ah_sign(h: float) -> str:
 
 
 def _goals_selections(
-    matrix: np.ndarray, home: str, away: str, home_xg: float, away_xg: float
+    matrix: np.ndarray, home: str, away: str, home_xg: float, away_xg: float,
+    win_probs: tuple[float, float, float] | None = None,
 ) -> list[Selection]:
-    """Deriva todos los mercados de goles desde la matriz de marcadores."""
+    """Deriva todos los mercados de goles desde la matriz de marcadores.
+
+    `win_probs` (home, draw, away): si se pasa (ej. el blend Elo+DC), se usa para los
+    mercados de ganar/empatar/perder (1X2, doble oportunidad, empate-no-apuesta). El
+    resto (hándicaps, totales, etc.) siempre sale de la matriz de goles.
+    """
     n = matrix.shape[0]
     idx = np.arange(n)
     i = idx.reshape(-1, 1)
@@ -106,10 +116,12 @@ def _goals_selections(
     fav = home if home_xg >= away_xg else away
     out: list[Selection] = []
 
-    # --- 1X2 ---
-    p_home = float(matrix[margin > 0].sum())
-    p_draw = float(matrix[margin == 0].sum())
-    p_away = float(matrix[margin < 0].sum())
+    # --- 1X2 (usa el blend si se pasó; si no, la matriz DC) ---
+    p_home, p_draw, p_away = win_probs or (
+        float(matrix[margin > 0].sum()),
+        float(matrix[margin == 0].sum()),
+        float(matrix[margin < 0].sum()),
+    )
     drv = f"xG {home_xg:.1f}-{away_xg:.1f}"
     out += [
         _sel("Ganador (1X2)", f"Gana {home}", p_home, note=drv,
@@ -257,19 +269,24 @@ def build_market_book(
 ) -> MarketBook:
     """Arma el libro de mercados completo de un partido (todos los mercados + cuota del modelo)."""
     p = elo.predict(home, away, neutral=neutral)
+    elo_p = (p.home, p.draw, p.away)
     selections: list[Selection] = []
     home_xg = away_xg = 0.0
-    dc_home = dc_draw = dc_away = 0.0
+    dc_home, dc_draw, dc_away = elo_p
+    blended = elo_p
 
     if goals is not None and goals.can_predict(home, away):
         try:
             matrix, home_xg, away_xg = goals.score_matrix(home, away, neutral=neutral)
-            selections += _goals_selections(matrix, home, away, home_xg, away_xg)
             n = matrix.shape[0]
             m = np.arange(n).reshape(-1, 1) - np.arange(n).reshape(1, -1)
             dc_home = float(matrix[m > 0].sum())
             dc_draw = float(matrix[m == 0].sum())
             dc_away = float(matrix[m < 0].sum())
+            blended = blend_1x2(elo_p, (dc_home, dc_draw, dc_away))
+            selections += _goals_selections(
+                matrix, home, away, home_xg, away_xg, win_probs=blended
+            )
         except GoalsModelError:
             pass
 
@@ -290,8 +307,9 @@ def build_market_book(
     return MarketBook(
         match=match_name or f"{home} vs {away}",
         home=home, away=away, home_xg=home_xg, away_xg=away_xg,
-        p_home=p.home, p_draw=p.draw, p_away=p.away,
+        p_home=blended[0], p_draw=blended[1], p_away=blended[2],
         exp_goals=home_xg + away_xg,
+        elo_home=elo_p[0], elo_draw=elo_p[1], elo_away=elo_p[2],
         dc_home=dc_home, dc_draw=dc_draw, dc_away=dc_away,
         selections=selections,
     )
@@ -313,15 +331,15 @@ def format_market_book(
     """Texto plano del libro completo. Si se pasan `odds`, muestra la cuota REAL de la casa."""
     head = (
         f"PANORAMA — {book.match}\n"
-        f"1X2 (Elo, baseline ganador): {book.home} {book.p_home:.0%} / "
+        f"1X2 FINAL (blend Elo+DC, el que vale): {book.home} {book.p_home:.0%} / "
         f"X {book.p_draw:.0%} / {book.away} {book.p_away:.0%}\n"
-        f"1X2 (Dixon-Coles, de goles): {book.home} {book.dc_home:.0%} / "
-        f"X {book.dc_draw:.0%} / {book.away} {book.dc_away:.0%}\n"
+        f"   desglose → Elo: {book.elo_home:.0%}/{book.elo_draw:.0%}/{book.elo_away:.0%} · "
+        f"DC: {book.dc_home:.0%}/{book.dc_draw:.0%}/{book.dc_away:.0%}\n"
         f"xG modelo: {book.home} {book.home_xg:.2f} − {book.away} {book.away_xg:.2f} "
         f"(total ~{book.exp_goals:.2f})\n"
-        "Nota: si Elo y Dixon-Coles difieren mucho en el ganador, Elo manda en 1X2; "
-        "DC manda en goles/hándicaps/totales. Las selecciones de abajo salen de la "
-        "matriz de goles (DC). 'modelo X%' = prob del modelo; 'casa Y.YY' = lo que paga.\n"
+        "Nota: el 1X2/doble oportunidad/empate-no-apuesta usan el BLEND; los goles, "
+        "hándicaps y totales salen de la matriz Dixon-Coles. 'modelo X%' = prob del "
+        "modelo; 'casa Y.YY' = lo que paga.\n"
     )
     lines = [head]
     for market, sels in book.by_market().items():

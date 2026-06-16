@@ -14,6 +14,7 @@ from __future__ import annotations
 import html
 from dataclasses import dataclass
 
+from mundial_bot.models.blend import blend_1x2
 from mundial_bot.models.cards_model import CardsModel
 from mundial_bot.models.corners_model import CornersModel
 from mundial_bot.models.elo_model import EloModel
@@ -91,33 +92,40 @@ def build_match_report(
     p = elo.predict(home, away, neutral=neutral)
     home_name, away_name = home, away
 
+    # 1X2 = blend Elo+DC (DC manda; ver models/blend.py). m se reusa para goles/BTTS.
+    win_p = (p.home, p.draw, p.away)
+    m = None
+    if goals is not None and goals.can_predict(home, away):
+        try:
+            m = goals.predict(home, away, neutral=neutral)
+            win_p = blend_1x2(win_p, (m.home, m.draw, m.away))
+        except GoalsModelError:
+            m = None
+    ph, pd_, pa = win_p
+
     # Ganador más probable.
     sides = [
-        (f"Gana {home_name}", p.home, "home"),
-        ("Empate", p.draw, "draw"),
-        (f"Gana {away_name}", p.away, "away"),
+        (f"Gana {home_name}", ph, "home"),
+        ("Empate", pd_, "draw"),
+        (f"Gana {away_name}", pa, "away"),
     ]
     win_label, win_prob, win_side = max(sides, key=lambda s: s[1])
     winner = MarketPick(win_label, win_prob, side=win_side)
 
     goals_pick = btts_pick = None
-    if goals is not None and goals.can_predict(home, away):
-        try:
-            m = goals.predict(home, away, neutral=neutral)
-            # Solo líneas estándar (1.5/2.5/3.5): 0.5 sería trivial (casi siempre over).
-            standard = {ln: m.lines[ln] for ln in (1.5, 2.5, 3.5) if ln in m.lines}
-            line = _best_line_from(standard or m.lines)
-            over, under = m.lines.get(line, (m.over_2_5, m.under_2_5))
-            goals_pick = _favored(
-                f"Over {line} goles", over, f"Under {line} goles", under,
-                expected=m.exp_goals, line=line,
-            )
-            btts_pick = _favored(
-                "Ambos marcan: Sí", m.btts_yes, "Ambos marcan: No", m.btts_no,
-                over_side="yes", under_side="no",
-            )
-        except GoalsModelError:
-            pass
+    if m is not None:
+        # Solo líneas estándar (1.5/2.5/3.5): 0.5 sería trivial (casi siempre over).
+        standard = {ln: m.lines[ln] for ln in (1.5, 2.5, 3.5) if ln in m.lines}
+        line = _best_line_from(standard or m.lines)
+        over, under = m.lines.get(line, (m.over_2_5, m.under_2_5))
+        goals_pick = _favored(
+            f"Over {line} goles", over, f"Under {line} goles", under,
+            expected=m.exp_goals, line=line,
+        )
+        btts_pick = _favored(
+            "Ambos marcan: Sí", m.btts_yes, "Ambos marcan: No", m.btts_no,
+            over_side="yes", under_side="no",
+        )
 
     corners_pick = None
     if corners is not None:
@@ -137,7 +145,7 @@ def build_match_report(
 
     return MatchReport(
         match=match_name or f"{home} vs {away}",
-        home_prob=p.home, draw_prob=p.draw, away_prob=p.away,
+        home_prob=ph, draw_prob=pd_, away_prob=pa,
         winner=winner, goals=goals_pick, btts=btts_pick,
         corners=corners_pick, cards=cards_pick,
     )
