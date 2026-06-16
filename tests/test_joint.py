@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from mundial_bot.models.joint import _goals_mask
 
@@ -44,3 +45,14 @@ def test_handicap_local_menos_1_5():
 def test_total_equipo_local():
     mask = _m({"market": "total_equipo", "team": "home", "side": "over", "line": 1.5})
     assert mask[2, 0] and not mask[1, 4]            # local marca 2+ goles
+
+
+def test_linea_entera_rechazada_por_el_push():
+    # Líneas enteras tienen push (devolución) → no se modelan en combinadas: deben fallar.
+    for leg in (
+        {"market": "goles", "side": "over", "line": 2},
+        {"market": "handicap", "team": "home", "line": -1},
+        {"market": "total_equipo", "team": "away", "side": "under", "line": 1},
+    ):
+        with pytest.raises(ValueError, match="push"):
+            _m(leg)

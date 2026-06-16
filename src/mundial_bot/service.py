@@ -139,8 +139,6 @@ def injuries_for_match(settings: Settings, home: str, away: str) -> str:
     """Bajas (lesionados/suspendidos) de un partido, por equipo. Texto para el agente."""
     if not settings.has_api_football:
         return "(Sin API-Football para traer las bajas.)"
-    from mundial_bot.collectors.injuries import fetch_injuries
-
     fixture_id = find_fixture_id(settings, home, away)
     if fixture_id is None:
         return "(No encontré el fixture para traer las bajas.)"

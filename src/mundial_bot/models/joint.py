@@ -31,6 +31,16 @@ class JointResult:
     note: str
 
 
+def _require_half_line(line: float, market: str) -> None:
+    """Las líneas enteras tienen push (devolución) que NO se modela en combinadas:
+    se subestimaría la probabilidad. Exigimos línea .5 para no mentir."""
+    if float(line).is_integer():
+        raise ValueError(
+            f"la línea {line:g} de '{market}' es entera (tiene push/devolución), que no se "
+            "modela en combinadas. Usá una línea .5 (ej. 2.5 / -1.5)."
+        )
+
+
 def _goals_mask(leg: dict, i, j, margin, total):
     """Máscara booleana (sobre la matriz) de una pata de goles."""
     market = leg["market"]
@@ -43,14 +53,17 @@ def _goals_mask(leg: dict, i, j, margin, total):
         return {"home_draw": margin >= 0, "home_away": margin != 0,
                 "draw_away": margin <= 0}[side]
     if market == "goles":
+        _require_half_line(line, "goles")
         return total > line if side == "over" else total < line
     if market == "ambos_marcan":
         yes = (i >= 1) & (j >= 1)
         return yes if side == "yes" else ~yes
     if market == "handicap":
+        _require_half_line(line, "handicap")
         adj = (margin + line) if team == "home" else (-margin + line)
         return adj > 0
     if market == "total_equipo":
+        _require_half_line(line, "total por equipo")
         g = i if team == "home" else j
         return g > line if side == "over" else g < line
     raise ValueError(f"mercado de goles desconocido: {market}")

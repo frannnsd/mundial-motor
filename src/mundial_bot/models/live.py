@@ -29,7 +29,10 @@ def live_final_matrix(
     remaining = max(0.0, (FULL_MATCH_MIN - min(minute, FULL_MATCH_MIN)) / FULL_MATCH_MIN)
     lam_h = max(1e-9, home_xg * remaining)
     lam_a = max(1e-9, away_xg * remaining)
-    n = max(home_goals, away_goals) + _MAX_EXTRA_GOALS + 1
+    # El rango extra se escala con el xG restante para no truncar la cola de Poisson
+    # (con xG alto, +10 dejaba afuera ~0.7% de masa).
+    extra = max(_MAX_EXTRA_GOALS, int(max(lam_h, lam_a) * 4) + 5)
+    n = max(home_goals, away_goals) + extra + 1
     rem_h = poisson.pmf(np.arange(n), lam_h)   # dist de goles que faltan (índice = restantes)
     rem_a = poisson.pmf(np.arange(n), lam_a)
     matrix = np.zeros((n, n))

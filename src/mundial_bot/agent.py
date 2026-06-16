@@ -8,7 +8,7 @@ manejarle la plata, pensando fuera de la caja — pero honesto con los números.
 from __future__ import annotations
 
 import base64
-from datetime import datetime
+from datetime import UTC, datetime
 
 from mundial_bot.brain import BotBrain, build_today_message
 from mundial_bot.config import Settings
@@ -150,7 +150,9 @@ TOOLS = [
                        "home_away/draw_away) | 'goles'(side over/under, line) | 'ambos_marcan'"
                        "(side yes/no) | 'handicap'(team home/away, line) | 'total_equipo'(team "
                        "home/away, side over/under, line) | 'corners'(side over/under, line) | "
-                       "'cards'(side over/under, line). Poné un 'desc' legible en cada pata.",
+                       "'cards'(side over/under, line). En goles/handicap/total_equipo usá "
+                       "líneas .5 (2.5, -1.5): las enteras tienen push y no se modelan. Poné un "
+                       "'desc' legible en cada pata.",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -308,7 +310,7 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             return scan_today(settings, brain)
         if name == "partidos_de_hoy":
             return build_today_message(
-                brain, settings, date_str=datetime.now().strftime("%d/%m/%Y"), log=False
+                brain, settings, date_str=datetime.now(UTC).strftime("%d/%m/%Y"), log=False
             )
         if name == "mi_balance":
             from mundial_bot.tracking import PredictionStore, format_balance, grade_pending
@@ -338,7 +340,7 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             return format_schedule(
                 fixtures,
                 tz_name=settings.timezone,
-                date_str=datetime.now().strftime("%d/%m/%Y"),
+                date_str=datetime.now(UTC).strftime("%d/%m/%Y"),
             )
     except Exception as exc:  # noqa: BLE001
         return f"(error ejecutando {name}: {exc})"
