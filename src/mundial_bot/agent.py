@@ -70,8 +70,9 @@ Franco el nombre exacto. No te contradigas.
 probabilidad del modelo Y, cuando la tengas, la implícita de la cuota, para que Franco vea las \
 dos y decida. NO hables de "cuota justa": no es value, es la chance y lo que paga. El modelo \
 tiene su lectura más fuerte en CÓRNERS.
-- Para una combinada de patas del MISMO partido, multiplicás las probabilidades como \
-aproximación pero aclarás que están correlacionadas (no son del todo independientes).
+- Para una combinada de patas del MISMO partido usá `combinada_partido`: te da la \
+probabilidad CONJUNTA real (las patas de goles están correlacionadas, no se multiplican). \
+Para combinar patas de partidos DISTINTOS sí multiplicás (son independientes).
 
 Agenda: con `agenda_partidos` ves qué partidos ya se jugaron (con resultado), cuáles están \
 EN VIVO y cuáles faltan (con horario local de Argentina). Usala cuando Franco pregunte por \
@@ -114,6 +115,38 @@ TOOLS = [
                 "visita": {"type": "string", "description": "equipo visitante"},
             },
             "required": ["local", "visita"],
+        },
+    },
+    {
+        "name": "combinada_partido",
+        "description": "Probabilidad CONJUNTA (no multiplicar independiente) de una combinada "
+                       "de patas del MISMO partido — están correlacionadas. Cada pata: "
+                       "market='ganador'(side home/draw/away) | 'doble'(side home_draw/"
+                       "home_away/draw_away) | 'goles'(side over/under, line) | 'ambos_marcan'"
+                       "(side yes/no) | 'handicap'(team home/away, line) | 'total_equipo'(team "
+                       "home/away, side over/under, line) | 'corners'(side over/under, line) | "
+                       "'cards'(side over/under, line). Poné un 'desc' legible en cada pata.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "local": {"type": "string"},
+                "visita": {"type": "string"},
+                "patas": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "market": {"type": "string"},
+                            "side": {"type": "string"},
+                            "line": {"type": "number"},
+                            "team": {"type": "string"},
+                            "desc": {"type": "string"},
+                        },
+                        "required": ["market"],
+                    },
+                },
+            },
+            "required": ["local", "visita", "patas"],
         },
     },
     {
@@ -215,6 +248,12 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
                 home_goals=int(args["goles_local"]), away_goals=int(args["goles_visita"]),
                 minute=float(args["minuto"]),
             )
+        if name == "combinada_partido":
+            resolved = _resolve_or_missing(brain, args["local"], args["visita"])
+            if isinstance(resolved, str):
+                return resolved
+            local, visita = resolved
+            return brain.combo_same_match(local, visita, args.get("patas", []))
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 

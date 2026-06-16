@@ -158,6 +158,30 @@ class BotBrain:
             match_name=match_name or f"{rh} vs {ra}",
         )
 
+    def combo_same_match(self, home: str, away: str, legs: list[dict]) -> str:
+        """Combinada de patas del MISMO partido con probabilidad CONJUNTA (correlación)."""
+        if self.models.goals is None:
+            return "(No tengo el modelo de goles para la combinada.)"
+        from mundial_bot.models.goals_model import GoalsModelError
+        from mundial_bot.models.joint import joint_same_match
+
+        rh, ra = self.resolve(home), self.resolve(away)
+        try:
+            res = joint_same_match(
+                rh, ra, goals=self.models.goals,
+                corners=self.corners, cards=self.cards, legs=legs,
+            )
+        except (GoalsModelError, ValueError) as exc:
+            return f"(No pude calcular la combinada: {exc})"
+        lines = [f"🎲 Combinada {rh} vs {ra} (patas del mismo partido):"]
+        lines += [f"  • {d}: {p:.0%}" for d, p in res.legs]
+        lines.append(
+            f"CONJUNTA: <b>{res.combined_prob:.1%}</b> · cuota s/modelo "
+            f"{res.fair_odds:.2f}"
+        )
+        lines.append(res.note)
+        return "\n".join(lines)
+
     def handle_text(self, text: str) -> str:
         """Responde a un mensaje de texto libre."""
         teams = parse_two_teams(text or "", self.known)
