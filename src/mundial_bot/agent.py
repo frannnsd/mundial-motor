@@ -132,6 +132,17 @@ TOOLS = [
         },
     },
     {
+        "name": "noticias_equipo",
+        "description": "Titulares recientes de un equipo (suspensiones, lesiones de último "
+                       "momento, motivación, clima, líos internos). Contexto para pesar vos. "
+                       "Necesita NEWS_API_KEY.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"equipo": {"type": "string"}},
+            "required": ["equipo"],
+        },
+    },
+    {
         "name": "combinada_partido",
         "description": "Probabilidad CONJUNTA (no multiplicar independiente) de una combinada "
                        "de patas del MISMO partido — están correlacionadas. Cada pata: "
@@ -272,6 +283,18 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             from mundial_bot.service import injuries_for_match
 
             return injuries_for_match(settings, args["local"], args["visita"])
+        if name == "noticias_equipo":
+            from mundial_bot.collectors.news import fetch_team_news, format_news
+
+            if not settings.has_news:
+                return ("(No tengo NEWS_API_KEY configurada. Pedile a Franco que la "
+                        "cargue en el .env para leer noticias.)")
+            team = brain.resolve(args["equipo"])
+            try:
+                headlines = fetch_team_news(settings.news_api_key, team)
+            except Exception as exc:  # noqa: BLE001
+                return f"(No pude traer noticias: {exc})"
+            return format_news(team, headlines)
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 
