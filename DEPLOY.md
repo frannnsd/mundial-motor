@@ -30,12 +30,17 @@ En **Variables**, pegá las mismas del `.env`:
 ```
 TELEGRAM_BOT_TOKEN=...
 TELEGRAM_CHAT_ID=...
-API_FOOTBALL_KEY=...
+API_FOOTBALL_KEY=...           # fixtures, cuotas, estadísticas, lesiones
+ANTHROPIC_API_KEY=...          # IMPRESCINDIBLE: el agente "Apu" + leer imágenes
+ODDSPAPI_KEY=...               # opcional: cuotas extra de odds-api.io
+NEWS_API_KEY=...               # opcional: titulares (newsapi.org)
 BANKROLL_USD=100
 KELLY_FRACTION=0.25
 TIMEZONE=America/Argentina/Buenos_Aires
 DAILY_PICKS_HOUR=10
 ```
+> Sin `ANTHROPIC_API_KEY` el bot responde con el cerebro básico (sin charla natural,
+> sin leer fotos, sin las herramientas de Apu). Cargala sí o sí.
 
 ### 5. Primer arranque (poblar datos)
 La primera vez, en Railway → **Settings → Deploy → Custom Start Command** (temporal) o
