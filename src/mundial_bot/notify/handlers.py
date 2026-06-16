@@ -115,9 +115,8 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
             )
         await message.answer(msg)
 
-    @dp.message(F.photo)
-    async def _photo(message: Message) -> None:
-        """Franco manda una foto (ticket de apuesta, cuotas) → Apu la lee y la evalúa."""
+    async def _read_image(message: Message, downloadable, media_type: str) -> None:
+        """Baja una imagen de Telegram, se la pasa a Apu y responde."""
         if not settings.has_anthropic:
             await message.answer("Para leer imágenes necesito la IA configurada (Anthropic).")
             return
@@ -127,16 +126,25 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
 
         buf = BytesIO()
         try:
-            await message.bot.download(message.photo[-1], destination=buf)
+            await message.bot.download(downloadable, destination=buf)
         except Exception as exc:  # noqa: BLE001
             await message.answer(f"No pude bajar la imagen: {html.escape(str(exc))}")
             return
-        caption = message.caption or ""
         reply = await asyncio.to_thread(
-            ask_agent, caption, settings=settings, brain=holder.brain,
-            history=holder.history, image=(buf.getvalue(), "image/jpeg"),
+            ask_agent, message.caption or "", settings=settings, brain=holder.brain,
+            history=holder.history, image=(buf.getvalue(), media_type),
         )
         await message.answer(html.escape(reply))
+
+    @dp.message(F.photo)
+    async def _photo(message: Message) -> None:
+        """Franco manda una foto (ticket de apuesta, cuotas) → Apu la lee y la evalúa."""
+        await _read_image(message, message.photo[-1], "image/jpeg")
+
+    @dp.message(F.document.mime_type.startswith("image/"))
+    async def _doc_image(message: Message) -> None:
+        """Imagen mandada como ARCHIVO/documento (no comprimida)."""
+        await _read_image(message, message.document, message.document.mime_type)
 
     @dp.message()
     async def _any(message: Message) -> None:

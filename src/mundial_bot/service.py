@@ -115,6 +115,44 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
     )
 
 
+def find_fixture_id(settings: Settings, home: str, away: str) -> int | None:
+    """Resuelve el fixture_id de un partido buscando por nombres en una ventana de fechas."""
+    want = frozenset({normalize_team(home), normalize_team(away)})
+    try:
+        fixtures = get_schedule(settings, days_back=1, days_ahead=7)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("No pude resolver fixture para %s vs %s: %s", home, away, exc)
+        return None
+    return next(
+        (f.fixture_id for f in fixtures
+         if frozenset({normalize_team(f.home_team), normalize_team(f.away_team)}) == want
+         and f.fixture_id),
+        None,
+    )
+
+
+def injuries_for_match(settings: Settings, home: str, away: str) -> str:
+    """Bajas (lesionados/suspendidos) de un partido, por equipo. Texto para el agente."""
+    if not settings.has_api_football:
+        return "(Sin API-Football para traer las bajas.)"
+    from mundial_bot.collectors.injuries import fetch_injuries
+
+    fixture_id = find_fixture_id(settings, home, away)
+    if fixture_id is None:
+        return "(No encontré el fixture para traer las bajas.)"
+    try:
+        injuries = fetch_injuries(settings.api_football_key, fixture_id=fixture_id)
+    except Exception as exc:  # noqa: BLE001
+        return f"(No pude traer las bajas: {exc})"
+    if not injuries:
+        return "Sin bajas reportadas para este partido (o la API todavía no las cargó)."
+    lines = ["BAJAS (lesionados/suspendidos) — pesá vos qué jugador es importante:"]
+    for team, players in injuries.items():
+        names = ", ".join(f"{p.player} ({p.reason})" for p in players[:12])
+        lines.append(f"  {team}: {names}")
+    return "\n".join(lines)
+
+
 def odds_for_match(settings: Settings, home: str, away: str) -> dict:
     """Cuotas REALES de un partido (API-Football por fixture + odds-api.io), fusionadas.
 
@@ -124,20 +162,8 @@ def odds_for_match(settings: Settings, home: str, away: str) -> dict:
     from mundial_bot.collectors.odds_af import fetch_odds, merge_odds
 
     key = settings.api_football_key
-    want = frozenset({normalize_team(home), normalize_team(away)})
     odds: dict = {}
-
-    try:
-        fixtures = get_schedule(settings, days_back=0, days_ahead=7)
-    except Exception as exc:  # noqa: BLE001
-        logger.warning("No pude resolver fixture para %s vs %s: %s", home, away, exc)
-        fixtures = []
-    fixture_id = next(
-        (f.fixture_id for f in fixtures
-         if frozenset({normalize_team(f.home_team), normalize_team(f.away_team)}) == want
-         and f.fixture_id),
-        None,
-    )
+    fixture_id = find_fixture_id(settings, home, away)
     if fixture_id and key:
         try:
             odds = fetch_odds(key, fixture_id)

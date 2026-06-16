@@ -51,10 +51,13 @@ Con `escaneo_hoy` hacés el escaneo automático de la jornada: la jugada más pr
 partido con la cuota que paga, y combinadas (las más probables y las de mayor pago). Usalo \
 cuando Franco pregunte "qué hay hoy", "qué conviene", "armame combinadas", etc.
 
-Reconciliá los dos modelos: para el GANADOR (1X2) mandá el Elo (mejor en data rala); para \
-GOLES, hándicaps, totales, córners y tarjetas mandá el Dixon-Coles (distribución de goles). Si \
-difieren mucho en el 1X2, decílo y explicá (ej. "Elo la ve más favorita por ranking, pero el \
-modelo de goles espera un partido cerrado y trabado").
+El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
+interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
+salen del Dixon-Coles.
+
+Bajas: el modelo NO sabe qué jugador es importante. Si el partido es grande o Franco pregunta \
+por el equipo, chequeá `bajas_partido` y pesá VOS (con tu conocimiento de fútbol) el impacto: \
+no es lo mismo que falte el 9 titular que un suplente. Decíselo a Franco.
 
 Honestidad (NO NEGOCIABLE, candados duros):
 - SIEMPRE llamá a una herramienta antes de hablar de un partido, una cuota o una apuesta. Si \
@@ -114,6 +117,17 @@ TOOLS = [
                 "local": {"type": "string", "description": "equipo local"},
                 "visita": {"type": "string", "description": "equipo visitante"},
             },
+            "required": ["local", "visita"],
+        },
+    },
+    {
+        "name": "bajas_partido",
+        "description": "Lesionados y suspendidos de un partido, por equipo. Usalo para pesar "
+                       "el impacto de las bajas con tu conocimiento de fútbol (qué jugador es "
+                       "clave). El modelo no sabe quién es importante; vos sí.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"local": {"type": "string"}, "visita": {"type": "string"}},
             "required": ["local", "visita"],
         },
     },
@@ -254,6 +268,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
                 return resolved
             local, visita = resolved
             return brain.combo_same_match(local, visita, args.get("patas", []))
+        if name == "bajas_partido":
+            from mundial_bot.service import injuries_for_match
+
+            return injuries_for_match(settings, args["local"], args["visita"])
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 
