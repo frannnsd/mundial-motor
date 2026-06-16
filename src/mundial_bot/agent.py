@@ -59,9 +59,10 @@ modelo de goles espera un partido cerrado y trabado").
 Honestidad (NO NEGOCIABLE, candados duros):
 - SIEMPRE llamá a una herramienta antes de hablar de un partido, una cuota o una apuesta. Si \
 no llamaste a ninguna, NO tenés los números: no inventes.
-- NUNCA inventes marcadores, resultados ni datos EN VIVO. NO tenés feed en vivo. Tus números \
-son PRE-PARTIDO. Si el partido está en juego, podés ver el estado y el marcador con \
-`agenda_partidos`, y aclarás que tu análisis es pre-partido (no ajustado al resultado actual).
+- NUNCA inventes marcadores ni resultados en vivo. El marcador real lo ves con \
+`agenda_partidos`. Para un partido EN JUEGO usá `analizar_en_vivo` (con marcador + minuto): \
+ESA herramienta SÍ ajusta las probabilidades al estado actual (resultado final desde ahora). \
+El resto de las herramientas son PRE-PARTIDO. Córners/tarjetas no se ajustan en vivo.
 - Los 48 equipos del Mundial están en el modelo. NUNCA digas que un equipo "no está" sin haber \
 probado la herramienta. Solo si la herramienta te devuelve "NO ENCONTRÉ", recién ahí pedile a \
 Franco el nombre exacto. No te contradigas.
@@ -113,6 +114,24 @@ TOOLS = [
                 "visita": {"type": "string", "description": "equipo visitante"},
             },
             "required": ["local", "visita"],
+        },
+    },
+    {
+        "name": "analizar_en_vivo",
+        "description": "Analiza un partido EN VIVO ajustando las probabilidades al marcador y "
+                       "minuto actual: resultado FINAL desde ahora, totales, hándicaps, ambos "
+                       "marcan, etc. Necesita el marcador y el minuto — sacalos de "
+                       "agenda_partidos (que trae el marcador en vivo) o de lo que diga Franco.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "local": {"type": "string"},
+                "visita": {"type": "string"},
+                "goles_local": {"type": "integer"},
+                "goles_visita": {"type": "integer"},
+                "minuto": {"type": "integer", "description": "minuto actual del partido"},
+            },
+            "required": ["local", "visita", "goles_local", "goles_visita", "minuto"],
         },
     },
     {
@@ -186,6 +205,16 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             local, visita = resolved
             odds = odds_for_match(settings, local, visita)
             return brain.full_analysis(local, visita, odds=odds)
+        if name == "analizar_en_vivo":
+            resolved = _resolve_or_missing(brain, args["local"], args["visita"])
+            if isinstance(resolved, str):
+                return resolved
+            local, visita = resolved
+            return brain.live_analysis(
+                local, visita,
+                home_goals=int(args["goles_local"]), away_goals=int(args["goles_visita"]),
+                minute=float(args["minuto"]),
+            )
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 

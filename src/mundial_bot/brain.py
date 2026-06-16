@@ -142,6 +142,22 @@ class BotBrain:
         )
         return format_market_book(book, odds=odds)
 
+    def live_analysis(
+        self, home: str, away: str, *, home_goals: int, away_goals: int,
+        minute: float, match_name: str | None = None,
+    ) -> str:
+        """Análisis EN VIVO ajustado al marcador y minuto (resultado final desde ahora)."""
+        if self.models.goals is None:
+            return "(No tengo el modelo de goles cargado para analizar en vivo.)"
+        from mundial_bot.models.live import live_analysis
+
+        rh, ra = self.resolve(home), self.resolve(away)
+        return live_analysis(
+            self.models.goals, rh, ra,
+            home_goals=home_goals, away_goals=away_goals, minute=minute,
+            match_name=match_name or f"{rh} vs {ra}",
+        )
+
     def handle_text(self, text: str) -> str:
         """Responde a un mensaje de texto libre."""
         teams = parse_two_teams(text or "", self.known)
