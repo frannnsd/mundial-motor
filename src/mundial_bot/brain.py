@@ -44,6 +44,7 @@ HELP = (
     "• <b>/hoy</b> → predicciones de todos los partidos de hoy\n"
     "• <b>/agenda</b> → qué se jugó, qué hay en vivo y qué falta (horario AR) 📅\n"
     "• <b>/balance</b> → cuánto vengo acertando 📊\n"
+    "• <b>/clv</b> → ¿le gano al cierre del mercado? (si el bot es sharp) 📈\n"
     "• <b>/apuesta 5 2.10 Argentina gana</b> → registrá una apuesta tuya\n"
     "• <b>/roi</b> → tu ganancia y ROI real 💰\n"
     "• 📸 <b>Mandame una foto</b> de tu ticket o de las cuotas y te la leo/evalúo\n\n"

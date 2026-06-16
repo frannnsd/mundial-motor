@@ -60,6 +60,13 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
         with PredictionStore() as store:
             await message.answer(format_balance(store.balance()))
 
+    @dp.message(Command("clv"))
+    async def _clv(message: Message) -> None:
+        from mundial_bot.clv import ClvStore, format_clv
+
+        with ClvStore() as store:
+            await message.answer(format_clv(store.summary()))
+
     @dp.message(Command("apuesta"))
     async def _apuesta(message: Message) -> None:
         from mundial_bot.betlog import BetStore, parse_bet_command

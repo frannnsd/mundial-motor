@@ -216,6 +216,13 @@ TOOLS = [
         "input_schema": {"type": "object", "properties": {}},
     },
     {
+        "name": "mi_clv",
+        "description": "CLV (Closing Line Value): si el bot le gana al cierre del mercado. Es "
+                       "la prueba de fuego de si el modelo es sharp (tiene edge real), más allá "
+                       "de si los partidos salen o no.",
+        "input_schema": {"type": "object", "properties": {}},
+    },
+    {
         "name": "agenda_partidos",
         "description": "Agenda del Mundial: qué partidos ya se jugaron (con resultado), cuáles "
                        "están EN VIVO y cuáles faltan (con horario local de Argentina). Permite "
@@ -315,6 +322,11 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
 
             with BetStore() as store:
                 return format_roi(store.summary())
+        if name == "mi_clv":
+            from mundial_bot.clv import ClvStore, format_clv
+
+            with ClvStore() as store:
+                return format_clv(store.summary())
         if name == "agenda_partidos":
             from mundial_bot.service import format_schedule, get_schedule
 

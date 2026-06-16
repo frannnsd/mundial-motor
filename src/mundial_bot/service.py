@@ -41,6 +41,10 @@ def daily_cycle(settings: Settings) -> tuple[str, BotBrain]:
             logger.warning("Fallo refrescando datos: %s", exc)
 
     brain = load_brain()
+    try:
+        snapshot_clv(settings, brain)   # guarda la cuota de apertura de los picks (CLV)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("CLV snapshot falló: %s", exc)
     with PredictionStore() as store:
         balance = format_balance(store.balance())
     today = build_today_message(brain, settings, date_str=datetime.now(UTC).strftime("%d/%m/%Y"))
@@ -153,6 +157,95 @@ def injuries_for_match(settings: Settings, home: str, away: str) -> str:
     return "\n".join(lines)
 
 
+def snapshot_clv(settings: Settings, brain: BotBrain, *, max_per_fixture: int = 6) -> int:
+    """Guarda la cuota de APERTURA de los picks firmes de los próximos partidos (para CLV)."""
+    if not settings.has_api_football:
+        return 0
+    from mundial_bot.clv import ClvStore
+    from mundial_bot.collectors.odds_af import fetch_odds
+    from mundial_bot.evaluator import best_plays, plays_from_book
+    from mundial_bot.models.market_book import build_market_book
+
+    key = settings.api_football_key
+    try:
+        window = get_schedule(settings, days_back=0, days_ahead=2)
+        fixtures = sorted((f for f in window if f.upcoming), key=lambda f: f.date)[:10]
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("CLV snapshot sin fixtures: %s", exc)
+        return 0
+
+    now = datetime.now(UTC).isoformat()
+    logged = 0
+    with ClvStore() as store:
+        for f in fixtures:
+            if not f.fixture_id:
+                continue
+            try:
+                odds = fetch_odds(key, f.fixture_id)
+            except Exception:  # noqa: BLE001
+                continue
+            if not odds:
+                continue
+            book = build_market_book(
+                normalize_team(f.home_team), normalize_team(f.away_team),
+                elo=brain.models.elo, goals=brain.models.goals,
+                corners=brain.corners, cards=brain.cards,
+                referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
+            )
+            firmes, mejor, _ = best_plays(plays_from_book(book, odds))
+            seen: set[tuple[str, str]] = set()
+            for p in (firmes + mejor):
+                if not p.odds_key or (p.market, p.pick) in seen or len(seen) >= max_per_fixture:
+                    continue
+                seen.add((p.market, p.pick))
+                logged += store.open_pick(
+                    opened_at=now, fixture_id=f.fixture_id, match=f.match,
+                    market=p.odds_key[0], outcome=p.odds_key[1], pick=p.pick,
+                    open_odds=p.odd, open_book=p.book,
+                )
+    return logged
+
+
+def close_clv(settings: Settings, *, window_min: float = 120.0) -> int:
+    """Captura la cuota de CIERRE de los picks cuyo partido arranca pronto (para CLV)."""
+    if not settings.has_api_football:
+        return 0
+    from mundial_bot.clv import ClvStore
+    from mundial_bot.collectors.odds_af import fetch_odds
+
+    key = settings.api_football_key
+    try:
+        window = get_schedule(settings, days_back=0, days_ahead=2)
+    except Exception:  # noqa: BLE001
+        return 0
+    now = datetime.now(UTC).isoformat()
+    closed = 0
+    with ClvStore() as store:
+        for f in window:
+            if not f.fixture_id or not f.upcoming:
+                continue
+            mins = _minutes_to_kickoff(f.date)
+            if mins is None or not (0 < mins <= window_min):
+                continue
+            rows = store.open_for_fixture(f.fixture_id)
+            if not rows:
+                continue
+            try:
+                odds = fetch_odds(key, f.fixture_id)
+            except Exception:  # noqa: BLE001
+                continue
+            for r in rows:
+                mo = odds.get(r["market"])
+                if mo and r["outcome"] in mo.best:
+                    close_odds, close_book = mo.best[r["outcome"]]
+                    store.set_close(
+                        r["id"], closed_at=now, close_odds=close_odds,
+                        close_book=close_book, open_odds=r["open_odds"],
+                    )
+                    closed += 1
+    return closed
+
+
 def odds_for_match(settings: Settings, home: str, away: str) -> dict:
     """Cuotas REALES de un partido (API-Football por fixture + odds-api.io), fusionadas.
 
@@ -245,6 +338,10 @@ def prematch_alerts(settings: Settings, brain: BotBrain) -> list[str]:
     """Arma las alertas pre-partido pendientes (partidos por empezar, no avisados aún)."""
     key = settings.api_football_key
     messages: list[str] = []
+    try:
+        close_clv(settings)   # captura la cuota de cierre de los picks cerca del inicio (CLV)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("CLV close falló: %s", exc)
     fixtures = fetch_today_fixtures(settings)
     with PredictionStore() as store:
         for f in fixtures:

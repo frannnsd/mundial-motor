@@ -32,6 +32,8 @@ class Play:
     prob: float        # probabilidad del modelo
     odd: float | None = None   # cuota de la casa (None si no está listada)
     book: str = ""
+    odds_key: tuple[str, str] | None = None  # (mercado, resultado) API-Football, para CLV
+    fixture_id: int | None = None
 
     @property
     def implied(self) -> float | None:
@@ -148,7 +150,10 @@ def plays_from_book(book, odds: dict[str, MarketOdds]) -> list[Play]:
     for s in book.selections:
         found = real_odd(s, odds)
         if found:
-            out.append(Play(book.match, s.market, s.pick, s.prob, found[0], found[1]))
+            out.append(Play(
+                book.match, s.market, s.pick, s.prob, found[0], found[1],
+                odds_key=s.odds_key,
+            ))
     return out
 
 
