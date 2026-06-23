@@ -307,22 +307,37 @@ def shots_on_target_market(settings: Settings, brain: BotBrain, home: str, away:
     return "\n".join(lines)
 
 
+# mercado → (atributo de tasa, nombres de mercado en la casa, línea por defecto, etiqueta)
 _PLAYER_PROPS = {
-    "barridas": ("tackles_per_game", "Player Tackles", 2, "Barridas (tackles)"),
-    "faltas": ("fouls_per_game", "Player Fouls Committed", 2, "Faltas cometidas"),
-    "tiros_al_arco": ("sot_per_game", "Player Shots On Target", 1, "Tiros al arco"),
+    "remates": ("shots_per_game",
+                ("Player Shots", "Home Player Shots", "Away Player Shots"), 2,
+                "Remates totales"),
+    "tiros_al_arco": ("sot_per_game",
+                      ("Player Shots On Target", "Home Player Shots On Target Total",
+                       "Away Player Shots On Target Total"), 1, "Tiros al arco"),
+    "barridas": ("tackles_per_game",
+                 ("Player Tackles", "Home Player Tackles", "Away Player Tackles"), 2,
+                 "Barridas (tackles)"),
+    "faltas": ("fouls_per_game",
+               ("Player Fouls Committed", "Home Player Fouls Committed",
+                "Away Player Fouls Committed"), 2, "Faltas cometidas"),
 }
 
 
 def player_props_market(settings: Settings, brain: BotBrain, home: str, away: str,
-                        market: str) -> str:
-    """Props por jugador con CUOTA REAL: barridas / faltas / tiros al arco (P(N+) por jugador)."""
+                        market: str, *, line: int | None = None) -> str:
+    """Props por jugador con CUOTA REAL: remates / tiros al arco / barridas / faltas.
+
+    P(N+) por jugador de los dos equipos + la cuota de la casa. `line` pisa la default
+    (ej. remates 3+ o 4+).
+    """
     if not settings.has_api_football:
         return "(Sin API-Football.)"
     cfg = _PLAYER_PROPS.get(market)
     if cfg is None:
-        return f"(Mercado '{market}' no soportado. Probá barridas, faltas o tiros_al_arco.)"
-    stat_attr, casa_market, line, label = cfg
+        return f"(Mercado '{market}' no soportado. Probá remates, tiros_al_arco, barridas, faltas.)"
+    stat_attr, casa_markets, default_line, label = cfg
+    line = line or default_line
     from operator import attrgetter
 
     from mundial_bot.collectors.odds_af import fetch_odds
@@ -345,10 +360,12 @@ def player_props_market(settings: Settings, brain: BotBrain, home: str, away: st
             odds = fetch_odds(key, fixture_id, books=settings.preferred_books_set)
         except Exception:  # noqa: BLE001
             odds = {}
+    # Junta las variantes del mercado (combinado + home + away) y matchea la línea pedida.
     casa: dict = {}
-    mo = odds.get(casa_market)
-    if mo and mo.best:
-        casa = parse_player_props_odds(mo.best, line)
+    for cm in casa_markets:
+        mo = odds.get(cm)
+        if mo and mo.best:
+            casa.update(parse_player_props_odds(mo.best, line))
     try:
         idmap = team_id_map(key)
     except Exception:  # noqa: BLE001

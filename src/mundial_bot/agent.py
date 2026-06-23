@@ -57,10 +57,12 @@ Para saber QUIÉN puede meter gol en un partido usá `goleadores_partido(local, 
 la probabilidad de que cada jugador haga 1+/2+/3+ goles, de los dos equipos, ya ajustada por \
 el rival. Para las CUOTAS de tiros al arco usá `tiros_al_arco_partido(local, visita)`: te da el \
 total del partido (Más/Menos) y el 1+ por jugador con la CUOTA REAL de la casa al lado de la \
-prob del modelo. Para BARRIDAS (tackles) o FALTAS cometidas por jugador usá \
-`props_jugador_partido(local, visita, mercado)` con mercado 'barridas'/'faltas' (te da el N+ \
-por jugador con la cuota real). Para un jugador suelto sin el partido, `tiros_jugador` \
-(pasale el `rival`). Asumen que arrancan de titulares.
+prob del modelo. Para props por jugador (REMATES totales / tiros al arco / barridas / faltas) usá \
+`props_jugador_partido(local, visita, mercado, linea)`. OJO LA DIFERENCIA: 'tiros_al_arco' es \
+SOLO al arco (más exigente, es el PISO); 'remates' incluye los de afuera (más amplio, casi \
+siempre MÁS probable) — si el ticket dice "remates" o "tiros totales" usá 'remates', no \
+'tiros_al_arco'. Pasá la `linea` del ticket (2+, 3+, 4+). Para un jugador suelto sin el \
+partido, `tiros_jugador` (pasale el `rival`). Asumen que arrancan de titulares.
 
 El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
 interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
@@ -155,10 +157,12 @@ TOOLS = [
     },
     {
         "name": "props_jugador_partido",
-        "description": "Props por jugador de un partido CON CUOTA REAL: barridas (tackles), "
-                       "faltas cometidas o tiros al arco. Para cada jugador de los dos equipos "
-                       "da la prob del modelo de N+ (barridas/faltas 2+, tiros al arco 1+) + la "
-                       "cuota real de la casa. Usalo para tickets tipo 'X jugador 2+ barridas'.",
+        "description": "Props por jugador de un partido CON CUOTA REAL: remates totales (al "
+                       "arco + afuera), tiros al arco, barridas (tackles) o faltas cometidas. "
+                       "Para cada jugador de los dos equipos da la prob del modelo de N+ + la "
+                       "cuota real de la casa. Pasá 'linea' para la línea del ticket (ej. remates "
+                       "3+ → linea=3). OJO: 'tiros_al_arco' es solo al arco (más exigente); "
+                       "'remates' incluye los de afuera (más amplio, casi siempre más probable).",
         "input_schema": {
             "type": "object",
             "properties": {
@@ -166,9 +170,10 @@ TOOLS = [
                 "visita": {"type": "string"},
                 "mercado": {
                     "type": "string",
-                    "enum": ["barridas", "faltas", "tiros_al_arco"],
-                    "description": "barridas (tackles), faltas (cometidas) o tiros_al_arco",
+                    "enum": ["remates", "tiros_al_arco", "barridas", "faltas"],
+                    "description": "remates (totales), tiros_al_arco, barridas o faltas",
                 },
+                "linea": {"type": "integer", "description": "línea N+ (ej. 2 = 2+). Opcional."},
             },
             "required": ["local", "visita", "mercado"],
         },
@@ -388,8 +393,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
         if name == "props_jugador_partido":
             from mundial_bot.service import player_props_market
 
+            linea = args.get("linea")
             return player_props_market(
-                settings, brain, args["local"], args["visita"], args["mercado"]
+                settings, brain, args["local"], args["visita"], args["mercado"],
+                line=int(linea) if linea else None,
             )
         if name == "tiros_al_arco_partido":
             from mundial_bot.service import shots_on_target_market

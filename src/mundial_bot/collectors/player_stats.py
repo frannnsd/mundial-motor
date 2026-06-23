@@ -154,6 +154,7 @@ class SquadGoals:
     appearances: int
     goals: int
     shots_on: int = 0
+    shots_total: int = 0
     tackles: int = 0
     fouls: int = 0
 
@@ -164,6 +165,10 @@ class SquadGoals:
     @property
     def sot_per_game(self) -> float:
         return self.shots_on / self.appearances if self.appearances else 0.0
+
+    @property
+    def shots_per_game(self) -> float:
+        return self.shots_total / self.appearances if self.appearances else 0.0
 
     @property
     def tackles_per_game(self) -> float:
@@ -202,17 +207,18 @@ def fetch_squad_goals(
         raw = _get(key, {"team": team_id, "season": season, "page": page})
         for item in raw.get("response", []):
             name = (item.get("player") or {}).get("name", "")
-            apps = goals = sot = tackles = fouls = 0
+            apps = goals = sot = shots = tackles = fouls = 0
             for st in item.get("statistics", []) or []:
                 apps += _num((st.get("games") or {}).get("appearences"))
                 goals += _num((st.get("goals") or {}).get("total"))
                 sot += _num((st.get("shots") or {}).get("on"))
+                shots += _num((st.get("shots") or {}).get("total"))
                 tackles += _num((st.get("tackles") or {}).get("total"))
                 fouls += _num((st.get("fouls") or {}).get("committed"))
             if name and apps > 0:
                 players.append(SquadGoals(
                     name=name, appearances=apps, goals=goals, shots_on=sot,
-                    tackles=tackles, fouls=fouls,
+                    shots_total=shots, tackles=tackles, fouls=fouls,
                 ))
         paging = raw.get("paging") or {}
         if page >= _num(paging.get("total")):
