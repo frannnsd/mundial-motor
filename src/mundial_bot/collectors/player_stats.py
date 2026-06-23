@@ -153,10 +153,15 @@ class SquadGoals:
     name: str
     appearances: int
     goals: int
+    shots_on: int = 0
 
     @property
     def goals_per_game(self) -> float:
         return self.goals / self.appearances if self.appearances else 0.0
+
+    @property
+    def sot_per_game(self) -> float:
+        return self.shots_on / self.appearances if self.appearances else 0.0
 
 
 def team_id_map(key: str, *, season: int = DEFAULT_SEASON) -> dict[str, int]:
@@ -187,12 +192,13 @@ def fetch_squad_goals(
         raw = _get(key, {"team": team_id, "season": season, "page": page})
         for item in raw.get("response", []):
             name = (item.get("player") or {}).get("name", "")
-            apps = goals = 0
+            apps = goals = sot = 0
             for st in item.get("statistics", []) or []:
                 apps += _num((st.get("games") or {}).get("appearences"))
                 goals += _num((st.get("goals") or {}).get("total"))
+                sot += _num((st.get("shots") or {}).get("on"))
             if name and apps > 0:
-                players.append(SquadGoals(name=name, appearances=apps, goals=goals))
+                players.append(SquadGoals(name=name, appearances=apps, goals=goals, shots_on=sot))
         paging = raw.get("paging") or {}
         if page >= _num(paging.get("total")):
             break
@@ -218,6 +224,50 @@ def goalscorer_probs(
         rows.append((p.name, pxg, p1, p2, p3))
     rows.sort(key=lambda r: -r[2])
     return rows[:top]
+
+
+def player_sot_probs(
+    squad: list[SquadGoals], factor: float = 1.0, *, min_apps: int = _SQUAD_MIN_APPS,
+    top: int = 14,
+) -> list[tuple[str, float, float]]:
+    """P(1+ tiro al arco) por jugador = Poisson(su tasa de tiros al arco × factor del rival).
+
+    Devuelve [(nombre, tasa_ajustada, P(1+))] ordenado por P(1+)."""
+    rows = []
+    for p in squad:
+        if p.appearances < min_apps or p.sot_per_game <= 0:
+            continue
+        rate = p.sot_per_game * factor
+        p1 = float(1.0 - poisson.pmf(0, rate))
+        rows.append((p.name, rate, p1))
+    rows.sort(key=lambda r: -r[2])
+    return rows[:top]
+
+
+def player_sot_casa_odds(best: dict) -> dict[str, tuple[float, str]]:
+    """De las cuotas de 'Player Shots On Target' arma {nombre_normalizado: (cuota, casa)}.
+
+    Los outcomes vienen como 'Lionel Messi - 1+'; nos quedamos con los de 1+.
+    """
+    out: dict[str, tuple[float, str]] = {}
+    for outcome, val in best.items():
+        if "1+" not in outcome:
+            continue
+        name = outcome.rsplit(" - ", 1)[0] if " - " in outcome else outcome
+        out[_strip(name)] = val
+    return out
+
+
+def match_casa_odd(player_name: str, casa: dict[str, tuple[float, str]]):
+    """Busca la cuota de un jugador por nombre (exacto o por apellido)."""
+    norm = _strip(player_name)
+    if norm in casa:
+        return casa[norm]
+    last = norm.split()[-1] if norm.split() else norm
+    for cname, val in casa.items():
+        if last and last == (cname.split()[-1] if cname.split() else cname):
+            return val
+    return None
 
 
 def format_scorers(team: str, scorers: list[tuple[str, float, float, float, float]]) -> str:

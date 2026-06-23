@@ -20,7 +20,7 @@ _WINNER_OUTCOME = {"home": "Home", "draw": "Draw", "away": "Away"}
 # Posibles nombres del mercado de córners/tarjetas según la casa (probamos varios).
 _CORNER_MARKETS = ("Corners Over/Under", "Total Corners", "Corners Over Under")
 _CARD_MARKETS = ("Cards Over/Under", "Total Cards", "Cards Over Under")
-_SHOT_MARKETS = ("Total Shots on Target", "Shots on Target Over/Under")
+_SHOT_MARKETS = ("Total ShotOnGoal", "Total Shots on Target")
 
 
 @dataclass(frozen=True)

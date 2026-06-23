@@ -310,7 +310,7 @@ def build_market_book(
         sp = shots.predict(home, away)
         selections += _count_selections(
             "Tiros al arco Más/Menos", sp.total, sp.total * shots.dispersion,
-            _SHOT_LADDER, "Total Shots on Target",
+            _SHOT_LADDER, "Total ShotOnGoal",
         )
 
     return MarketBook(

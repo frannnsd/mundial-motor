@@ -10,8 +10,11 @@ from mundial_bot.collectors.player_stats import (
     SquadGoals,
     _poisson_over_under,
     goalscorer_probs,
+    match_casa_odd,
     opponent_factor,
     parse_player_shots,
+    player_sot_casa_odds,
+    player_sot_probs,
 )
 
 
@@ -79,6 +82,33 @@ def test_goalscorer_reparte_el_xg_y_ordena_por_chance():
 def test_goalscorer_sin_goleadores_o_sin_xg():
     assert goalscorer_probs([SquadGoals("X", 5, 0)], 2.0) == []
     assert goalscorer_probs([SquadGoals("X", 5, 3)], 0.0) == []
+
+
+def test_player_sot_probs_por_tasa_y_factor():
+    squad = [
+        SquadGoals("Tirador", appearances=10, goals=2, shots_on=15),   # 1.5 TA/PJ
+        SquadGoals("Flojo", appearances=10, goals=0, shots_on=2),       # 0.2 TA/PJ
+        SquadGoals("Nada", appearances=10, goals=0, shots_on=0),        # excluido
+    ]
+    rows = player_sot_probs(squad, factor=1.0)
+    assert [r[0] for r in rows] == ["Tirador", "Flojo"]
+    assert rows[0][2] > rows[1][2]            # más chance de 1+
+    # Factor del rival escala la tasa → sube la prob.
+    rows_floja = player_sot_probs(squad, factor=1.3)
+    assert rows_floja[0][2] > rows[0][2]
+
+
+def test_player_sot_casa_odds_y_match_por_apellido():
+    best = {
+        "Lionel Messi - 1+": (1.40, "Bet365"),
+        "Julian Alvarez - 1+": (1.85, "Bet365"),
+        "Algo raro - 2+": (5.0, "Bet365"),   # 2+ se ignora
+    }
+    casa = player_sot_casa_odds(best)
+    assert "2+" not in str(casa)              # solo 1+
+    assert match_casa_odd("L. Messi", casa) == (1.40, "Bet365")     # por apellido
+    assert match_casa_odd("Julián Álvarez", casa) == (1.85, "Bet365")  # acentos
+    assert match_casa_odd("Nadie", casa) is None
 
 
 def test_opponent_factor_ajusta_por_la_defensa_del_rival():

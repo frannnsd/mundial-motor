@@ -55,9 +55,10 @@ combinadas", "combinadas mezclando partidos", etc.
 
 Para saber QUIÉN puede meter gol en un partido usá `goleadores_partido(local, visita)`: te da \
 la probabilidad de que cada jugador haga 1+/2+/3+ goles, de los dos equipos, ya ajustada por \
-el rival. Para los tiros de un JUGADOR (props) usá `tiros_jugador` pasándole SIEMPRE el \
-`rival`: te da la PROBABILIDAD de más de 0.5/1.5/2.5 tiros al arco. Lo que importa es la \
-probabilidad de que pase, no la cuota. Aclarale que asumen que arrancan de titulares.
+el rival. Para las CUOTAS de tiros al arco usá `tiros_al_arco_partido(local, visita)`: te da el \
+total del partido (Más/Menos) y el 1+ por jugador con la CUOTA REAL de la casa al lado de la \
+prob del modelo. Para un jugador suelto sin el partido, `tiros_jugador` (pasale el `rival`). \
+Asumen que arrancan de titulares.
 
 El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
 interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
@@ -148,6 +149,19 @@ TOOLS = [
             "type": "object",
             "properties": {"equipo": {"type": "string"}},
             "required": ["equipo"],
+        },
+    },
+    {
+        "name": "tiros_al_arco_partido",
+        "description": "Tiros al arco de un partido CON CUOTA REAL de la casa: el total del "
+                       "partido (Más/Menos) y el 1+ tiro al arco por jugador de los dos equipos "
+                       "(ajustado por el rival), con la prob del modelo al lado de la cuota. "
+                       "Usalo cuando Franco pida las cuotas de tiros al arco del partido o por "
+                       "jugador.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"local": {"type": "string"}, "visita": {"type": "string"}},
+            "required": ["local", "visita"],
         },
     },
     {
@@ -349,6 +363,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             except Exception as exc:  # noqa: BLE001
                 return f"(No pude traer noticias: {exc})"
             return format_news(team, headlines)
+        if name == "tiros_al_arco_partido":
+            from mundial_bot.service import shots_on_target_market
+
+            return shots_on_target_market(settings, brain, args["local"], args["visita"])
         if name == "goleadores_partido":
             from mundial_bot.service import match_scorers
 

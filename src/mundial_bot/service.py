@@ -220,6 +220,93 @@ def match_scorers(settings: Settings, brain: BotBrain, home: str, away: str) -> 
     return head + "\n\n".join(blocks)
 
 
+def shots_on_target_market(settings: Settings, brain: BotBrain, home: str, away: str) -> str:
+    """Tiros al arco con CUOTA REAL: total del partido + 1+ por jugador (ajustado por rival)."""
+    if not settings.has_api_football:
+        return "(Sin API-Football.)"
+    if brain.shots is None:
+        return "(No tengo el modelo de tiros al arco cargado — falta el refresh de datos.)"
+    from mundial_bot.collectors.odds_af import fetch_odds
+    from mundial_bot.collectors.player_stats import (
+        fetch_squad_goals,
+        match_casa_odd,
+        opponent_factor,
+        player_sot_casa_odds,
+        player_sot_probs,
+        team_id_map,
+    )
+    from mundial_bot.models.count_market import over_under
+
+    rh, ra = brain.resolve(home), brain.resolve(away)
+    if rh not in brain.known or ra not in brain.known:
+        return f"(No tengo a {home} o {away} en el modelo del Mundial.)"
+    key = settings.api_football_key
+    fixture_id = find_fixture_id(settings, rh, ra)
+    odds: dict = {}
+    if fixture_id:
+        try:
+            odds = fetch_odds(key, fixture_id)
+        except Exception:  # noqa: BLE001
+            odds = {}
+
+    lines = [f"🎯 <b>TIROS AL ARCO — {rh} vs {ra}</b>"]
+
+    # --- Partido (total de tiros al arco) ---
+    sp = brain.shots.predict(rh, ra)
+    lines.append(f"\n<b>PARTIDO</b> (total ~{sp.total:.1f}):")
+    mo = odds.get("Total ShotOnGoal")
+    relevant = []
+    if mo and mo.best:
+        for outcome, (odd, book) in mo.best.items():
+            parts = outcome.split()
+            if len(parts) != 2:
+                continue
+            try:
+                line = float(parts[1])
+            except ValueError:
+                continue
+            # Solo líneas .5 (las enteras tienen push y duplican) y cerca del total.
+            if line == int(line) or abs(line - sp.total) > 3.5:
+                continue
+            over = parts[0].lower().startswith("over")
+            relevant.append((line, over, odd, book))
+    if relevant:
+        for line, over, odd, book in sorted(relevant, key=lambda r: (r[0], not r[1])):
+            p_over, p_under = over_under(sp.total, line, variance=sp.total * brain.shots.dispersion)
+            es, prob = ("Más", p_over) if over else ("Menos", p_under)
+            lines.append(f"  {es} de {line:g}: modelo {prob:.0%} · casa {odd:.2f} ({book})")
+    else:
+        lines.append(f"  Más de {sp.line:g}: modelo {sp.p_over:.0%} (sin cuota listada)")
+
+    # --- Por jugador (1+ tiro al arco) ---
+    casa_players: dict = {}
+    pmo = odds.get("Player Shots On Target")
+    if pmo and pmo.best:
+        casa_players = player_sot_casa_odds(pmo.best)
+    try:
+        idmap = team_id_map(key)
+    except Exception:  # noqa: BLE001
+        idmap = {}
+    lines.append("\n<b>POR JUGADOR</b> (1+ tiro al arco):")
+    for team, rival in ((rh, ra), (ra, rh)):
+        tid = idmap.get(team)
+        if not tid:
+            continue
+        try:
+            squad = fetch_squad_goals(key, tid)
+        except Exception:  # noqa: BLE001
+            continue
+        probs = player_sot_probs(squad, opponent_factor(brain.shots, rival), top=8)
+        if not probs:
+            continue
+        lines.append(f"  <b>{team}</b>:")
+        for name, _rate, p1 in probs:
+            found = match_casa_odd(name, casa_players)
+            casa = f" · casa {found[0]:.2f}" if found else ""
+            lines.append(f"    {name}: modelo {p1:.0%}{casa}")
+    return "\n".join(lines)
+
+
 def snapshot_clv(settings: Settings, brain: BotBrain, *, max_per_fixture: int = 6) -> int:
     """Guarda la cuota de APERTURA de los picks firmes de los próximos partidos (para CLV)."""
     if not settings.has_api_football:
