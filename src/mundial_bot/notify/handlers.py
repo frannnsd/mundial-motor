@@ -67,6 +67,13 @@ def register_handlers(dp, settings: Settings, holder: BrainHolder) -> None:
         with ClvStore() as store:
             await message.answer(format_clv(store.summary()))
 
+    @dp.message(Command("combinadas", "parlays"))
+    async def _combinadas(message: Message) -> None:
+        from mundial_bot.service import day_parlays
+
+        text = await asyncio.to_thread(day_parlays, settings, holder.brain)
+        await message.answer(text)
+
     @dp.message(Command("apuesta"))
     async def _apuesta(message: Message) -> None:
         from mundial_bot.betlog import BetStore, parse_bet_command

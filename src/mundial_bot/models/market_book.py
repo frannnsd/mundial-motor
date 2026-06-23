@@ -32,6 +32,7 @@ _TOTAL_WHOLE = (1.0, 2.0, 3.0, 4.0)
 _TEAM_TOTAL = (0.5, 1.5, 2.5)
 _CORNER_LADDER = (7.5, 8.5, 9.5, 10.5, 11.5, 12.5)
 _CARD_LADDER = (2.5, 3.5, 4.5, 5.5, 6.5)
+_SHOT_LADDER = (5.5, 6.5, 7.5, 8.5, 9.5, 10.5)
 
 
 @dataclass(frozen=True)
@@ -262,6 +263,7 @@ def build_market_book(
     goals: GoalsModel | None,
     corners: CornersModel | None = None,
     cards=None,
+    shots=None,
     referee: str | None = None,
     knockout: bool = False,
     neutral: bool = True,
@@ -302,6 +304,13 @@ def build_market_book(
         variance = cdp.total * getattr(cards, "dispersion", 1.0)
         selections += _count_selections(
             "Tarjetas Más/Menos", cdp.total, variance, _CARD_LADDER, "Cards Over/Under",
+        )
+
+    if shots is not None:
+        sp = shots.predict(home, away)
+        selections += _count_selections(
+            "Tiros al arco Más/Menos", sp.total, sp.total * shots.dispersion,
+            _SHOT_LADDER, "Total Shots on Target",
         )
 
     return MarketBook(

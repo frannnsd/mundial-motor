@@ -20,6 +20,7 @@ from mundial_bot.collectors.team_stats import TEAM_STATS_CACHE, load_team_stats
 from mundial_bot.config import Settings
 from mundial_bot.models.cards_model import CardsModel
 from mundial_bot.models.corners_model import CornersModel
+from mundial_bot.models.shots_model import ShotsModel
 from mundial_bot.pipeline import Models, build_models
 from mundial_bot.report import build_match_report, format_match_report, format_match_reports
 from mundial_bot.value.team_aliases import normalize_team
@@ -45,6 +46,7 @@ HELP = (
     "• <b>/agenda</b> → qué se jugó, qué hay en vivo y qué falta (horario AR) 📅\n"
     "• <b>/balance</b> → cuánto vengo acertando 📊\n"
     "• <b>/clv</b> → ¿le gano al cierre del mercado? (si el bot es sharp) 📈\n"
+    "• <b>/combinadas</b> → varias combinadas mezclando los partidos del día 🎲\n"
     "• <b>/apuesta 5 2.10 Argentina gana</b> → registrá una apuesta tuya\n"
     "• <b>/roi</b> → tu ganancia y ROI real 💰\n"
     "• 📸 <b>Mandame una foto</b> de tu ticket o de las cuotas y te la leo/evalúo\n\n"
@@ -90,6 +92,7 @@ class BotBrain:
     models: Models
     corners: CornersModel | None
     cards: CardsModel | None
+    shots: ShotsModel | None = None
 
     @property
     def known(self) -> set[str]:
@@ -115,7 +118,7 @@ class BotBrain:
         report = build_match_report(
             rh, ra,
             elo=self.models.elo, goals=self.models.goals,
-            corners=self.corners, cards=self.cards,
+            corners=self.corners, cards=self.cards, shots=self.shots,
             referee=referee, knockout=knockout, neutral=True,
             match_name=match_name or f"{rh} vs {ra}",
         )
@@ -137,7 +140,7 @@ class BotBrain:
         book = build_market_book(
             rh, ra,
             elo=self.models.elo, goals=self.models.goals,
-            corners=self.corners, cards=self.cards,
+            corners=self.corners, cards=self.cards, shots=self.shots,
             referee=referee, knockout=knockout, neutral=True,
             match_name=match_name or f"{rh} vs {ra}",
         )
@@ -170,7 +173,7 @@ class BotBrain:
         try:
             res = joint_same_match(
                 rh, ra, goals=self.models.goals,
-                corners=self.corners, cards=self.cards, legs=legs,
+                corners=self.corners, cards=self.cards, shots=self.shots, legs=legs,
             )
         except (GoalsModelError, ValueError) as exc:
             return f"(No pude calcular la combinada: {exc})"
@@ -193,16 +196,17 @@ class BotBrain:
         )
 
 
-def load_market_models() -> tuple[CornersModel | None, CardsModel | None]:
-    """Carga córners/tarjetas: prefiere la forma reciente de API-Football, sino StatsBomb."""
+def load_market_models() -> tuple[CornersModel | None, CardsModel | None, ShotsModel | None]:
+    """Carga córners/tarjetas/tiros al arco: forma reciente de API-Football, sino StatsBomb."""
     df = None
     if TEAM_STATS_CACHE.exists():
         df = load_team_stats()
     elif EVENTS_CACHE.exists():
         df = load_events(build_if_missing=False)
     if df is None or df.empty:
-        return None, None
-    return CornersModel.from_events(df), CardsModel.from_events(df)
+        return None, None, None
+    # ShotsModel devuelve None si el cache todavía no tiene las columnas de tiros al arco.
+    return CornersModel.from_events(df), CardsModel.from_events(df), ShotsModel.from_events(df)
 
 
 def load_brain() -> BotBrain:
@@ -210,8 +214,8 @@ def load_brain() -> BotBrain:
     from mundial_bot.collectors.wc_results import load_wc_results
 
     models = build_models(extra_results=load_wc_results())
-    corners, cards = load_market_models()
-    return BotBrain(models=models, corners=corners, cards=cards)
+    corners, cards, shots = load_market_models()
+    return BotBrain(models=models, corners=corners, cards=cards, shots=shots)
 
 
 def fetch_today_fixtures(settings: Settings) -> list:
@@ -256,7 +260,7 @@ def build_today_message(
             report = build_match_report(
                 normalize_team(f.home_team), normalize_team(f.away_team),
                 elo=brain.models.elo, goals=brain.models.goals,
-                corners=brain.corners, cards=brain.cards,
+                corners=brain.corners, cards=brain.cards, shots=brain.shots,
                 referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
             )
             reports.append(report)

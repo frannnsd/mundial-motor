@@ -42,14 +42,16 @@ está buena". Por probabilidad, no por value.
 Evaluás TODOS los mercados, no solo ganador/goles. Con `analizar_partido_completo` tenés la \
 probabilidad del modelo para cada mercado: 1X2, doble oportunidad, empate-no-apuesta, hándicap \
 asiático (toda la escalera), totales medios y enteros, total por equipo, ambos marcan, \
-par/impar, valla invicta, gana a cero, marcador exacto, córners y tarjetas. Cuando Franco te \
-tira una cuota, decile qué tan probable es eso según el modelo y mostrale la cuota al lado — \
-sin juzgarla por "value". Explicá el porqué (xG, goles esperados, quién domina, el árbitro en \
-tarjetas, etc.).
+par/impar, valla invicta, gana a cero, marcador exacto, córners, tarjetas y TIROS AL ARCO. \
+Cuando Franco te tira una cuota, decile qué tan probable es eso según el modelo y mostrale la \
+cuota al lado — sin juzgarla por "value". Explicá el porqué (xG, goles esperados, quién \
+domina, el árbitro en tarjetas, etc.).
 
 Con `escaneo_hoy` hacés el escaneo automático de la jornada: la jugada más probable de cada \
-partido con la cuota que paga, y combinadas (las más probables y las de mayor pago). Usalo \
-cuando Franco pregunte "qué hay hoy", "qué conviene", "armame combinadas", etc.
+partido con la cuota que paga. Con `combinadas_del_dia` armás VARIAS combinadas MEZCLANDO \
+partidos del día (cross-match, de 2 a 5 patas). Para una combinada de un SOLO partido usá \
+`combinada_partido` (probabilidad conjunta). Usalos cuando Franco pida "qué hay hoy", "armame \
+combinadas", "combinadas mezclando partidos", etc.
 
 El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
 interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
@@ -150,7 +152,8 @@ TOOLS = [
                        "home_away/draw_away) | 'goles'(side over/under, line) | 'ambos_marcan'"
                        "(side yes/no) | 'handicap'(team home/away, line) | 'total_equipo'(team "
                        "home/away, side over/under, line) | 'corners'(side over/under, line) | "
-                       "'cards'(side over/under, line). En goles/handicap/total_equipo usá "
+                       "'cards'(side over/under, line) | 'tiros'(tiros al arco, side over/under, "
+                       "line). En goles/handicap/total_equipo usá "
                        "líneas .5 (2.5, -1.5): las enteras tienen push y no se modelan. Poné un "
                        "'desc' legible en cada pata.",
         "input_schema": {
@@ -193,6 +196,14 @@ TOOLS = [
             },
             "required": ["local", "visita", "goles_local", "goles_visita", "minuto"],
         },
+    },
+    {
+        "name": "combinadas_del_dia",
+        "description": "Arma VARIAS combinadas MEZCLANDO los partidos del día (cross-match): "
+                       "las más probables y las de mayor pago, de 2 a 5 patas, con la cuota "
+                       "real. Usalo cuando Franco pida 'armame combinadas del día' o "
+                       "'combinadas mezclando partidos'.",
+        "input_schema": {"type": "object", "properties": {}},
     },
     {
         "name": "escaneo_hoy",
@@ -308,6 +319,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             from mundial_bot.service import scan_today
 
             return scan_today(settings, brain)
+        if name == "combinadas_del_dia":
+            from mundial_bot.service import day_parlays
+
+            return day_parlays(settings, brain)
         if name == "partidos_de_hoy":
             return build_today_message(
                 brain, settings, date_str=datetime.now(UTC).strftime("%d/%m/%Y"), log=False

@@ -20,6 +20,7 @@ _WINNER_OUTCOME = {"home": "Home", "draw": "Draw", "away": "Away"}
 # Posibles nombres del mercado de córners/tarjetas según la casa (probamos varios).
 _CORNER_MARKETS = ("Corners Over/Under", "Total Corners", "Corners Over Under")
 _CARD_MARKETS = ("Cards Over/Under", "Total Cards", "Cards Over Under")
+_SHOT_MARKETS = ("Total Shots on Target", "Shots on Target Over/Under")
 
 
 @dataclass(frozen=True)
@@ -80,6 +81,9 @@ def scan_match(report: MatchReport, odds: dict[str, MarketOdds]) -> list[Play]:
     if report.cards:
         side = "Over" if report.cards.side == "over" else "Under"
         add("Tarjetas", report.cards, _CARD_MARKETS, f"{side} {report.cards.line}")
+    if report.shots:
+        side = "Over" if report.shots.side == "over" else "Under"
+        add("Tiros al arco", report.shots, _SHOT_MARKETS, f"{side} {report.shots.line}")
     return plays
 
 
@@ -140,6 +144,31 @@ def format_play(p: Play) -> str:
 def format_combo(c: Combo) -> str:
     legs = " + ".join(leg.pick for leg in c.legs)
     return f"   <b>{c.combined_odds:.2f}x</b> · chance {c.combined_prob:.1%}\n   {legs}"
+
+
+def format_day_parlays(likely: list[Combo], payout: list[Combo], *, date_str: str) -> str:
+    """Combinadas del día MEZCLANDO partidos (cada pata muestra de qué partido es)."""
+    if not (likely or payout):
+        return (
+            f"🎲 <b>COMBINADAS DEL DÍA — {date_str}</b>\n\n"
+            "No tengo suficientes partidos con cuotas para armar combinadas ahora. 🤷"
+        )
+    lines = [f"🎲 <b>COMBINADAS DEL DÍA — {date_str}</b>", "(mezclando partidos del día)"]
+
+    def block(title: str, combos: list[Combo]) -> None:
+        if not combos:
+            return
+        lines.append(f"\n{title}")
+        for c in combos:
+            legs = "\n      ".join(f"• {leg.pick} ({leg.match})" for leg in c.legs)
+            lines.append(
+                f"   <b>{c.combined_odds:.2f}x</b> · chance {c.combined_prob:.1%}\n"
+                f"      {legs}"
+            )
+
+    block("🔒 <b>MÁS PROBABLES</b>", likely)
+    block("💰 <b>DE MAYOR PAGO</b> (más arriesgadas, vos ves)", payout)
+    return "\n".join(lines)
 
 
 def plays_from_book(book, odds: dict[str, MarketOdds]) -> list[Play]:

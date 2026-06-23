@@ -45,12 +45,13 @@ def _num(value) -> int:
 
 
 def _extract(stat_list: list[dict]) -> dict[str, int]:
-    """Saca córners/tarjetas/tiros/faltas de la lista de estadísticas de un equipo."""
+    """Saca córners/tarjetas/tiros/tiros al arco/faltas de las estadísticas de un equipo."""
     d = {s.get("type"): s.get("value") for s in stat_list}
     return {
         "corners": _num(d.get("Corner Kicks")),
         "cards": _num(d.get("Yellow Cards")) + _num(d.get("Red Cards")),
         "shots": _num(d.get("Total Shots")),
+        "shots_on_goal": _num(d.get("Shots on Goal")),   # tiros al arco
         "fouls": _num(d.get("Fouls")),
     }
 
@@ -137,6 +138,8 @@ def collect_team_stats(key: str, *, last: int = 12, season: int = DEFAULT_SEASON
                     "cards": a["cards"],
                     "fouls": a["fouls"],
                     "shots": a["shots"],
+                    "sot_for": a["shots_on_goal"],        # tiros al arco a favor
+                    "sot_against": b["shots_on_goal"],    # tiros al arco en contra
                     "referee": referee,
                     "is_home": int(tid_a == home_id),
                 })

@@ -63,6 +63,7 @@ class MatchReport:
     btts: MarketPick | None = None
     corners: MarketPick | None = None
     cards: MarketPick | None = None
+    shots: MarketPick | None = None
 
 
 def _favored(
@@ -83,6 +84,7 @@ def build_match_report(
     goals: GoalsModel | None = None,
     corners: CornersModel | None = None,
     cards: CardsModel | None = None,
+    shots=None,
     referee: str | None = None,
     knockout: bool = False,
     neutral: bool = True,
@@ -143,11 +145,20 @@ def build_match_report(
             expected=cdp.total, line=cdp.line,
         )
 
+    shots_pick = None
+    if shots is not None:
+        sp = shots.predict(home, away)
+        shots_pick = _favored(
+            f"Over {sp.line} tiros al arco", sp.p_over,
+            f"Under {sp.line} tiros al arco", sp.p_under,
+            expected=sp.total, line=sp.line,
+        )
+
     return MatchReport(
         match=match_name or f"{home} vs {away}",
         home_prob=ph, draw_prob=pd_, away_prob=pa,
         winner=winner, goals=goals_pick, btts=btts_pick,
-        corners=corners_pick, cards=cards_pick,
+        corners=corners_pick, cards=cards_pick, shots=shots_pick,
     )
 
 
@@ -165,7 +176,7 @@ def _confidence(prob: float) -> str:
 def best_bet(r: MatchReport) -> MarketPick:
     """La apuesta más firme del partido = la de mayor probabilidad."""
     picks = [r.winner]
-    picks += [m for m in (r.goals, r.corners, r.cards, r.btts) if m is not None]
+    picks += [m for m in (r.goals, r.corners, r.cards, r.btts, r.shots) if m is not None]
     return max(picks, key=lambda pk: pk.prob)
 
 
@@ -195,6 +206,11 @@ def format_match_report(r: MatchReport) -> str:
         lines.append(
             f"   🟨 {html.escape(r.cards.pick)} — {r.cards.prob:.0%}"
             f"  (~{r.cards.expected:.1f})"
+        )
+    if r.shots:
+        lines.append(
+            f"   🎯 {html.escape(r.shots.pick)} — {r.shots.prob:.0%}"
+            f"  (~{r.shots.expected:.0f})"
         )
     if r.btts:
         lines.append(f"   🤝 {html.escape(r.btts.pick)} — {r.btts.prob:.0%}")

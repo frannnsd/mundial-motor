@@ -58,14 +58,24 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
     Sin value gatekeeping: no descarta nada por falta de edge, solo ordena qué mostrar.
     Junta las casas de API-Football con las de odds-api.io (si hay key).
     """
+    from mundial_bot.evaluator import best_plays, build_combos, format_full_scan
+
+    all_plays = _day_plays(settings, brain)
+    firmes, mejor, batacazos = best_plays(all_plays)
+    likely, payout = build_combos(firmes + mejor)
+    return format_full_scan(
+        firmes, mejor, batacazos, likely, payout,
+        date_str=datetime.now(UTC).strftime("%d/%m/%Y"),
+    )
+
+
+def _day_plays(settings: Settings, brain: BotBrain) -> list:
+    """Junta TODAS las jugadas priced de los partidos por jugar (próximos 2 días)."""
     from mundial_bot.collectors.odds_af import fetch_odds, merge_odds
-    from mundial_bot.evaluator import best_plays, build_combos, format_full_scan, plays_from_book
+    from mundial_bot.evaluator import plays_from_book
     from mundial_bot.models.market_book import build_market_book
 
     key = settings.api_football_key
-    # Partidos POR JUGAR de los próximos días (los terminados/en vivo tienen cuotas
-    # viejas o de in-play que no sirven para apostar pre-partido). Acotado para no
-    # disparar demasiadas consultas ni mensajes gigantes.
     try:
         window = get_schedule(settings, days_back=0, days_ahead=2)
         fixtures = sorted((f for f in window if f.upcoming), key=lambda f: f.date)[:10]
@@ -73,7 +83,6 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
         logger.warning("No pude traer la agenda; uso fixtures de hoy: %s", exc)
         fixtures = [f for f in fetch_today_fixtures(settings) if getattr(f, "upcoming", True)]
 
-    # Cuotas extra de odds-api.io (una sola bajada de eventos del Mundial, reutilizada).
     extra_events = None
     if settings.has_oddspapi:
         try:
@@ -83,14 +92,14 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
         except Exception as exc:  # noqa: BLE001
             logger.warning("odds-api.io sin eventos: %s", exc)
 
-    all_plays = []
+    all_plays: list = []
     for f in fixtures:
         if not f.fixture_id:
             continue
         book = build_market_book(
             normalize_team(f.home_team), normalize_team(f.away_team),
             elo=brain.models.elo, goals=brain.models.goals,
-            corners=brain.corners, cards=brain.cards,
+            corners=brain.corners, cards=brain.cards, shots=brain.shots,
             referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
         )
         odds: dict = {}
@@ -110,12 +119,19 @@ def scan_today(settings: Settings, brain: BotBrain) -> str:
             except Exception as exc:  # noqa: BLE001
                 logger.warning("odds-api.io sin cuotas para %s: %s", f.match, exc)
         all_plays.extend(plays_from_book(book, odds))
+    return all_plays
 
-    firmes, mejor, batacazos = best_plays(all_plays)
-    likely, payout = build_combos(firmes + mejor)
-    return format_full_scan(
-        firmes, mejor, batacazos, likely, payout,
-        date_str=datetime.now(UTC).strftime("%d/%m/%Y"),
+
+def day_parlays(settings: Settings, brain: BotBrain) -> str:
+    """Arma VARIAS combinadas mezclando los partidos del día (cross-match)."""
+    from mundial_bot.evaluator import best_plays, build_combos, format_day_parlays
+
+    firmes, mejor, _ = best_plays(_day_plays(settings, brain))
+    likely, payout = build_combos(
+        firmes + mejor, sizes=(2, 3, 4, 5), top_likely=6, top_payout=6
+    )
+    return format_day_parlays(
+        likely, payout, date_str=datetime.now(UTC).strftime("%d/%m/%Y")
     )
 
 
@@ -187,7 +203,7 @@ def snapshot_clv(settings: Settings, brain: BotBrain, *, max_per_fixture: int = 
             book = build_market_book(
                 normalize_team(f.home_team), normalize_team(f.away_team),
                 elo=brain.models.elo, goals=brain.models.goals,
-                corners=brain.corners, cards=brain.cards,
+                corners=brain.corners, cards=brain.cards, shots=brain.shots,
                 referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
             )
             firmes, mejor, _ = best_plays(plays_from_book(book, odds))
@@ -351,7 +367,7 @@ def prematch_alerts(settings: Settings, brain: BotBrain) -> list[str]:
             report = build_match_report(
                 normalize_team(f.home_team), normalize_team(f.away_team),
                 elo=brain.models.elo, goals=brain.models.goals,
-                corners=brain.corners, cards=brain.cards,
+                corners=brain.corners, cards=brain.cards, shots=brain.shots,
                 referee=f.referee, knockout=f.knockout, neutral=True, match_name=f.match,
             )
             msg = f"⏰ <b>PRE-PARTIDO</b> (empieza en ~{int(mins)} min)\n\n"

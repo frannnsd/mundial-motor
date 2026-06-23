@@ -20,7 +20,7 @@ from mundial_bot.models.count_market import over_under
 from mundial_bot.models.goals_model import GoalsModel, GoalsModelError
 
 _GOALS_MARKETS = {"ganador", "doble", "goles", "ambos_marcan", "handicap", "total_equipo"}
-_COUNT_MARKETS = {"corners", "cards"}
+_COUNT_MARKETS = {"corners", "cards", "tiros"}
 
 
 @dataclass(frozen=True)
@@ -70,27 +70,23 @@ def _goals_mask(leg: dict, i, j, margin, total):
 
 
 def _count_prob(leg: dict, corners: CornersModel | None, cards: CardsModel | None,
-                home: str, away: str) -> float:
-    """Probabilidad marginal de una pata de córners/tarjetas."""
+                shots, home: str, away: str) -> float:
+    """Probabilidad marginal de una pata de córners/tarjetas/tiros al arco."""
     market = leg["market"]
     side = leg.get("side", "over")
     line = float(leg.get("line", 0) or 0)
-    if market == "corners" and corners is not None:
-        pred = corners.predict(home, away)
-        var = pred.total * corners.dispersion
-        p_over, p_under = over_under(pred.total, line, variance=var)
-    elif market == "cards" and cards is not None:
-        pred = cards.predict(home, away)
-        var = pred.total * getattr(cards, "dispersion", 1.0)
-        p_over, p_under = over_under(pred.total, line, variance=var)
-    else:
+    model = {"corners": corners, "cards": cards, "tiros": shots}.get(market)
+    if model is None:
         raise ValueError(f"sin modelo para {market}")
+    pred = model.predict(home, away)
+    var = pred.total * getattr(model, "dispersion", 1.0)
+    p_over, p_under = over_under(pred.total, line, variance=var)
     return p_over if side == "over" else p_under
 
 
 def joint_same_match(
     home: str, away: str, *, goals: GoalsModel,
-    corners: CornersModel | None, cards: CardsModel | None,
+    corners: CornersModel | None, cards: CardsModel | None, shots=None,
     legs: list[dict], neutral: bool = True,
 ) -> JointResult:
     """Probabilidad conjunta de una combinada de patas del MISMO partido."""
@@ -115,7 +111,7 @@ def joint_same_match(
             mask = mask & np.broadcast_to(m, (n, n))
             desc.append((label, float(matrix[np.broadcast_to(m, (n, n))].sum())))
         elif market in _COUNT_MARKETS:
-            p = _count_prob(leg, corners, cards, home, away)
+            p = _count_prob(leg, corners, cards, shots, home, away)
             count_prob *= p
             desc.append((label, p))
         else:
