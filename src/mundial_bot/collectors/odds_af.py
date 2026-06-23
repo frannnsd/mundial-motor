@@ -30,12 +30,17 @@ class MarketOdds:
         return v[0] if v else None
 
 
-def parse_odds(raw: dict) -> dict[str, MarketOdds]:
-    """Parsea la respuesta de /odds a {mercado: MarketOdds con la mejor cuota}. Puro."""
+def parse_odds(raw: dict, *, books: set[str] | None = None) -> dict[str, MarketOdds]:
+    """Parsea la respuesta de /odds a {mercado: MarketOdds con la mejor cuota}. Puro.
+
+    Si `books` (nombres en minúscula) se pasa, considera SOLO esas casas (las de Franco).
+    """
     out: dict[str, MarketOdds] = {}
     for item in raw.get("response", []):
         for bookmaker in item.get("bookmakers", []):
             book = bookmaker.get("name", "?")
+            if books and book.lower() not in books:
+                continue
             for bet in bookmaker.get("bets", []):
                 market = bet.get("name", "")
                 if not market:
@@ -55,13 +60,15 @@ def parse_odds(raw: dict) -> dict[str, MarketOdds]:
     return out
 
 
-def fetch_odds(key: str, fixture_id: int) -> dict[str, MarketOdds]:
-    """Trae todas las cuotas de un partido (mejor cuota por resultado)."""
+def fetch_odds(
+    key: str, fixture_id: int, *, books: set[str] | None = None
+) -> dict[str, MarketOdds]:
+    """Trae las cuotas de un partido (mejor cuota por resultado). `books` = casas de Franco."""
     raw = requests.get(
         f"{API_FOOTBALL_BASE}/odds", headers={"x-apisports-key": key},
         params={"fixture": fixture_id}, timeout=TIMEOUT_S,
     ).json()
-    return parse_odds(raw)
+    return parse_odds(raw, books=books)
 
 
 def num_bookmakers(raw: dict) -> int:

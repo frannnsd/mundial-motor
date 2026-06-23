@@ -104,7 +104,7 @@ def _day_plays(settings: Settings, brain: BotBrain) -> list:
         )
         odds: dict = {}
         try:
-            odds = fetch_odds(key, f.fixture_id)
+            odds = fetch_odds(key, f.fixture_id, books=settings.preferred_books_set)
         except Exception as exc:  # noqa: BLE001
             logger.warning("Sin cuotas para %s: %s", f.match, exc)
         if extra_events is not None:
@@ -245,7 +245,7 @@ def shots_on_target_market(settings: Settings, brain: BotBrain, home: str, away:
     odds: dict = {}
     if fixture_id:
         try:
-            odds = fetch_odds(key, fixture_id)
+            odds = fetch_odds(key, fixture_id, books=settings.preferred_books_set)
         except Exception:  # noqa: BLE001
             odds = {}
 
@@ -331,7 +331,7 @@ def snapshot_clv(settings: Settings, brain: BotBrain, *, max_per_fixture: int = 
             if not f.fixture_id:
                 continue
             try:
-                odds = fetch_odds(key, f.fixture_id)
+                odds = fetch_odds(key, f.fixture_id, books=settings.preferred_books_set)
             except Exception:  # noqa: BLE001
                 continue
             if not odds:
@@ -381,7 +381,7 @@ def close_clv(settings: Settings, *, window_min: float = 120.0) -> int:
             if not rows:
                 continue
             try:
-                odds = fetch_odds(key, f.fixture_id)
+                odds = fetch_odds(key, f.fixture_id, books=settings.preferred_books_set)
             except Exception:  # noqa: BLE001
                 continue
             for r in rows:
@@ -409,7 +409,7 @@ def odds_for_match(settings: Settings, home: str, away: str) -> dict:
     fixture_id = find_fixture_id(settings, home, away)
     if fixture_id and key:
         try:
-            odds = fetch_odds(key, fixture_id)
+            odds = fetch_odds(key, fixture_id, books=settings.preferred_books_set)
         except Exception as exc:  # noqa: BLE001
             logger.warning("Sin cuotas API-Football para %s vs %s: %s", home, away, exc)
     if settings.has_oddspapi:

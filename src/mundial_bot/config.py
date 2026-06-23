@@ -49,6 +49,13 @@ class Settings(BaseSettings):
     odds_region: str = Field(default="eu", alias="ODDS_REGION")
     timezone: str = Field(default="America/Argentina/Buenos_Aires", alias="TIMEZONE")
     daily_picks_hour: int = Field(default=10, alias="DAILY_PICKS_HOUR", ge=0, le=23)
+    # Casas donde apuesta Franco: el bot muestra SOLO estas cuotas (vacío = todas).
+    preferred_books: str = Field(default="Bet365,Betano", alias="PREFERRED_BOOKS")
+
+    @property
+    def preferred_books_set(self) -> set[str]:
+        """Nombres (en minúscula) de las casas preferidas. Vacío = todas las casas."""
+        return {b.strip().lower() for b in self.preferred_books.split(",") if b.strip()}
 
     @property
     def has_odds_api(self) -> bool:

@@ -23,8 +23,8 @@ from mundial_bot.collectors.odds_af import MarketOdds
 
 ODDSAPI_BASE = "https://api.odds-api.io/v3"
 WORLD_CUP_LEAGUE = "international-fifa-world-cup"
-# Máx. 2 por el plan; 1xbet y Bet365 suelen tener cuotas altas y mucho mercado.
-DEFAULT_BOOKMAKERS = "1xbet,Bet365"
+# Máx. 2 por el plan; alineado a las casas de Franco (Bet365 + Betano).
+DEFAULT_BOOKMAKERS = "Bet365,Betano"
 TIMEOUT_S = 25
 
 # Nombres de mercado de odds-api.io → los que consume el evaluador (estilo API-Football).

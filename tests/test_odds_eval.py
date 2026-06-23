@@ -48,6 +48,14 @@ def test_parse_odds_toma_la_mejor_cuota():
     assert odds["Match Winner"].best["Away"] == (2.65, "Pinnacle")
 
 
+def test_parse_odds_filtra_a_las_casas_de_franco():
+    # Filtrando a Bet365, la mejor de Away ya no es Pinnacle (2.65) sino Bet365 (2.40).
+    odds = parse_odds(ODDS_RAW, books={"bet365"})
+    assert odds["Match Winner"].best["Away"] == (2.40, "Bet365")
+    # Pinnacle quedó afuera → su mercado Goals Over/Under no aparece.
+    assert "Goals Over/Under" not in odds
+
+
 def test_scan_match_adjunta_la_cuota_y_no_descarta():
     odds = parse_odds(ODDS_RAW)
     plays = scan_match(_report("A vs B", away_prob=0.45), odds)
