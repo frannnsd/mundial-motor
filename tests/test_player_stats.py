@@ -8,8 +8,14 @@ import pytest
 
 from mundial_bot.collectors.player_stats import (
     _poisson_over_under,
+    opponent_factor,
     parse_player_shots,
 )
+
+
+class _FakeShots:
+    league_avg = 4.0
+    team_against = {"Floja": 6.0, "Firme": 2.0, "Media": 4.0}
 
 RAW = {
     "response": [
@@ -51,3 +57,11 @@ def test_poisson_over_under_coherente():
     assert out[0.5] == pytest.approx(1 - math.exp(-1.5))
     # Monótono decreciente al subir la línea
     assert out[0.5] > out[1.5] > out[2.5]
+
+
+def test_opponent_factor_ajusta_por_la_defensa_del_rival():
+    s = _FakeShots()
+    assert opponent_factor(s, "Media") == pytest.approx(1.0)     # concede la media
+    assert opponent_factor(s, "Floja") == pytest.approx(1.5)     # 6/4 = patea más
+    assert opponent_factor(s, "Firme") == pytest.approx(0.6)     # 2/4=0.5 → acotado a 0.6
+    assert opponent_factor(s, "Desconocido") == pytest.approx(1.0)  # sin dato → media

@@ -53,9 +53,10 @@ partidos del día (cross-match, de 2 a 5 patas). Para una combinada de un SOLO p
 `combinada_partido` (probabilidad conjunta). Usalos cuando Franco pida "qué hay hoy", "armame \
 combinadas", "combinadas mezclando partidos", etc.
 
-Para los tiros de un JUGADOR puntual (props) usá `tiros_jugador`: te da su promedio y la \
-probabilidad de más de 0.5/1.5/2.5 tiros al arco. Aclarale que asume que es titular y que la \
-cuota la compara él (no tengo la de la casa para props de jugador).
+Para los tiros de un JUGADOR (props) usá `tiros_jugador` pasándole SIEMPRE el `rival` para \
+que ajuste por la defensa del rival: te da la PROBABILIDAD de más de 0.5/1.5/2.5 tiros al \
+arco. Lo que importa es la probabilidad de que pase, no la cuota. Aclarale que asume que \
+arranca de titular.
 
 El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
 interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
@@ -150,13 +151,17 @@ TOOLS = [
     },
     {
         "name": "tiros_jugador",
-        "description": "Tiros y tiros al ARCO de un JUGADOR (player props): su promedio por "
-                       "partido + probabilidad de más de 0.5/1.5/2.5 tiros al arco (Poisson). "
-                       "Asume que arranca de titular; sin cuota de la casa (mostrá la prob del "
-                       "modelo). Usalo cuando Franco pregunte por los tiros de un jugador.",
+        "description": "Tiros y tiros al ARCO de un JUGADOR (player props): la PROBABILIDAD de "
+                       "más de 0.5/1.5/2.5 tiros al arco (Poisson). Si pasás 'rival', AJUSTA por "
+                       "la defensa del rival (concede más/menos tiros que la media). Asume que "
+                       "arranca de titular. Usalo cuando Franco pregunte por los tiros de un "
+                       "jugador.",
         "input_schema": {
             "type": "object",
-            "properties": {"jugador": {"type": "string", "description": "nombre del jugador"}},
+            "properties": {
+                "jugador": {"type": "string", "description": "nombre del jugador"},
+                "rival": {"type": "string", "description": "equipo rival (para ajustar), opcional"},
+            },
             "required": ["jugador"],
         },
     },
@@ -335,6 +340,7 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             from mundial_bot.collectors.player_stats import (
                 fetch_player_shots,
                 format_player_shots,
+                opponent_factor,
             )
 
             if not settings.has_api_football:
@@ -346,7 +352,11 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             if ps is None:
                 return (f"(No encontré datos de tiros de {args['jugador']}. Probá con el "
                         "nombre completo o el apellido exacto.)")
-            return format_player_shots(ps)
+            opponent = factor = None
+            if args.get("rival") and brain.shots is not None:
+                opponent = brain.resolve(args["rival"])
+                factor = opponent_factor(brain.shots, opponent)
+            return format_player_shots(ps, opponent=opponent, factor=factor)
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 

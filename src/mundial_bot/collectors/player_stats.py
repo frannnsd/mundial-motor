@@ -133,17 +133,40 @@ def _poisson_over_under(mean: float, lines: tuple[float, ...]) -> list[tuple[flo
     return out
 
 
-def format_player_shots(ps: PlayerShots) -> str:
-    """Texto para el agente: tasa + over/under de tiros y tiros al arco."""
+def opponent_factor(shots_model, rival: str, *, lo: float = 0.6, hi: float = 1.6) -> float:
+    """Factor defensivo del rival: tiros al arco que concede vs la media (1.0 = media).
+
+    >1 = defensa floja (el jugador patea MÁS); <1 = defensa firme (patea menos).
+    Acotado para no exagerar con muestras chicas.
+    """
+    avg = getattr(shots_model, "league_avg", 0.0)
+    conceded = getattr(shots_model, "team_against", {}).get(rival, avg)
+    if avg <= 0:
+        return 1.0
+    return min(max(conceded / avg, lo), hi)
+
+
+def format_player_shots(
+    ps: PlayerShots, *, opponent: str | None = None, factor: float | None = None
+) -> str:
+    """Texto para el agente: tasa + over/under. Si hay `factor`, ajusta por el rival."""
+    sot_rate, shot_rate = ps.sot_per_game, ps.shots_per_game
     lines = [
         f"TIROS DE {ps.name} ({ps.team}) — {ps.appearances} partidos esta temporada:",
-        f"  promedio: {ps.shots_per_game:.2f} tiros · {ps.sot_per_game:.2f} al arco por partido",
-        "  (asume que arranca de titular; tasa de la temporada, sin ajuste por rival)",
-        "  Tiros al arco:",
+        f"  base: {ps.shots_per_game:.2f} tiros · {ps.sot_per_game:.2f} al arco por partido",
     ]
-    for line, p in _poisson_over_under(ps.sot_per_game, SOT_LINES):
+    if factor and opponent:
+        sot_rate, shot_rate = ps.sot_per_game * factor, ps.shots_per_game * factor
+        tag = "defensa floja" if factor > 1.05 else "defensa firme" if factor < 0.95 else "neutra"
+        lines.append(
+            f"  ajustado vs {opponent} ({tag}, concede {factor:.2f}x la media): "
+            f"{shot_rate:.2f} tiros · {sot_rate:.2f} al arco"
+        )
+    lines.append("  (asume que arranca de titular)")
+    lines.append("  Tiros al arco — probabilidad de que pase:")
+    for line, p in _poisson_over_under(sot_rate, SOT_LINES):
         lines.append(f"    Más de {line:g}: {p:.0%}")
     lines.append("  Tiros totales:")
-    for line, p in _poisson_over_under(ps.shots_per_game, SHOT_LINES):
+    for line, p in _poisson_over_under(shot_rate, SHOT_LINES):
         lines.append(f"    Más de {line:g}: {p:.0%}")
     return "\n".join(lines)
