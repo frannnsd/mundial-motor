@@ -53,10 +53,11 @@ partidos del día (cross-match, de 2 a 5 patas). Para una combinada de un SOLO p
 `combinada_partido` (probabilidad conjunta). Usalos cuando Franco pida "qué hay hoy", "armame \
 combinadas", "combinadas mezclando partidos", etc.
 
-Para los tiros de un JUGADOR (props) usá `tiros_jugador` pasándole SIEMPRE el `rival` para \
-que ajuste por la defensa del rival: te da la PROBABILIDAD de más de 0.5/1.5/2.5 tiros al \
-arco. Lo que importa es la probabilidad de que pase, no la cuota. Aclarale que asume que \
-arranca de titular.
+Para saber QUIÉN puede meter gol en un partido usá `goleadores_partido(local, visita)`: te da \
+la probabilidad de que cada jugador haga 1+/2+/3+ goles, de los dos equipos, ya ajustada por \
+el rival. Para los tiros de un JUGADOR (props) usá `tiros_jugador` pasándole SIEMPRE el \
+`rival`: te da la PROBABILIDAD de más de 0.5/1.5/2.5 tiros al arco. Lo que importa es la \
+probabilidad de que pase, no la cuota. Aclarale que asumen que arrancan de titulares.
 
 El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
 interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
@@ -147,6 +148,18 @@ TOOLS = [
             "type": "object",
             "properties": {"equipo": {"type": "string"}},
             "required": ["equipo"],
+        },
+    },
+    {
+        "name": "goleadores_partido",
+        "description": "GOLEADORES de un partido: la probabilidad de que CADA jugador haga "
+                       "1+/2+/3+ goles, para los dos equipos, ordenados por chance. Reparte el "
+                       "xG del equipo (ya ajustado por el rival) según cuánto convierte cada "
+                       "uno. Usalo cuando Franco pregunte quién puede meter gol / goleadores.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"local": {"type": "string"}, "visita": {"type": "string"}},
+            "required": ["local", "visita"],
         },
     },
     {
@@ -336,6 +349,10 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             except Exception as exc:  # noqa: BLE001
                 return f"(No pude traer noticias: {exc})"
             return format_news(team, headlines)
+        if name == "goleadores_partido":
+            from mundial_bot.service import match_scorers
+
+            return match_scorers(settings, brain, args["local"], args["visita"])
         if name == "tiros_jugador":
             from mundial_bot.collectors.player_stats import (
                 fetch_player_shots,

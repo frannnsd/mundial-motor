@@ -7,7 +7,9 @@ import math
 import pytest
 
 from mundial_bot.collectors.player_stats import (
+    SquadGoals,
     _poisson_over_under,
+    goalscorer_probs,
     opponent_factor,
     parse_player_shots,
 )
@@ -57,6 +59,26 @@ def test_poisson_over_under_coherente():
     assert out[0.5] == pytest.approx(1 - math.exp(-1.5))
     # Monótono decreciente al subir la línea
     assert out[0.5] > out[1.5] > out[2.5]
+
+
+def test_goalscorer_reparte_el_xg_y_ordena_por_chance():
+    squad = [
+        SquadGoals("Goleador", appearances=10, goals=8),    # 0.8/PJ
+        SquadGoals("Media", appearances=10, goals=2),        # 0.2/PJ
+        SquadGoals("Defensor", appearances=10, goals=0),     # no convierte → excluido
+        SquadGoals("Suplente", appearances=1, goals=1),      # pocas apariciones → excluido
+    ]
+    rows = goalscorer_probs(squad, team_xg=2.0)
+    names = [r[0] for r in rows]
+    assert names == ["Goleador", "Media"]                    # ordenado por P(1+)
+    # El goleador concentra 0.8/(0.8+0.2)=80% del xG del equipo → xg 1.6
+    assert rows[0][1] == pytest.approx(1.6)
+    assert rows[0][2] > rows[1][2]                           # más chance de 1+
+
+
+def test_goalscorer_sin_goleadores_o_sin_xg():
+    assert goalscorer_probs([SquadGoals("X", 5, 0)], 2.0) == []
+    assert goalscorer_probs([SquadGoals("X", 5, 3)], 0.0) == []
 
 
 def test_opponent_factor_ajusta_por_la_defensa_del_rival():

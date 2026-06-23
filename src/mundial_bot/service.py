@@ -171,6 +171,55 @@ def injuries_for_match(settings: Settings, home: str, away: str) -> str:
     return "\n".join(lines)
 
 
+def match_scorers(settings: Settings, brain: BotBrain, home: str, away: str) -> str:
+    """Goleadores probables de un partido: P(1+/2+/3+ goles) por jugador de cada equipo.
+
+    Reparte el xG del equipo (Dixon-Coles, ya ajustado por el rival) entre los jugadores
+    según su tasa de gol de la temporada.
+    """
+    if not settings.has_api_football:
+        return "(Sin API-Football para traer los planteles.)"
+    if brain.models.goals is None:
+        return "(No tengo el modelo de goles cargado.)"
+    from mundial_bot.collectors.player_stats import (
+        fetch_squad_goals,
+        format_scorers,
+        goalscorer_probs,
+        team_id_map,
+    )
+
+    rh, ra = brain.resolve(home), brain.resolve(away)
+    if rh not in brain.known or ra not in brain.known:
+        return f"(No tengo a {home} o {away} en el modelo del Mundial.)"
+    if not brain.models.goals.can_predict(rh, ra):
+        return f"(No tengo datos de goles para {rh} o {ra}.)"
+    try:
+        _, home_xg, away_xg = brain.models.goals.score_matrix(rh, ra, neutral=True)
+    except Exception as exc:  # noqa: BLE001
+        return f"(No pude calcular el xG: {exc})"
+
+    key = settings.api_football_key
+    try:
+        idmap = team_id_map(key)
+    except Exception as exc:  # noqa: BLE001
+        return f"(No pude traer los planteles: {exc})"
+
+    blocks = []
+    for team, xg in ((rh, home_xg), (ra, away_xg)):
+        tid = idmap.get(team)
+        if tid is None:
+            blocks.append(f"⚽ {team}: no encontré el plantel.")
+            continue
+        try:
+            squad = fetch_squad_goals(key, tid)
+        except Exception:  # noqa: BLE001
+            blocks.append(f"⚽ {team}: no pude traer el plantel.")
+            continue
+        blocks.append(format_scorers(team, goalscorer_probs(squad, xg)))
+    head = f"🥅 GOLEADORES — {rh} vs {ra}\n(asume titulares; tasa de la temporada)\n"
+    return head + "\n\n".join(blocks)
+
+
 def snapshot_clv(settings: Settings, brain: BotBrain, *, max_per_fixture: int = 6) -> int:
     """Guarda la cuota de APERTURA de los picks firmes de los próximos partidos (para CLV)."""
     if not settings.has_api_football:

@@ -22,6 +22,8 @@ DEFAULT_SEASON = 2026
 TIMEOUT_S = 25
 SOT_LINES = (0.5, 1.5, 2.5)
 SHOT_LINES = (0.5, 1.5, 2.5, 3.5)
+_SQUAD_MIN_APPS = 2     # ignora jugadores con muy pocos partidos
+_SQUAD_MAX_PAGES = 4
 
 
 @dataclass(frozen=True)
@@ -144,6 +146,93 @@ def opponent_factor(shots_model, rival: str, *, lo: float = 0.6, hi: float = 1.6
     if avg <= 0:
         return 1.0
     return min(max(conceded / avg, lo), hi)
+
+
+@dataclass(frozen=True)
+class SquadGoals:
+    name: str
+    appearances: int
+    goals: int
+
+    @property
+    def goals_per_game(self) -> float:
+        return self.goals / self.appearances if self.appearances else 0.0
+
+
+def team_id_map(key: str, *, season: int = DEFAULT_SEASON) -> dict[str, int]:
+    """{nombre_normalizado_del_modelo: team_id} de los equipos del Mundial."""
+    from mundial_bot.value.team_aliases import normalize_team
+
+    r = requests.get(
+        f"{API_FOOTBALL_BASE}/teams",
+        headers={"x-apisports-key": key},
+        params={"league": WORLD_CUP_LEAGUE_ID, "season": season}, timeout=TIMEOUT_S,
+    )
+    r.raise_for_status()
+    out: dict[str, int] = {}
+    for item in r.json().get("response", []):
+        team = item.get("team") or {}
+        if team.get("id") and team.get("name"):
+            out[normalize_team(team["name"])] = int(team["id"])
+    return out
+
+
+def fetch_squad_goals(
+    key: str, team_id: int, *, season: int = DEFAULT_SEASON
+) -> list[SquadGoals]:
+    """Plantel de un equipo con sus goles/partidos de la temporada (paginado)."""
+    players: list[SquadGoals] = []
+    page = 1
+    while page <= _SQUAD_MAX_PAGES:
+        raw = _get(key, {"team": team_id, "season": season, "page": page})
+        for item in raw.get("response", []):
+            name = (item.get("player") or {}).get("name", "")
+            apps = goals = 0
+            for st in item.get("statistics", []) or []:
+                apps += _num((st.get("games") or {}).get("appearences"))
+                goals += _num((st.get("goals") or {}).get("total"))
+            if name and apps > 0:
+                players.append(SquadGoals(name=name, appearances=apps, goals=goals))
+        paging = raw.get("paging") or {}
+        if page >= _num(paging.get("total")):
+            break
+        page += 1
+    return players
+
+
+def goalscorer_probs(
+    squad: list[SquadGoals], team_xg: float, *, min_apps: int = _SQUAD_MIN_APPS, top: int = 8
+) -> list[tuple[str, float, float, float, float]]:
+    """Reparte el xG del equipo (ya ajustado por el rival) entre los jugadores según su
+    tasa de gol. Devuelve [(nombre, xg_jugador, P(1+), P(2+), P(3+))] ordenado por P(1+)."""
+    elig = [p for p in squad if p.appearances >= min_apps and p.goals_per_game > 0]
+    total_gpg = sum(p.goals_per_game for p in elig)
+    if total_gpg <= 0 or team_xg <= 0:
+        return []
+    rows = []
+    for p in elig:
+        pxg = team_xg * (p.goals_per_game / total_gpg)
+        p1 = float(1.0 - poisson.pmf(0, pxg))
+        p2 = float(1.0 - poisson.cdf(1, pxg))
+        p3 = float(1.0 - poisson.cdf(2, pxg))
+        rows.append((p.name, pxg, p1, p2, p3))
+    rows.sort(key=lambda r: -r[2])
+    return rows[:top]
+
+
+def format_scorers(team: str, scorers: list[tuple[str, float, float, float, float]]) -> str:
+    """Goleadores probables de un equipo (1+/2+/3+ goles)."""
+    if not scorers:
+        return f"⚽ {team}: sin datos de goleadores."
+    lines = [f"⚽ <b>{team}</b> — chance de hacer gol (ya ajustado por el rival):"]
+    for name, _pxg, p1, p2, p3 in scorers:
+        extra = ""
+        if p2 >= 0.04:
+            extra += f" · 2+: {p2:.0%}"
+        if p3 >= 0.015:
+            extra += f" · 3+: {p3:.0%}"
+        lines.append(f"   {name}: <b>1+ {p1:.0%}</b>{extra}")
+    return "\n".join(lines)
 
 
 def format_player_shots(
