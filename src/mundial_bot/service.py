@@ -307,6 +307,75 @@ def shots_on_target_market(settings: Settings, brain: BotBrain, home: str, away:
     return "\n".join(lines)
 
 
+_PLAYER_PROPS = {
+    "barridas": ("tackles_per_game", "Player Tackles", 2, "Barridas (tackles)"),
+    "faltas": ("fouls_per_game", "Player Fouls Committed", 2, "Faltas cometidas"),
+    "tiros_al_arco": ("sot_per_game", "Player Shots On Target", 1, "Tiros al arco"),
+}
+
+
+def player_props_market(settings: Settings, brain: BotBrain, home: str, away: str,
+                        market: str) -> str:
+    """Props por jugador con CUOTA REAL: barridas / faltas / tiros al arco (P(N+) por jugador)."""
+    if not settings.has_api_football:
+        return "(Sin API-Football.)"
+    cfg = _PLAYER_PROPS.get(market)
+    if cfg is None:
+        return f"(Mercado '{market}' no soportado. Probá barridas, faltas o tiros_al_arco.)"
+    stat_attr, casa_market, line, label = cfg
+    from operator import attrgetter
+
+    from mundial_bot.collectors.odds_af import fetch_odds
+    from mundial_bot.collectors.player_stats import (
+        fetch_squad_goals,
+        match_casa_odd,
+        parse_player_props_odds,
+        player_count_probs,
+        team_id_map,
+    )
+
+    rh, ra = brain.resolve(home), brain.resolve(away)
+    if rh not in brain.known or ra not in brain.known:
+        return f"(No tengo a {home} o {away} en el modelo del Mundial.)"
+    key = settings.api_football_key
+    fixture_id = find_fixture_id(settings, rh, ra)
+    odds: dict = {}
+    if fixture_id:
+        try:
+            odds = fetch_odds(key, fixture_id, books=settings.preferred_books_set)
+        except Exception:  # noqa: BLE001
+            odds = {}
+    casa: dict = {}
+    mo = odds.get(casa_market)
+    if mo and mo.best:
+        casa = parse_player_props_odds(mo.best, line)
+    try:
+        idmap = team_id_map(key)
+    except Exception:  # noqa: BLE001
+        idmap = {}
+
+    getter = attrgetter(stat_attr)
+    lines = [f"🦵 <b>{label.upper()} — {rh} vs {ra}</b> ({line}+):"]
+    for team in (rh, ra):
+        tid = idmap.get(team)
+        if not tid:
+            continue
+        try:
+            squad = fetch_squad_goals(key, tid)
+        except Exception:  # noqa: BLE001
+            continue
+        probs = player_count_probs(squad, getter, line, top=8)
+        if not probs:
+            continue
+        lines.append(f"  <b>{team}</b>:")
+        for name, _rate, pk in probs:
+            found = match_casa_odd(name, casa)
+            c = f" · casa {found[0]:.2f}" if found else ""
+            lines.append(f"    {name}: modelo {pk:.0%}{c}")
+    lines.append("<i>(asume titulares; barridas/faltas sin ajuste por rival)</i>")
+    return "\n".join(lines)
+
+
 def snapshot_clv(settings: Settings, brain: BotBrain, *, max_per_fixture: int = 6) -> int:
     """Guarda la cuota de APERTURA de los picks firmes de los próximos partidos (para CLV)."""
     if not settings.has_api_football:

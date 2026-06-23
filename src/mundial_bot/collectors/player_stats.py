@@ -154,6 +154,8 @@ class SquadGoals:
     appearances: int
     goals: int
     shots_on: int = 0
+    tackles: int = 0
+    fouls: int = 0
 
     @property
     def goals_per_game(self) -> float:
@@ -162,6 +164,14 @@ class SquadGoals:
     @property
     def sot_per_game(self) -> float:
         return self.shots_on / self.appearances if self.appearances else 0.0
+
+    @property
+    def tackles_per_game(self) -> float:
+        return self.tackles / self.appearances if self.appearances else 0.0
+
+    @property
+    def fouls_per_game(self) -> float:
+        return self.fouls / self.appearances if self.appearances else 0.0
 
 
 def team_id_map(key: str, *, season: int = DEFAULT_SEASON) -> dict[str, int]:
@@ -192,13 +202,18 @@ def fetch_squad_goals(
         raw = _get(key, {"team": team_id, "season": season, "page": page})
         for item in raw.get("response", []):
             name = (item.get("player") or {}).get("name", "")
-            apps = goals = sot = 0
+            apps = goals = sot = tackles = fouls = 0
             for st in item.get("statistics", []) or []:
                 apps += _num((st.get("games") or {}).get("appearences"))
                 goals += _num((st.get("goals") or {}).get("total"))
                 sot += _num((st.get("shots") or {}).get("on"))
+                tackles += _num((st.get("tackles") or {}).get("total"))
+                fouls += _num((st.get("fouls") or {}).get("committed"))
             if name and apps > 0:
-                players.append(SquadGoals(name=name, appearances=apps, goals=goals, shots_on=sot))
+                players.append(SquadGoals(
+                    name=name, appearances=apps, goals=goals, shots_on=sot,
+                    tackles=tackles, fouls=fouls,
+                ))
         paging = raw.get("paging") or {}
         if page >= _num(paging.get("total")):
             break
@@ -242,6 +257,42 @@ def player_sot_probs(
         rows.append((p.name, rate, p1))
     rows.sort(key=lambda r: -r[2])
     return rows[:top]
+
+
+def player_count_probs(
+    squad: list[SquadGoals], getter, line: int, *, factor: float = 1.0,
+    min_apps: int = _SQUAD_MIN_APPS, top: int = 10,
+) -> list[tuple[str, float, float]]:
+    """P(line+) por jugador de un conteo (tiros al arco / barridas / faltas) con Poisson.
+
+    `getter(p)` devuelve la tasa por partido del jugador. Devuelve [(nombre, tasa, P(line+))].
+    """
+    from scipy.stats import poisson as _poisson
+
+    rows = []
+    for p in squad:
+        if p.appearances < min_apps:
+            continue
+        rate = getter(p) * factor
+        if rate <= 0:
+            continue
+        pk = float(1.0 - _poisson.cdf(line - 1, rate))
+        rows.append((p.name, rate, pk))
+    rows.sort(key=lambda r: -r[2])
+    return rows[:top]
+
+
+def parse_player_props_odds(best: dict, line: int) -> dict[str, tuple[float, str]]:
+    """De un mercado de props por jugador ('Nombre - N+') arma {nombre_norm: (cuota, casa)}
+    para la línea pedida (ej. 2 → '2+')."""
+    tag = f"{line}+"
+    out: dict[str, tuple[float, str]] = {}
+    for outcome, val in best.items():
+        if tag not in outcome:
+            continue
+        name = outcome.rsplit(" - ", 1)[0] if " - " in outcome else outcome
+        out[_strip(name)] = val
+    return out
 
 
 def player_sot_casa_odds(best: dict) -> dict[str, tuple[float, str]]:
