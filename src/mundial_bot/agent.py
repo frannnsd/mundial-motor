@@ -53,6 +53,10 @@ partidos del día (cross-match, de 2 a 5 patas). Para una combinada de un SOLO p
 `combinada_partido` (probabilidad conjunta). Usalos cuando Franco pida "qué hay hoy", "armame \
 combinadas", "combinadas mezclando partidos", etc.
 
+Para los tiros de un JUGADOR puntual (props) usá `tiros_jugador`: te da su promedio y la \
+probabilidad de más de 0.5/1.5/2.5 tiros al arco. Aclarale que asume que es titular y que la \
+cuota la compara él (no tengo la de la casa para props de jugador).
+
 El 1X2 ya viene fusionado (blend Elo+DC, lo trae el modelo) — no lo reconcilies a mano; si te \
 interesa el desglose Elo/DC está en el panorama. Goles, hándicaps, totales, córners y tarjetas \
 salen del Dixon-Coles.
@@ -142,6 +146,18 @@ TOOLS = [
             "type": "object",
             "properties": {"equipo": {"type": "string"}},
             "required": ["equipo"],
+        },
+    },
+    {
+        "name": "tiros_jugador",
+        "description": "Tiros y tiros al ARCO de un JUGADOR (player props): su promedio por "
+                       "partido + probabilidad de más de 0.5/1.5/2.5 tiros al arco (Poisson). "
+                       "Asume que arranca de titular; sin cuota de la casa (mostrá la prob del "
+                       "modelo). Usalo cuando Franco pregunte por los tiros de un jugador.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"jugador": {"type": "string", "description": "nombre del jugador"}},
+            "required": ["jugador"],
         },
     },
     {
@@ -315,6 +331,22 @@ def _run_tool(name: str, args: dict, settings: Settings, brain: BotBrain) -> str
             except Exception as exc:  # noqa: BLE001
                 return f"(No pude traer noticias: {exc})"
             return format_news(team, headlines)
+        if name == "tiros_jugador":
+            from mundial_bot.collectors.player_stats import (
+                fetch_player_shots,
+                format_player_shots,
+            )
+
+            if not settings.has_api_football:
+                return "(Sin API-Football para traer los tiros del jugador.)"
+            try:
+                ps = fetch_player_shots(settings.api_football_key, args["jugador"])
+            except Exception as exc:  # noqa: BLE001
+                return f"(No pude traer los tiros de {args['jugador']}: {exc})"
+            if ps is None:
+                return (f"(No encontré datos de tiros de {args['jugador']}. Probá con el "
+                        "nombre completo o el apellido exacto.)")
+            return format_player_shots(ps)
         if name == "escaneo_hoy":
             from mundial_bot.service import scan_today
 
