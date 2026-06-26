@@ -1,0 +1,24 @@
+name: keep-motor-awake
+
+# Mantiene despierto el motor en Render (plan free duerme tras ~15 min sin tráfico).
+# En repo PÚBLICO los minutos de Actions son gratis e ilimitados.
+on:
+  schedule:
+    - cron: "*/5 * * * *" # cada 5 min (GitHub puede demorarlo algunos min bajo carga)
+  workflow_dispatch: {} # permite dispararlo a mano desde la pestaña Actions
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health del motor
+        run: |
+          URL="https://mundial-motor.onrender.com/health"
+          for i in 1 2 3 4; do
+            code=$(curl -s -o /tmp/h -w "%{http_code}" --max-time 90 "$URL" || echo 000)
+            echo "intento $i -> HTTP $code | $(cat /tmp/h 2>/dev/null | head -c 200)"
+            if [ "$code" = "200" ]; then exit 0; fi
+            sleep 25
+          done
+          echo "El motor no respondió 200 tras varios intentos."
+          exit 1
