@@ -22,6 +22,7 @@ dependencies = [
 [project.optional-dependencies]
 model = ["penaltyblog>=1.0"]
 xg = ["statsbombpy>=1.11"]
+api = ["fastapi>=0.110", "uvicorn[standard]>=0.30"]
 dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]
 
 [build-system]

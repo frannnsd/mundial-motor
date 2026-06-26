@@ -21,6 +21,7 @@ from mundial_bot.config import Settings
 from mundial_bot.models.cards_model import CardsModel
 from mundial_bot.models.corners_model import CornersModel
 from mundial_bot.models.shots_model import ShotsModel
+from mundial_bot.models.total_shots_model import TotalShotsModel
 from mundial_bot.pipeline import Models, build_models
 from mundial_bot.report import build_match_report, format_match_report, format_match_reports
 from mundial_bot.value.team_aliases import normalize_team
@@ -93,6 +94,7 @@ class BotBrain:
     corners: CornersModel | None
     cards: CardsModel | None
     shots: ShotsModel | None = None
+    total_shots: TotalShotsModel | None = None
 
     @property
     def known(self) -> set[str]:
@@ -196,26 +198,38 @@ class BotBrain:
         )
 
 
-def load_market_models() -> tuple[CornersModel | None, CardsModel | None, ShotsModel | None]:
-    """Carga córners/tarjetas/tiros al arco: forma reciente de API-Football, sino StatsBomb."""
+def load_market_models() -> tuple[
+    CornersModel | None, CardsModel | None, ShotsModel | None, TotalShotsModel | None
+]:
+    """Carga córners/tarjetas/tiros al arco/remates: forma reciente de API-Football, sino StatsBomb."""
     df = None
     if TEAM_STATS_CACHE.exists():
         df = load_team_stats()
     elif EVENTS_CACHE.exists():
         df = load_events(build_if_missing=False)
     if df is None or df.empty:
-        return None, None, None
-    # ShotsModel devuelve None si el cache todavía no tiene las columnas de tiros al arco.
-    return CornersModel.from_events(df), CardsModel.from_events(df), ShotsModel.from_events(df)
+        return None, None, None, None
+    # Los modelos devuelven None si al cache le faltan sus columnas.
+    return (
+        CornersModel.from_events(df),
+        CardsModel.from_events(df),
+        ShotsModel.from_events(df),
+        TotalShotsModel.from_events(df),
+    )
 
 
 def load_brain() -> BotBrain:
     """Entrena/carga todos los modelos en memoria (Elo autoalimentado con el Mundial)."""
     from mundial_bot.collectors.wc_results import load_wc_results
 
-    models = build_models(extra_results=load_wc_results())
-    corners, cards, shots = load_market_models()
-    return BotBrain(models=models, corners=corners, cards=cards, shots=shots)
+    wc = load_wc_results()
+    models = build_models(extra_results=wc)
+    if models.goals is not None:
+        models.goals.fit_calibration(wc)  # ajusta el ritmo de gol al del Mundial
+    corners, cards, shots, total_shots = load_market_models()
+    return BotBrain(
+        models=models, corners=corners, cards=cards, shots=shots, total_shots=total_shots
+    )
 
 
 def fetch_today_fixtures(settings: Settings) -> list:

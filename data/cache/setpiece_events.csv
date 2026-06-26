@@ -1,0 +1,629 @@
+match_id,team,opponent,corners_for,corners_against,cards,fouls,referee
+3857276,Canada,Morocco,6,2,4,16,Raphael Claus
+3857276,Morocco,Canada,2,6,0,15,Raphael Claus
+3857271,England,Iran,8,0,0,9,Raphael Claus
+3857271,Iran,England,0,8,2,21,Raphael Claus
+3857296,Croatia,Belgium,2,4,0,11,Anthony Taylor
+3857296,Belgium,Croatia,4,2,1,10,Anthony Taylor
+3857274,Netherlands,Ecuador,2,5,0,16,Mustapha Ghorbal
+3857274,Ecuador,Netherlands,5,2,1,13,Mustapha Ghorbal
+3857255,Japan,Spain,0,2,3,11,Victor Miguel de Freitas Gomes
+3857255,Spain,Japan,2,0,0,8,Victor Miguel de Freitas Gomes
+3857272,England,United States,3,7,0,11,Jesús Valenzuela Sáez
+3857272,United States,England,7,3,0,16,Jesús Valenzuela Sáez
+3857278,Iran,United States,1,5,3,21,Antonio Miguel Mateu Lahoz
+3857278,United States,Iran,5,1,1,13,Antonio Miguel Mateu Lahoz
+3857277,Morocco,Croatia,0,5,1,18,Fernando Andrés Rapallini
+3857277,Croatia,Morocco,5,0,0,12,Fernando Andrés Rapallini
+3857273,Wales,Iran,2,7,2,9,Mario Alberto Escobar Toca
+3857273,Iran,Wales,7,2,2,10,Mario Alberto Escobar Toca
+3857275,Tunisia,France,7,8,1,16,Matthew Conger
+3857275,France,Tunisia,8,7,0,8,Matthew Conger
+3857261,Wales,England,1,6,2,19,Slavko Vinčić
+3857261,England,Wales,6,1,0,11,Slavko Vinčić
+3857290,Switzerland,Cameroon,11,5,2,14,Facundo Tello Figueroa
+3857290,Cameroon,Switzerland,5,11,1,10,Facundo Tello Figueroa
+3857298,Portugal,Ghana,3,3,2,15,Ismail Elfath
+3857298,Ghana,Portugal,3,3,4,20,Ismail Elfath
+3857285,Senegal,Netherlands,6,7,2,13,Wilton Pereira Sampaio
+3857285,Netherlands,Senegal,7,6,1,16,Wilton Pereira Sampaio
+3857282,United States,Wales,5,3,4,17,Abdulrahman Ibrahim Al Jassim
+3857282,Wales,United States,3,5,2,10,Abdulrahman Ibrahim Al Jassim
+3857297,Poland,Saudi Arabia,4,5,3,18,Wilton Pereira Sampaio
+3857297,Saudi Arabia,Poland,5,4,2,16,Wilton Pereira Sampaio
+3857294,Netherlands,Qatar,4,2,1,19,Bakary Papa Gassama
+3857294,Qatar,Netherlands,2,4,0,8,Bakary Papa Gassama
+3857266,France,Denmark,6,4,1,4,Szymon Marciniak
+3857266,Denmark,France,4,6,2,11,Szymon Marciniak
+3857284,Germany,Japan,6,6,0,7,Ivan Arcides Barton Cisneros
+3857284,Japan,Germany,6,6,0,15,Ivan Arcides Barton Cisneros
+3857254,Denmark,Tunisia,11,9,2,13,César Arturo Ramos Palazuelos
+3857254,Tunisia,Denmark,9,11,1,10,César Arturo Ramos Palazuelos
+3857265,Mexico,Poland,6,5,2,14,Chris Beath
+3857265,Poland,Mexico,5,6,1,15,Chris Beath
+3857301,Qatar,Senegal,6,6,3,11,Antonio Miguel Mateu Lahoz
+3857301,Senegal,Qatar,6,6,3,13,Antonio Miguel Mateu Lahoz
+3857268,Belgium,Canada,4,4,3,11,Janny Sikazwe
+3857268,Canada,Belgium,4,4,2,15,Janny Sikazwe
+3857269,Brazil,Switzerland,8,3,1,10,Ivan Arcides Barton Cisneros
+3857269,Switzerland,Brazil,3,8,1,18,Ivan Arcides Barton Cisneros
+3869321,Netherlands,Argentina,2,8,8,37,Antonio Miguel Mateu Lahoz
+3869321,Argentina,Netherlands,8,2,8,22,Antonio Miguel Mateu Lahoz
+3857292,Costa Rica,Germany,1,14,1,4,Stéphanie Frappart
+3857292,Germany,Costa Rica,14,1,0,9,Stéphanie Frappart
+3857295,Japan,Costa Rica,5,0,3,24,Michael Oliver
+3857295,Costa Rica,Japan,0,5,3,13,Michael Oliver
+3869685,Argentina,France,6,5,5,29,Szymon Marciniak
+3869685,France,Argentina,5,6,3,19,Szymon Marciniak
+3869684,Croatia,Morocco,6,3,0,14,Abdulrahman Ibrahim Al Jassim
+3869684,Morocco,Croatia,3,6,2,15,Abdulrahman Ibrahim Al Jassim
+3857256,Serbia,Switzerland,2,0,7,21,Fernando Andrés Rapallini
+3857256,Switzerland,Serbia,0,2,4,14,Fernando Andrés Rapallini
+3869151,Argentina,Australia,1,3,0,9,Szymon Marciniak
+3869151,Australia,Argentina,3,1,2,18,Szymon Marciniak
+3857257,Australia,Denmark,2,6,2,12,Mustapha Ghorbal
+3857257,Denmark,Australia,6,2,1,10,Mustapha Ghorbal
+3857258,Brazil,Serbia,5,4,0,8,Alireza Faghani
+3857258,Serbia,Brazil,4,5,3,11,Alireza Faghani
+3857288,Tunisia,Australia,5,2,3,15,Daniel Siebert
+3857288,Australia,Tunisia,2,5,0,16,Daniel Siebert
+3857267,Ecuador,Senegal,3,6,0,23,Clément Turpin
+3857267,Senegal,Ecuador,6,3,1,10,Clément Turpin
+3857287,Uruguay,South Korea,4,3,1,7,Clément Turpin
+3857287,South Korea,Uruguay,3,4,1,11,Clément Turpin
+3869486,Morocco,Portugal,3,9,3,18,Facundo Tello Figueroa
+3869486,Portugal,Morocco,9,3,1,9,Facundo Tello Figueroa
+3857260,Saudi Arabia,Mexico,1,8,6,21,Michael Oliver
+3857260,Mexico,Saudi Arabia,8,1,1,18,Michael Oliver
+3857264,Poland,Argentina,1,8,1,9,Danny Desmond Makkelie
+3857264,Argentina,Poland,8,1,1,12,Danny Desmond Makkelie
+3857289,Argentina,Mexico,4,2,1,15,Daniele Orsato
+3857289,Mexico,Argentina,2,4,4,21,Daniele Orsato
+3869254,Portugal,Switzerland,6,6,0,14,César Arturo Ramos Palazuelos
+3869254,Switzerland,Portugal,6,6,2,15,César Arturo Ramos Palazuelos
+3869118,England,Senegal,3,3,0,16,Ivan Arcides Barton Cisneros
+3869118,Senegal,England,3,3,1,13,Ivan Arcides Barton Cisneros
+3869519,Argentina,Croatia,2,4,2,20,Daniele Orsato
+3869519,Croatia,Argentina,4,2,2,10,Daniele Orsato
+3869354,England,France,5,2,1,10,Wilton Pereira Sampaio
+3869354,France,England,2,5,3,15,Wilton Pereira Sampaio
+3869552,France,Morocco,2,3,0,14,César Arturo Ramos Palazuelos
+3869552,Morocco,France,3,2,1,14,César Arturo Ramos Palazuelos
+3869420,Croatia,Brazil,3,7,2,23,Michael Oliver
+3869420,Brazil,Croatia,7,3,3,25,Michael Oliver
+3869220,Morocco,Spain,0,8,1,19,Fernando Andrés Rapallini
+3869220,Spain,Morocco,8,0,1,14,Fernando Andrés Rapallini
+3869219,Japan,Croatia,8,5,0,13,Ismail Elfath
+3869219,Croatia,Japan,5,8,2,16,Ismail Elfath
+3869253,Brazil,South Korea,5,4,0,8,Clément Turpin
+3869253,South Korea,Brazil,4,5,1,12,Clément Turpin
+3869152,France,Poland,7,1,1,11,Jesús Valenzuela Sáez
+3869152,Poland,France,1,7,2,10,Jesús Valenzuela Sáez
+3869117,Netherlands,United States,4,5,2,11,Wilton Pereira Sampaio
+3869117,United States,Netherlands,5,4,0,5,Wilton Pereira Sampaio
+3857270,Portugal,Uruguay,6,2,3,11,Alireza Faghani
+3857270,Uruguay,Portugal,2,6,2,16,Alireza Faghani
+3857263,Spain,Germany,6,5,1,14,Danny Desmond Makkelie
+3857263,Germany,Spain,5,6,3,15,Danny Desmond Makkelie
+3857259,Cameroon,Serbia,4,3,2,9,Mohamed Abdulla Hassan Mohd
+3857259,Serbia,Cameroon,3,4,2,16,Mohamed Abdulla Hassan Mohd
+3857283,Belgium,Morocco,9,1,1,10,César Arturo Ramos Palazuelos
+3857283,Morocco,Belgium,1,9,1,16,César Arturo Ramos Palazuelos
+3857286,Qatar,Ecuador,1,3,4,17,Daniele Orsato
+3857286,Ecuador,Qatar,3,1,2,14,Daniele Orsato
+3857300,Argentina,Saudi Arabia,9,2,0,7,Slavko Vinčić
+3857300,Saudi Arabia,Argentina,2,9,6,22,Slavko Vinčić
+3857299,South Korea,Ghana,12,5,2,15,Anthony Taylor
+3857299,Ghana,South Korea,5,12,2,10,Anthony Taylor
+3857293,Ghana,Uruguay,5,2,2,21,Daniel Siebert
+3857293,Uruguay,Ghana,2,5,5,11,Daniel Siebert
+3857291,Spain,Costa Rica,5,0,0,8,
+3857291,Costa Rica,Spain,0,5,2,14,
+3857281,Croatia,Canada,5,2,2,15,Andrés Matonte
+3857281,Canada,Croatia,2,5,2,6,Andrés Matonte
+3857280,Cameroon,Brazil,3,11,5,17,Ismail Elfath
+3857280,Brazil,Cameroon,11,3,2,15,Ismail Elfath
+3857279,France,Australia,8,1,0,4,Victor Miguel de Freitas Gomes
+3857279,Australia,France,1,8,3,14,Victor Miguel de Freitas Gomes
+3857262,South Korea,Portugal,5,4,2,9,Facundo Tello Figueroa
+3857262,Portugal,South Korea,4,5,0,10,Facundo Tello Figueroa
+8650,Brazil,Belgium,8,4,2,20,Milorad Mažić
+8650,Belgium,Brazil,4,8,2,18,Milorad Mažić
+7584,Belgium,Japan,8,4,0,13,Malang Diedhiou
+7584,Japan,Belgium,4,8,1,11,Malang Diedhiou
+7554,England,Panama,3,2,1,14,Ghead Grisha
+7554,Panama,England,2,3,3,13,Ghead Grisha
+7539,Poland,Senegal,3,3,1,7,Nawaf Abdulla Ghayyath Shukralla
+7539,Senegal,Poland,3,3,1,17,Nawaf Abdulla Ghayyath Shukralla
+7550,Serbia,Switzerland,3,7,4,20,Felix Brych
+7550,Switzerland,Serbia,7,3,1,13,Felix Brych
+7538,Sweden,South Korea,6,5,1,19,Joel Antonio Aguilar Chicas
+7538,South Korea,Sweden,5,6,2,22,Joel Antonio Aguilar Chicas
+7534,Germany,Mexico,6,1,2,13,Alireza Faghani
+7534,Mexico,Germany,1,6,2,15,Alireza Faghani
+7543,Iran,Spain,2,6,2,14,Andrés Cunha
+7543,Spain,Iran,6,2,0,15,Andrés Cunha
+7544,Uruguay,Saudi Arabia,3,2,0,13,Clément Turpin
+7544,Saudi Arabia,Uruguay,2,3,0,12,Clément Turpin
+7546,France,Peru,5,2,2,11,Mohamed Abdulla Hassan Mohd
+7546,Peru,France,2,5,2,14,Mohamed Abdulla Hassan Mohd
+7545,Argentina,Croatia,5,2,4,20,Ravshan Irmatov
+7545,Croatia,Argentina,2,5,4,23,Ravshan Irmatov
+7585,Colombia,England,2,7,6,23,Mark Geiger
+7585,England,Colombia,7,2,2,13,Mark Geiger
+7569,Panama,Tunisia,0,6,1,20,Nawaf Abdulla Ghayyath Shukralla
+7569,Tunisia,Panama,6,0,3,20,Nawaf Abdulla Ghayyath Shukralla
+7572,Japan,Poland,5,7,1,12,Janny Sikazwe
+7572,Poland,Japan,7,5,0,9,Janny Sikazwe
+7561,Iceland,Croatia,10,5,3,14,Antonio Miguel Mateu Lahoz
+7561,Croatia,Iceland,5,10,1,13,Antonio Miguel Mateu Lahoz
+7540,Russia,Egypt,7,4,2,10,Enrique Cáceres
+7540,Egypt,Russia,4,7,1,11,Enrique Cáceres
+7531,Argentina,Iceland,10,2,0,11,Szymon Marciniak
+7531,Iceland,Argentina,2,10,0,17,Szymon Marciniak
+7570,England,Belgium,7,2,0,14,Damir Skomina
+7570,Belgium,England,2,7,2,16,Damir Skomina
+7586,Sweden,Switzerland,3,11,1,12,Damir Skomina
+7586,Switzerland,Sweden,11,3,3,16,Damir Skomina
+7557,Iran,Portugal,0,5,1,16,Enrique Cáceres
+7557,Portugal,Iran,5,0,2,9,Enrique Cáceres
+7542,Portugal,Morocco,5,7,1,18,Mark Geiger
+7542,Morocco,Portugal,7,5,1,23,Mark Geiger
+8656,Croatia,England,8,4,2,26,Cüneyt Çakιr
+8656,England,Croatia,4,8,1,13,Cüneyt Çakιr
+7548,Brazil,Costa Rica,10,1,2,11,Björn Kuipers
+7548,Costa Rica,Brazil,1,10,1,17,Björn Kuipers
+7578,Egypt,Uruguay,0,5,1,16,Björn Kuipers
+7578,Uruguay,Egypt,5,0,0,7,Björn Kuipers
+7553,South Korea,Mexico,7,4,3,26,Milorad Mažić
+7553,Mexico,South Korea,4,7,0,8,Milorad Mažić
+7536,Belgium,Panama,9,3,3,17,Janny Sikazwe
+7536,Panama,Belgium,3,9,5,20,Janny Sikazwe
+7555,Poland,Colombia,7,5,2,17,César Arturo Ramos Palazuelos
+7555,Colombia,Poland,5,7,0,11,César Arturo Ramos Palazuelos
+7576,Portugal,Spain,3,5,1,13,Gianluca Rocchi
+7576,Spain,Portugal,5,3,1,11,Gianluca Rocchi
+7565,Serbia,Brazil,5,8,3,14,Alireza Faghani
+7565,Brazil,Serbia,8,5,0,7,Alireza Faghani
+7551,Germany,Sweden,5,3,2,12,Szymon Marciniak
+7551,Sweden,Germany,3,5,2,17,Szymon Marciniak
+7537,Tunisia,England,2,7,0,15,Wilmar Alexander Roldán Pérez
+7537,England,Tunisia,7,2,1,9,Wilmar Alexander Roldán Pérez
+7580,France,Argentina,0,4,2,23,Alireza Faghani
+7580,Argentina,France,4,0,4,14,Alireza Faghani
+7581,Croatia,Denmark,5,4,0,7,Néstor Fabián Pitana
+7581,Denmark,Croatia,4,5,1,19,Néstor Fabián Pitana
+7549,Nigeria,Iceland,6,5,1,10,Matthew Conger
+7549,Iceland,Nigeria,5,6,0,12,Matthew Conger
+7529,Croatia,Nigeria,6,4,2,21,Sandro Ricci
+7529,Nigeria,Croatia,4,6,1,15,Sandro Ricci
+7562,Australia,Peru,8,3,3,12,Sergey Karasev
+7562,Peru,Australia,3,8,2,12,Sergey Karasev
+7571,Senegal,Colombia,1,3,1,15,Milorad Mažić
+7571,Colombia,Senegal,3,1,1,16,Milorad Mažić
+7568,Switzerland,Costa Rica,6,3,2,10,Clément Turpin
+7568,Costa Rica,Switzerland,3,6,2,15,Clément Turpin
+7530,France,Australia,5,1,1,17,Andrés Cunha
+7530,Australia,France,1,5,3,20,Andrés Cunha
+7558,Uruguay,Russia,4,2,1,19,Malang Diedhiou
+7558,Russia,Uruguay,2,4,2,19,Malang Diedhiou
+7583,Brazil,Mexico,8,7,2,8,Gianluca Rocchi
+7583,Mexico,Brazil,7,8,4,19,Gianluca Rocchi
+7547,Denmark,Australia,3,5,2,7,Antonio Miguel Mateu Lahoz
+7547,Australia,Denmark,5,3,0,6,Antonio Miguel Mateu Lahoz
+7535,Costa Rica,Serbia,5,4,2,18,Malang Diedhiou
+7535,Serbia,Costa Rica,4,5,2,13,Malang Diedhiou
+8649,Uruguay,France,4,3,2,22,Néstor Fabián Pitana
+8649,France,Uruguay,3,4,2,18,Néstor Fabián Pitana
+8658,France,Croatia,2,6,1,14,Néstor Fabián Pitana
+8658,Croatia,France,6,2,1,14,Néstor Fabián Pitana
+7582,Spain,Russia,6,5,1,6,Björn Kuipers
+7582,Russia,Spain,5,6,2,21,Björn Kuipers
+7552,Belgium,Tunisia,3,2,0,13,Jair Marrufo
+7552,Tunisia,Belgium,2,3,1,15,Jair Marrufo
+7532,Peru,Denmark,3,7,1,12,Bakary Papa Gassama
+7532,Denmark,Peru,7,3,2,21,Bakary Papa Gassama
+7560,Spain,Morocco,7,1,0,6,Ravshan Irmatov
+7560,Morocco,Spain,1,7,6,18,Ravshan Irmatov
+7533,Brazil,Switzerland,7,2,1,12,César Arturo Ramos Palazuelos
+7533,Switzerland,Brazil,2,7,2,21,César Arturo Ramos Palazuelos
+7564,Nigeria,Argentina,3,5,2,21,Cüneyt Çakιr
+7564,Argentina,Nigeria,5,3,3,17,Cüneyt Çakιr
+7579,Uruguay,Portugal,2,9,0,14,César Arturo Ramos Palazuelos
+7579,Portugal,Uruguay,9,2,1,13,César Arturo Ramos Palazuelos
+7577,Morocco,Iran,5,2,1,22,Cüneyt Çakιr
+7577,Iran,Morocco,2,5,3,16,Cüneyt Çakιr
+7525,Russia,Saudi Arabia,6,2,1,23,Néstor Fabián Pitana
+7525,Saudi Arabia,Russia,2,6,1,12,Néstor Fabián Pitana
+7566,Mexico,Sweden,7,3,3,16,Néstor Fabián Pitana
+7566,Sweden,Mexico,3,7,2,18,Néstor Fabián Pitana
+8651,Sweden,England,1,6,2,14,Björn Kuipers
+8651,England,Sweden,6,1,1,8,Björn Kuipers
+7567,South Korea,Germany,3,8,4,16,Mark Geiger
+7567,Germany,South Korea,8,3,0,7,Mark Geiger
+7541,Colombia,Japan,3,6,3,15,Damir Skomina
+7541,Japan,Colombia,6,3,0,11,Damir Skomina
+8655,France,Belgium,4,5,2,6,Andrés Cunha
+8655,Belgium,France,5,4,3,17,Andrés Cunha
+8657,Belgium,England,4,5,1,12,Alireza Faghani
+8657,England,Belgium,5,4,2,4,Alireza Faghani
+8652,Russia,Croatia,6,8,1,24,Sandro Ricci
+8652,Croatia,Russia,8,6,4,18,Sandro Ricci
+7563,Denmark,France,4,2,1,11,Sandro Ricci
+7563,France,Denmark,2,4,0,10,Sandro Ricci
+7556,Japan,Senegal,2,5,2,9,Gianluca Rocchi
+7556,Senegal,Japan,5,2,3,15,Gianluca Rocchi
+7559,Saudi Arabia,Egypt,6,1,0,9,Wilmar Alexander Roldán Pérez
+7559,Egypt,Saudi Arabia,1,6,2,17,Wilmar Alexander Roldán Pérez
+3930166,Portugal,Czech Republic,13,0,2,6,Marco Guida
+3930166,Czech Republic,Portugal,0,13,1,12,Marco Guida
+3930159,Hungary,Switzerland,2,6,2,10,Slavko Vinčić
+3930159,Switzerland,Hungary,6,2,2,14,Slavko Vinčić
+3930163,Serbia,England,2,1,2,28,Daniele Orsato
+3930163,England,Serbia,1,2,0,12,Daniele Orsato
+3930181,England,Slovenia,6,0,3,12,Clément Turpin
+3930181,Slovenia,England,0,6,2,10,Clément Turpin
+3930178,Croatia,Italy,2,11,6,23,Danny Desmond Makkelie
+3930178,Italy,Croatia,11,2,2,10,Danny Desmond Makkelie
+3930160,Spain,Croatia,5,0,1,16,Michael Oliver
+3930160,Croatia,Spain,0,5,0,13,Michael Oliver
+3930170,Slovenia,Serbia,4,9,2,14,István Kovács
+3930170,Serbia,Slovenia,9,4,4,9,István Kovács
+3938643,France,Poland,11,3,1,15,Marco Guida
+3938643,Poland,France,3,11,3,20,Marco Guida
+3938641,Poland,Austria,4,3,4,15,Halil Umut Meler
+3938641,Austria,Poland,3,4,2,17,Halil Umut Meler
+3938642,Georgia,Czech Republic,5,11,4,13,Daniel Siebert
+3938642,Czech Republic,Georgia,11,5,5,17,Daniel Siebert
+3938639,Turkey,Georgia,5,5,2,10,Facundo Tello Figueroa
+3938639,Georgia,Turkey,5,5,1,10,Facundo Tello Figueroa
+3938638,Romania,Ukraine,3,8,1,12,Glenn Nyberg
+3938638,Ukraine,Romania,8,3,1,9,Glenn Nyberg
+3938640,Slovakia,Ukraine,4,4,0,10,Michael Oliver
+3938640,Ukraine,Slovakia,4,4,1,15,Michael Oliver
+3938637,Poland,Netherlands,3,6,0,10,Artur Manuel Ribeiro Soares Dias
+3938637,Netherlands,Poland,6,3,1,8,Artur Manuel Ribeiro Soares Dias
+3938644,Georgia,Portugal,1,11,1,8,Sandro Schärer
+3938644,Portugal,Georgia,11,1,3,11,Sandro Schärer
+3941019,France,Belgium,5,2,3,8,Glenn Nyberg
+3941019,Belgium,France,2,5,2,10,Glenn Nyberg
+3942227,England,Switzerland,4,2,1,9,Daniele Orsato
+3942227,Switzerland,England,2,4,2,15,Daniele Orsato
+3930174,Turkey,Portugal,9,1,3,19,Felix Zwayer
+3930174,Portugal,Turkey,1,9,2,8,Felix Zwayer
+3930162,Slovenia,Denmark,5,9,2,13,Sandro Schärer
+3930162,Denmark,Slovenia,9,5,1,10,Sandro Schärer
+3930176,Switzerland,Germany,2,9,3,15,Daniele Orsato
+3930176,Germany,Switzerland,9,2,1,12,Daniele Orsato
+3930169,Scotland,Switzerland,5,8,3,13,Ivan Kružliak
+3930169,Switzerland,Scotland,8,5,2,12,Ivan Kružliak
+3942819,Netherlands,England,3,0,3,13,Felix Zwayer
+3942819,England,Netherlands,0,3,3,11,Felix Zwayer
+3943043,Spain,England,10,2,1,12,François Letexier
+3943043,England,Spain,2,10,3,7,François Letexier
+3942752,Spain,France,4,6,2,10,Slavko Vinčić
+3942752,France,Spain,6,4,2,14,Slavko Vinčić
+3942382,Netherlands,Turkey,3,7,4,16,Clément Turpin
+3942382,Turkey,Netherlands,7,3,2,9,Clément Turpin
+3942349,Portugal,France,11,4,1,11,Michael Oliver
+3942349,France,Portugal,4,11,1,16,Michael Oliver
+3930180,Netherlands,Austria,5,2,0,14,Ivan Kružliak
+3930180,Austria,Netherlands,2,5,3,16,Ivan Kružliak
+3930171,Denmark,England,4,2,3,13,Artur Manuel Ribeiro Soares Dias
+3930171,England,Denmark,2,4,1,8,Artur Manuel Ribeiro Soares Dias
+3942226,Spain,Germany,1,5,7,17,Anthony Taylor
+3942226,Germany,Spain,5,1,8,22,Anthony Taylor
+3938645,Ukraine,Belgium,2,7,1,12,Anthony Taylor
+3938645,Belgium,Ukraine,7,2,1,10,Anthony Taylor
+3930184,Czech Republic,Turkey,3,7,8,18,István Kovács
+3930184,Turkey,Czech Republic,7,3,11,10,István Kovács
+3941022,Austria,Turkey,10,4,2,12,Artur Manuel Ribeiro Soares Dias
+3941022,Turkey,Austria,4,10,2,5,Artur Manuel Ribeiro Soares Dias
+3941021,Romania,Netherlands,4,12,2,11,Felix Zwayer
+3941021,Netherlands,Romania,12,4,2,9,Felix Zwayer
+3941020,Portugal,Slovenia,11,4,1,8,Daniele Orsato
+3941020,Slovenia,Portugal,4,11,5,21,Daniele Orsato
+3941018,Spain,Georgia,13,3,1,12,François Letexier
+3941018,Georgia,Spain,3,13,1,11,François Letexier
+3941017,England,Slovakia,9,1,3,13,Halil Umut Meler
+3941017,Slovakia,England,1,9,6,19,Halil Umut Meler
+3930182,Denmark,Serbia,8,2,2,14,François Letexier
+3930182,Serbia,Denmark,2,8,2,7,François Letexier
+3930179,Albania,Spain,2,7,2,8,Glenn Nyberg
+3930179,Spain,Albania,7,2,1,17,Glenn Nyberg
+3940983,Germany,Denmark,6,6,0,7,Michael Oliver
+3940983,Denmark,Germany,6,6,2,18,Michael Oliver
+3940878,Switzerland,Italy,4,6,0,11,Szymon Marciniak
+3940878,Italy,Switzerland,6,4,3,17,Szymon Marciniak
+3930177,Scotland,Hungary,2,6,1,16,Facundo Tello Figueroa
+3930177,Hungary,Scotland,6,2,5,14,Facundo Tello Figueroa
+3930173,Netherlands,France,3,6,1,14,Anthony Taylor
+3930173,France,Netherlands,6,3,0,9,Anthony Taylor
+3930172,Spain,Italy,5,2,3,19,Slavko Vinčić
+3930172,Italy,Spain,2,5,2,15,Slavko Vinčić
+3930167,Croatia,Albania,3,1,1,16,François Letexier
+3930167,Albania,Croatia,1,3,3,13,François Letexier
+3930168,Germany,Hungary,11,7,2,16,Danny Desmond Makkelie
+3930168,Hungary,Germany,7,11,2,19,Danny Desmond Makkelie
+3930165,Austria,France,6,2,5,23,Jesús Gil Manzano
+3930165,France,Austria,2,6,2,13,Jesús Gil Manzano
+3930164,Belgium,Slovakia,5,7,3,15,Halil Umut Meler
+3930164,Slovakia,Belgium,7,5,1,13,Halil Umut Meler
+3930161,Italy,Albania,5,3,2,8,Felix Zwayer
+3930161,Albania,Italy,3,5,2,10,Felix Zwayer
+3930183,Slovakia,Romania,5,1,1,11,Daniel Siebert
+3930183,Romania,Slovakia,1,5,3,12,Daniel Siebert
+3930175,Belgium,Romania,7,7,1,12,Szymon Marciniak
+3930175,Romania,Belgium,7,7,2,14,Szymon Marciniak
+3930158,Germany,Scotland,5,0,2,15,Clément Turpin
+3930158,Scotland,Germany,0,5,2,9,Clément Turpin
+3788758,Ukraine,North Macedonia,5,5,1,10,Fernando Andrés Rapallini
+3788758,North Macedonia,Ukraine,5,5,2,13,Fernando Andrés Rapallini
+3788773,Portugal,France,0,1,0,13,Antonio Miguel Mateu Lahoz
+3788773,France,Portugal,1,0,4,20,Antonio Miguel Mateu Lahoz
+3788765,Switzerland,Turkey,8,8,1,14,Slavko Vinčić
+3788765,Turkey,Switzerland,8,8,3,21,Slavko Vinčić
+3788761,Sweden,Slovakia,7,6,1,17,Daniel Siebert
+3788761,Slovakia,Sweden,6,7,3,9,Daniel Siebert
+3788760,Croatia,Czech Republic,4,4,1,8,Carlos del Cerro Grande
+3788760,Czech Republic,Croatia,4,4,3,16,Carlos del Cerro Grande
+3795108,Switzerland,Spain,9,13,3,17,Michael Oliver
+3795108,Spain,Switzerland,13,9,1,15,Michael Oliver
+3794687,Belgium,Portugal,0,3,2,17,Felix Brych
+3794687,Portugal,Belgium,3,0,3,10,Felix Brych
+3794690,Netherlands,Czech Republic,6,5,3,7,Sergey Karasev
+3794690,Czech Republic,Netherlands,5,6,1,15,Sergey Karasev
+3794685,Italy,Austria,4,3,2,13,Anthony Taylor
+3794685,Austria,Italy,3,4,3,23,Anthony Taylor
+3794692,Sweden,Ukraine,6,2,3,12,Daniele Orsato
+3794692,Ukraine,Sweden,2,6,2,8,Daniele Orsato
+3794689,Wales,Denmark,1,9,5,13,Daniel Siebert
+3794689,Denmark,Wales,9,1,0,9,Daniel Siebert
+3795107,Belgium,Italy,9,5,1,16,Slavko Vinčić
+3795107,Italy,Belgium,5,9,2,15,Slavko Vinčić
+3795187,Ukraine,England,3,2,0,10,Felix Brych
+3795187,England,Ukraine,2,3,0,4,Felix Brych
+3795220,Italy,Spain,1,6,2,20,Felix Brych
+3795220,Spain,Italy,6,1,1,19,Felix Brych
+3794686,Croatia,Spain,1,8,2,27,Cüneyt Çakιr
+3794686,Spain,Croatia,8,1,0,12,Cüneyt Çakιr
+3788763,Hungary,France,1,3,1,19,Michael Oliver
+3788763,France,Hungary,3,1,1,18,Michael Oliver
+3795506,Italy,England,3,5,5,25,Björn Kuipers
+3795506,England,Italy,5,3,1,22,Björn Kuipers
+3788769,Russia,Denmark,1,7,2,16,Clément Turpin
+3788769,Denmark,Russia,7,1,1,17,Clément Turpin
+3788766,Italy,Wales,7,1,1,16,Ovidiu Alin Hațegan
+3788766,Wales,Italy,1,7,3,13,Ovidiu Alin Hațegan
+3788764,Portugal,Germany,6,3,0,7,Anthony Taylor
+3788764,Germany,Portugal,3,6,2,16,Anthony Taylor
+3788755,Turkey,Wales,10,7,2,19,Artur Manuel Ribeiro Soares Dias
+3788755,Wales,Turkey,7,10,2,9,Artur Manuel Ribeiro Soares Dias
+3788754,Italy,Switzerland,3,2,0,10,Sergey Karasev
+3788754,Switzerland,Italy,2,3,2,14,Sergey Karasev
+3788762,Spain,Poland,7,1,2,17,Daniele Orsato
+3788762,Poland,Spain,1,7,4,21,Daniele Orsato
+3788747,Austria,North Macedonia,4,0,1,14,Lars Christian Andreas Ekberg
+3788747,North Macedonia,Austria,0,4,2,18,Lars Christian Andreas Ekberg
+3788741,Turkey,Italy,2,8,2,14,Danny Desmond Makkelie
+3788741,Italy,Turkey,8,2,0,9,Danny Desmond Makkelie
+3795109,Czech Republic,Denmark,9,7,2,13,Björn Kuipers
+3795109,Denmark,Czech Republic,7,9,0,14,Björn Kuipers
+3788770,North Macedonia,Netherlands,5,7,4,12,Istvan Kovacs
+3788770,Netherlands,North Macedonia,7,5,0,16,Istvan Kovacs
+3794688,England,Germany,3,3,3,12,Danny Desmond Makkelie
+3794688,Germany,England,3,3,2,13,Danny Desmond Makkelie
+3788774,Germany,Hungary,6,1,2,8,Sergey Karasev
+3788774,Hungary,Germany,1,6,3,11,Sergey Karasev
+3788771,Croatia,Scotland,5,7,1,12,Fernando Andrés Rapallini
+3788771,Scotland,Croatia,7,5,1,10,Fernando Andrés Rapallini
+3788772,Czech Republic,England,4,6,1,11,Artur Manuel Ribeiro Soares Dias
+3788772,England,Czech Republic,6,4,0,12,Artur Manuel Ribeiro Soares Dias
+3788768,Finland,Belgium,0,5,0,7,Felix Brych
+3788768,Belgium,Finland,5,0,0,10,Felix Brych
+3788767,Ukraine,Austria,4,9,0,12,Cüneyt Çakιr
+3788767,Austria,Ukraine,9,4,0,12,Cüneyt Çakιr
+3788753,Finland,Russia,1,4,2,15,Danny Desmond Makkelie
+3788753,Russia,Finland,4,1,3,13,Danny Desmond Makkelie
+3788759,England,Scotland,6,5,0,16,Antonio Miguel Mateu Lahoz
+3788759,Scotland,England,5,6,2,20,Antonio Miguel Mateu Lahoz
+3788757,Denmark,Belgium,2,4,3,15,Björn Kuipers
+3788757,Belgium,Denmark,4,2,1,19,Björn Kuipers
+3788745,England,Croatia,1,1,1,9,Daniele Orsato
+3788745,Croatia,England,1,1,3,13,Daniele Orsato
+3795221,England,Denmark,6,5,1,11,Danny Desmond Makkelie
+3795221,Denmark,England,5,6,1,23,Danny Desmond Makkelie
+3788746,Netherlands,Ukraine,5,1,0,9,Felix Brych
+3788746,Ukraine,Netherlands,1,5,1,10,Felix Brych
+3794691,France,Switzerland,8,5,3,18,Fernando Andrés Rapallini
+3794691,Switzerland,France,5,8,4,19,Fernando Andrés Rapallini
+3788756,Netherlands,Austria,2,5,1,14,Orel Grinfeeld
+3788756,Austria,Netherlands,5,2,2,11,Orel Grinfeeld
+3788749,Poland,Slovakia,5,2,2,15,Ovidiu Alin Hațegan
+3788749,Slovakia,Poland,2,5,1,13,Ovidiu Alin Hațegan
+3788750,Spain,Sweden,6,1,0,8,Slavko Vinčić
+3788750,Sweden,Spain,1,6,1,15,Slavko Vinčić
+3788748,Scotland,Czech Republic,6,6,0,7,Daniel Siebert
+3788748,Czech Republic,Scotland,6,6,0,7,Daniel Siebert
+3788751,France,Germany,3,5,0,8,Carlos del Cerro Grande
+3788751,Germany,France,5,3,1,13,Carlos del Cerro Grande
+3788752,Hungary,Portugal,0,6,2,14,Cüneyt Çakιr
+3788752,Portugal,Hungary,6,0,1,16,Cüneyt Çakιr
+3788742,Denmark,Finland,9,0,0,11,Anthony Taylor
+3788742,Finland,Denmark,0,9,2,13,Anthony Taylor
+3788775,Slovakia,Spain,0,7,2,18,Björn Kuipers
+3788775,Spain,Slovakia,7,0,2,8,Björn Kuipers
+3788776,Sweden,Poland,6,10,1,15,Michael Oliver
+3788776,Poland,Sweden,10,6,2,14,Michael Oliver
+3788743,Belgium,Russia,2,4,0,12,Antonio Miguel Mateu Lahoz
+3788743,Russia,Belgium,4,2,0,14,Antonio Miguel Mateu Lahoz
+3788744,Wales,Switzerland,4,12,1,6,Clément Turpin
+3788744,Switzerland,Wales,12,4,2,10,Clément Turpin
+3939991,Brazil,Colombia,6,5,3,16,Jesús Valenzuela Sáez
+3939991,Colombia,Brazil,5,6,2,20,Jesús Valenzuela Sáez
+3939987,Jamaica,Venezuela,6,9,1,7,Maurizio Mariani
+3939987,Venezuela,Jamaica,9,6,1,12,Maurizio Mariani
+3939982,Uruguay,Bolivia,4,3,0,12,Juan Gabriel Benítez
+3939982,Bolivia,Uruguay,3,4,1,19,Juan Gabriel Benítez
+3939970,Peru,Chile,1,3,1,23,Wilton Pereira Sampaio
+3939970,Chile,Peru,3,1,3,20,Wilton Pereira Sampaio
+3939980,Ecuador,Jamaica,7,8,0,9,Cristián Marcelo Garay Reyes
+3939980,Jamaica,Ecuador,8,7,4,19,Cristián Marcelo Garay Reyes
+3939977,Chile,Argentina,0,11,2,13,Andrés Matonte
+3939977,Argentina,Chile,11,0,0,9,Andrés Matonte
+3939975,Colombia,Paraguay,3,3,1,10,Darío Herrera
+3939975,Paraguay,Colombia,3,3,2,20,Darío Herrera
+3939974,United States,Bolivia,7,1,1,11,Maurizio Mariani
+3939974,Bolivia,United States,1,7,4,20,Maurizio Mariani
+3939986,Argentina,Peru,6,3,1,14,César Arturo Ramos Palazuelos
+3939986,Peru,Argentina,3,6,5,24,César Arturo Ramos Palazuelos
+3939971,Mexico,Jamaica,7,6,0,8,Ismail Elfath
+3939971,Jamaica,Mexico,6,7,0,7,Ismail Elfath
+3939979,Venezuela,Mexico,2,7,2,12,Raphael Claus
+3939979,Mexico,Venezuela,7,2,2,16,Raphael Claus
+3939988,Mexico,Ecuador,5,2,5,17,Mario Alberto Escobar Toca
+3939988,Ecuador,Mexico,2,5,2,12,Mario Alberto Escobar Toca
+3939990,United States,Uruguay,2,3,2,12,Kevin Ortega
+3939990,Uruguay,United States,3,2,1,15,Kevin Ortega
+3939983,Paraguay,Brazil,4,6,3,17,Piero Maza Gomez
+3939983,Brazil,Paraguay,6,4,3,14,Piero Maza Gomez
+3939972,Ecuador,Venezuela,3,5,3,21,Wilmar Alexander Roldán Pérez
+3939972,Venezuela,Ecuador,5,3,2,18,Wilmar Alexander Roldán Pérez
+3939978,Peru,Canada,2,1,1,19,Mario Alberto Escobar Toca
+3939978,Canada,Peru,1,2,1,14,Mario Alberto Escobar Toca
+3939976,Brazil,Costa Rica,9,1,1,13,César Arturo Ramos Palazuelos
+3939976,Costa Rica,Brazil,1,9,2,15,César Arturo Ramos Palazuelos
+3939992,Costa Rica,Paraguay,1,6,3,14,Yael Falcón Pérez
+3939992,Paraguay,Costa Rica,6,1,3,17,Yael Falcón Pérez
+3942416,Colombia,Panama,4,2,1,15,Maurizio Mariani
+3942416,Panama,Colombia,2,4,3,23,Maurizio Mariani
+3943077,Argentina,Colombia,4,7,2,11,Raphael Claus
+3943077,Colombia,Argentina,7,4,2,20,Raphael Claus
+3943076,Canada,Uruguay,7,6,4,19,Alexis Herrera
+3943076,Uruguay,Canada,6,7,2,19,Alexis Herrera
+3942852,Uruguay,Colombia,4,3,3,14,César Arturo Ramos Palazuelos
+3942852,Colombia,Uruguay,3,4,5,16,César Arturo Ramos Palazuelos
+3942785,Argentina,Canada,2,2,1,6,Piero Maza Gomez
+3942785,Canada,Argentina,2,2,3,16,Piero Maza Gomez
+3942415,Uruguay,Brazil,6,2,3,29,Darío Herrera
+3942415,Brazil,Uruguay,2,6,2,16,Darío Herrera
+3939973,Uruguay,Panama,9,3,0,17,Piero Maza Gomez
+3939973,Panama,Uruguay,3,9,1,13,Piero Maza Gomez
+3942229,Venezuela,Canada,7,3,1,8,Wilton Pereira Sampaio
+3942229,Canada,Venezuela,3,7,2,13,Wilton Pereira Sampaio
+3942228,Argentina,Ecuador,2,5,2,15,Andrés Matonte
+3942228,Ecuador,Argentina,5,2,2,16,Andrés Matonte
+3939985,Canada,Chile,8,4,5,16,Wilmar Alexander Roldán Pérez
+3939985,Chile,Canada,4,8,2,8,Wilmar Alexander Roldán Pérez
+3939984,Colombia,Costa Rica,4,2,2,20,Gustavo Tejera
+3939984,Costa Rica,Colombia,2,4,1,19,Gustavo Tejera
+3939981,Panama,United States,3,0,4,19,Ivan Arcides Barton Cisneros
+3939981,United States,Panama,0,3,3,6,Ivan Arcides Barton Cisneros
+3939989,Bolivia,Panama,2,1,2,23,Edina Alves Batista
+3939989,Panama,Bolivia,1,2,1,10,Edina Alves Batista
+3939969,Argentina,Canada,7,4,2,19,Jesús Valenzuela Sáez
+3939969,Canada,Argentina,4,7,2,10,Jesús Valenzuela Sáez
+3922240,Egypt,Congo DR,2,4,4,19,Abongile Tom
+3922240,Congo DR,Egypt,4,2,3,22,Abongile Tom
+3920399,Cape Verde Islands,Mozambique,1,6,1,17,Samir Guezzaz
+3920399,Mozambique,Cape Verde Islands,6,1,0,15,Samir Guezzaz
+3920413,Gambia,Cameroon,7,5,4,15,Bamlak Tessema Weyesa
+3920413,Cameroon,Gambia,5,7,0,9,Bamlak Tessema Weyesa
+3920400,Senegal,Cameroon,8,9,1,14,Mahmood Ali Mahmood Ismail
+3920400,Cameroon,Senegal,9,8,3,14,Mahmood Ali Mahmood Ismail
+3920409,Guinea-Bissau,Nigeria,3,2,0,17,Bouchra Karboubi
+3920409,Nigeria,Guinea-Bissau,2,3,3,20,Bouchra Karboubi
+3920417,Namibia,Mali,9,3,1,14,Samuel Uwikunda
+3920417,Mali,Namibia,3,9,0,15,Samuel Uwikunda
+3920395,Congo DR,Zambia,7,0,1,11,Bamlak Tessema Weyesa
+3920395,Zambia,Congo DR,0,7,1,13,Bamlak Tessema Weyesa
+3920407,South Africa,Namibia,6,2,1,20,Youcef Gamouh
+3920407,Namibia,South Africa,2,6,0,13,Youcef Gamouh
+3920412,Guinea,Senegal,0,6,2,18,Pacifique Ndabihawenimana
+3920412,Senegal,Guinea,6,0,2,14,Pacifique Ndabihawenimana
+3920415,Mauritania,Algeria,5,6,3,20,Omar Abdulkadir Artan
+3920415,Algeria,Mauritania,6,5,3,15,Omar Abdulkadir Artan
+3920404,Tunisia,Mali,3,4,2,13,Daniel Nii Ayi Laryea
+3920404,Mali,Tunisia,4,3,0,13,Daniel Nii Ayi Laryea
+3920389,Cameroon,Guinea,5,0,2,14,Ibrahim Mutaz
+3920389,Guinea,Cameroon,0,5,2,15,Ibrahim Mutaz
+3920393,Tunisia,Namibia,8,7,0,11,Abdulkadir Artan
+3920393,Namibia,Tunisia,7,8,0,13,Abdulkadir Artan
+3920403,Mauritania,Angola,6,11,2,13,Mohamed Maarouf Eid Mansour
+3920403,Angola,Mauritania,11,6,1,16,Mohamed Maarouf Eid Mansour
+3920394,Morocco,Tanzania,5,2,2,14,Alhadi Allaou Mahamat
+3920394,Tanzania,Morocco,2,5,5,16,Alhadi Allaou Mahamat
+3920402,Algeria,Burkina Faso,4,1,2,13,Abongile Tom
+3920402,Burkina Faso,Algeria,1,4,5,18,Abongile Tom
+3920414,Angola,Burkina Faso,1,6,3,15,Jean Jacques Ndala Ngambo
+3920414,Burkina Faso,Angola,6,1,1,10,Jean Jacques Ndala Ngambo
+3920405,Morocco,Congo DR,3,5,3,17,Peter Waweru Kamaku
+3920405,Congo DR,Morocco,5,3,1,17,Peter Waweru Kamaku
+3920416,South Africa,Tunisia,5,6,0,14,Issa Sy
+3920416,Tunisia,South Africa,6,5,0,12,Issa Sy
+3922658,Cape Verde Islands,South Africa,10,4,1,19,Jean Jacques Ndala Ngambo
+3922658,South Africa,Cape Verde Islands,4,10,0,15,Jean Jacques Ndala Ngambo
+3920386,Nigeria,Equatorial Guinea,2,3,1,13,Abongile Tom
+3920386,Equatorial Guinea,Nigeria,3,2,2,12,Abongile Tom
+3920408,Equatorial Guinea,Côte d'Ivoire,1,11,3,23,Mahmood Ali Mahmood Ismail
+3920408,Côte d'Ivoire,Equatorial Guinea,11,1,2,21,Mahmood Ali Mahmood Ismail
+3920397,Equatorial Guinea,Guinea-Bissau,2,7,2,15,Samuel Uwikunda
+3920397,Guinea-Bissau,Equatorial Guinea,7,2,0,11,Samuel Uwikunda
+3920410,Mozambique,Ghana,6,3,4,10,Ibrahim Mutaz
+3920410,Ghana,Mozambique,3,6,5,33,Ibrahim Mutaz
+3923881,Nigeria,Côte d'Ivoire,4,5,2,19,Dahane Beida
+3923881,Côte d'Ivoire,Nigeria,5,4,3,15,Dahane Beida
+3923880,South Africa,Congo DR,2,1,0,7,Bamlak Tessema Weyesa
+3923880,Congo DR,South Africa,1,2,1,13,Bamlak Tessema Weyesa
+3922838,Côte d'Ivoire,Congo DR,6,6,0,14,Ibrahim Mutaz
+3922838,Congo DR,Côte d'Ivoire,6,6,0,17,Ibrahim Mutaz
+3922837,Nigeria,South Africa,5,4,2,22,Amin Mohamed Omar
+3922837,South Africa,Nigeria,4,5,1,11,Amin Mohamed Omar
+3922242,Senegal,Côte d'Ivoire,6,2,4,25,Pierre Ghislain Atcho
+3922242,Côte d'Ivoire,Senegal,2,6,3,26,Pierre Ghislain Atcho
+3922239,Equatorial Guinea,Guinea,2,2,1,12,Omar Abdulkadir Artan
+3922239,Guinea,Equatorial Guinea,2,2,1,18,Omar Abdulkadir Artan
+3922659,Mali,Côte d'Ivoire,10,2,4,31,Mohamed Adel Elsaid
+3922659,Côte d'Ivoire,Mali,2,10,7,19,Mohamed Adel Elsaid
+3922244,Mali,Burkina Faso,1,2,1,19,Ibrahim Mutaz
+3922244,Burkina Faso,Mali,2,1,3,18,Ibrahim Mutaz
+3922356,Congo DR,Guinea,3,4,1,16,Mustapha Ghorbal
+3922356,Guinea,Congo DR,4,3,2,18,Mustapha Ghorbal
+3922321,Nigeria,Angola,4,7,1,18,Issa Sy
+3922321,Angola,Nigeria,7,4,3,20,Issa Sy
+3922237,Angola,Namibia,6,3,1,15,Dahane Beida
+3922237,Namibia,Angola,3,6,3,20,Dahane Beida
+3922243,Morocco,South Africa,6,2,2,13,Mahmood Ali Mahmood Ismail
+3922243,South Africa,Morocco,2,6,3,17,Mahmood Ali Mahmood Ismail
+3922241,Cape Verde Islands,Mauritania,11,1,1,18,Mohamed Adel Elsaid
+3922241,Mauritania,Cape Verde Islands,1,11,1,14,Mohamed Adel Elsaid
+3922238,Nigeria,Cameroon,3,1,2,20,Redouane Jiyed
+3922238,Cameroon,Nigeria,1,3,2,19,Redouane Jiyed
+3920396,Egypt,Ghana,3,4,0,14,Pierre Ghislain Atcho
+3920396,Ghana,Egypt,4,3,1,20,Pierre Ghislain Atcho
+3920385,Egypt,Mozambique,7,2,1,9,Dahane Beida
+3920385,Mozambique,Egypt,2,7,3,9,Dahane Beida
+3920387,Ghana,Cape Verde Islands,2,5,3,17,Jean Jacques Ndala Ngambo
+3920387,Cape Verde Islands,Ghana,5,2,3,15,Jean Jacques Ndala Ngambo
+3920419,Zambia,Morocco,3,7,0,10,Patrice Tanguy Mebiame
+3920419,Morocco,Zambia,7,3,1,17,Patrice Tanguy Mebiame
+3920418,Tanzania,Congo DR,1,4,0,5,Amin Mohamed Omar
+3920418,Congo DR,Tanzania,4,1,1,9,Amin Mohamed Omar
+3920411,Cape Verde Islands,Egypt,4,8,1,9,Alhadi Allaou Mahamat
+3920411,Egypt,Cape Verde Islands,8,4,2,11,Alhadi Allaou Mahamat
+3920406,Zambia,Tanzania,5,3,3,18,Djindo Louis Houngnandande
+3920406,Tanzania,Zambia,3,5,0,9,Djindo Louis Houngnandande
+3920401,Guinea,Gambia,7,5,2,12,Abdel Aziz Mohamed Bouh
+3920401,Gambia,Guinea,5,7,2,19,Abdel Aziz Mohamed Bouh
+3920398,Côte d'Ivoire,Nigeria,5,6,0,16,Mustapha Ghorbal
+3920398,Nigeria,Côte d'Ivoire,6,5,1,19,Mustapha Ghorbal
+3920392,Burkina Faso,Mauritania,3,4,3,21,Jalal Jayed
+3920392,Mauritania,Burkina Faso,4,3,2,13,Jalal Jayed
+3920391,Mali,South Africa,2,3,3,14,Mohamed Adel Hussein
+3920391,South Africa,Mali,3,2,2,12,Mohamed Adel Hussein
+3920390,Algeria,Angola,14,2,4,13,Issa Sy
+3920390,Angola,Algeria,2,14,1,19,Issa Sy
+3920388,Senegal,Gambia,6,4,2,20,Redouane Jiyed
+3920388,Gambia,Senegal,4,6,1,13,Redouane Jiyed
+3920384,Côte d'Ivoire,Guinea-Bissau,6,2,2,12,Amin Mohamed Omar
+3920384,Guinea-Bissau,Côte d'Ivoire,2,6,1,13,Amin Mohamed Omar

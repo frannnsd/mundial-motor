@@ -15,6 +15,14 @@ serviceAccount*.json
 # Datos cacheados y base de datos local
 data/cache/*
 !data/cache/.gitkeep
+# ...pero SÍ versionamos los datos que el deploy necesita para entrenar:
+!data/cache/international_results.csv
+!data/cache/team_match_stats.csv
+!data/cache/wc2026_results.csv
+!data/cache/setpiece_events.csv
+# Artefactos que genera el build en la nube (no se versionan):
+data/brain.pkl
+data/backtest.json
 *.sqlite
 *.db
 ledger.sqlite

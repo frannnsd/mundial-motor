@@ -1,0 +1,1750 @@
+[
+  {
+    "id": 1489369,
+    "date": "2026-06-11T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Wilton Pereira Sampaio, Brazil",
+    "venue": "Estadio Banorte",
+    "city": "Mexico City",
+    "home": {
+      "id": 16,
+      "name": "Mexico",
+      "logo": "https://media.api-sports.io/football/teams/16.png",
+      "model_name": "Mexico"
+    },
+    "away": {
+      "id": 1531,
+      "name": "South Africa",
+      "logo": "https://media.api-sports.io/football/teams/1531.png",
+      "model_name": "South Africa"
+    },
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  {
+    "id": 1538999,
+    "date": "2026-06-12T02:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Amin Mohamed Omar, Egypt",
+    "venue": "Estadio Akron",
+    "city": "Zapopan",
+    "home": {
+      "id": 17,
+      "name": "South Korea",
+      "logo": "https://media.api-sports.io/football/teams/17.png",
+      "model_name": "South Korea"
+    },
+    "away": {
+      "id": 770,
+      "name": "Czechia",
+      "logo": "https://media.api-sports.io/football/teams/770.png",
+      "model_name": "Czech Republic"
+    },
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  {
+    "id": 1539000,
+    "date": "2026-06-12T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Facundo Raul Tello Figueroa, Argentina",
+    "venue": "BMO Field",
+    "city": "Toronto",
+    "home": {
+      "id": 5529,
+      "name": "Canada",
+      "logo": "https://media.api-sports.io/football/teams/5529.png",
+      "model_name": "Canada"
+    },
+    "away": {
+      "id": 1113,
+      "name": "Bosnia & Herzegovina",
+      "logo": "https://media.api-sports.io/football/teams/1113.png",
+      "model_name": "Bosnia and Herzegovina"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489370,
+    "date": "2026-06-13T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Danny Makkelie, Netherlands",
+    "venue": "SoFi Stadium",
+    "city": "Inglewood",
+    "home": {
+      "id": 2384,
+      "name": "USA",
+      "logo": "https://media.api-sports.io/football/teams/2384.png",
+      "model_name": "United States"
+    },
+    "away": {
+      "id": 2380,
+      "name": "Paraguay",
+      "logo": "https://media.api-sports.io/football/teams/2380.png",
+      "model_name": "Paraguay"
+    },
+    "home_goals": 4,
+    "away_goals": 1
+  },
+  {
+    "id": 1489373,
+    "date": "2026-06-13T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Said Martinez, Honduras",
+    "venue": "Levi's Stadium",
+    "city": "Santa Clara",
+    "home": {
+      "id": 1569,
+      "name": "Qatar",
+      "logo": "https://media.api-sports.io/football/teams/1569.png",
+      "model_name": "Qatar"
+    },
+    "away": {
+      "id": 15,
+      "name": "Switzerland",
+      "logo": "https://media.api-sports.io/football/teams/15.png",
+      "model_name": "Switzerland"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489371,
+    "date": "2026-06-13T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Slavko Vinčić, Slovenia",
+    "venue": "MetLife Stadium",
+    "city": "East Rutherford",
+    "home": {
+      "id": 6,
+      "name": "Brazil",
+      "logo": "https://media.api-sports.io/football/teams/6.png",
+      "model_name": "Brazil"
+    },
+    "away": {
+      "id": 31,
+      "name": "Morocco",
+      "logo": "https://media.api-sports.io/football/teams/31.png",
+      "model_name": "Morocco"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489372,
+    "date": "2026-06-14T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Mustapha Ghorbal, Algeria",
+    "venue": "Gillette Stadium",
+    "city": "Boston",
+    "home": {
+      "id": 2386,
+      "name": "Haiti",
+      "logo": "https://media.api-sports.io/football/teams/2386.png",
+      "model_name": "Haiti"
+    },
+    "away": {
+      "id": 1108,
+      "name": "Scotland",
+      "logo": "https://media.api-sports.io/football/teams/1108.png",
+      "model_name": "Scotland"
+    },
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  {
+    "id": 1539001,
+    "date": "2026-06-14T04:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Jesús Valenzuela, Venezuela",
+    "venue": "BC Place",
+    "city": "Vancouver",
+    "home": {
+      "id": 20,
+      "name": "Australia",
+      "logo": "https://media.api-sports.io/football/teams/20.png",
+      "model_name": "Australia"
+    },
+    "away": {
+      "id": 777,
+      "name": "Türkiye",
+      "logo": "https://media.api-sports.io/football/teams/777.png",
+      "model_name": "Turkey"
+    },
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  {
+    "id": 1489374,
+    "date": "2026-06-14T17:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Jalal Jayed, Morocco",
+    "venue": "NRG Stadium",
+    "city": "Houston",
+    "home": {
+      "id": 25,
+      "name": "Germany",
+      "logo": "https://media.api-sports.io/football/teams/25.png",
+      "model_name": "Germany"
+    },
+    "away": {
+      "id": 5530,
+      "name": "Curaçao",
+      "logo": "https://media.api-sports.io/football/teams/5530.png",
+      "model_name": "Curaçao"
+    },
+    "home_goals": 7,
+    "away_goals": 1
+  },
+  {
+    "id": 1489376,
+    "date": "2026-06-14T20:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Ismail Elfath, USA",
+    "venue": "AT&T Stadium",
+    "city": "Arlington",
+    "home": {
+      "id": 1118,
+      "name": "Netherlands",
+      "logo": "https://media.api-sports.io/football/teams/1118.png",
+      "model_name": "Netherlands"
+    },
+    "away": {
+      "id": 12,
+      "name": "Japan",
+      "logo": "https://media.api-sports.io/football/teams/12.png",
+      "model_name": "Japan"
+    },
+    "home_goals": 2,
+    "away_goals": 2
+  },
+  {
+    "id": 1489375,
+    "date": "2026-06-14T23:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "François Letexier, France",
+    "venue": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "home": {
+      "id": 1501,
+      "name": "Ivory Coast",
+      "logo": "https://media.api-sports.io/football/teams/1501.png",
+      "model_name": "Ivory Coast"
+    },
+    "away": {
+      "id": 2382,
+      "name": "Ecuador",
+      "logo": "https://media.api-sports.io/football/teams/2382.png",
+      "model_name": "Ecuador"
+    },
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  {
+    "id": 1539002,
+    "date": "2026-06-15T02:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Yael Falcon Perez, Argentina",
+    "venue": "Estadio BBVA",
+    "city": "Monterrey",
+    "home": {
+      "id": 5,
+      "name": "Sweden",
+      "logo": "https://media.api-sports.io/football/teams/5.png",
+      "model_name": "Sweden"
+    },
+    "away": {
+      "id": 28,
+      "name": "Tunisia",
+      "logo": "https://media.api-sports.io/football/teams/28.png",
+      "model_name": "Tunisia"
+    },
+    "home_goals": 5,
+    "away_goals": 1
+  },
+  {
+    "id": 1489380,
+    "date": "2026-06-15T16:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Adham Mohammad, Jordan",
+    "venue": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "home": {
+      "id": 9,
+      "name": "Spain",
+      "logo": "https://media.api-sports.io/football/teams/9.png",
+      "model_name": "Spain"
+    },
+    "away": {
+      "id": 1533,
+      "name": "Cape Verde Islands",
+      "logo": "https://media.api-sports.io/football/teams/1533.png",
+      "model_name": "Cape Verde"
+    },
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  {
+    "id": 1489377,
+    "date": "2026-06-15T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Ramon Abatti Abel, Brazil",
+    "venue": "Lumen Field",
+    "city": "Seattle",
+    "home": {
+      "id": 1,
+      "name": "Belgium",
+      "logo": "https://media.api-sports.io/football/teams/1.png",
+      "model_name": "Belgium"
+    },
+    "away": {
+      "id": 32,
+      "name": "Egypt",
+      "logo": "https://media.api-sports.io/football/teams/32.png",
+      "model_name": "Egypt"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489379,
+    "date": "2026-06-15T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Maurizio Mariani, Italy",
+    "venue": "Hard Rock Stadium",
+    "city": "Miami Gardens",
+    "home": {
+      "id": 23,
+      "name": "Saudi Arabia",
+      "logo": "https://media.api-sports.io/football/teams/23.png",
+      "model_name": "Saudi Arabia"
+    },
+    "away": {
+      "id": 7,
+      "name": "Uruguay",
+      "logo": "https://media.api-sports.io/football/teams/7.png",
+      "model_name": "Uruguay"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489378,
+    "date": "2026-06-16T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "César Ramos Palazuelos, Mexico",
+    "venue": "SoFi Stadium",
+    "city": "Inglewood",
+    "home": {
+      "id": 22,
+      "name": "Iran",
+      "logo": "https://media.api-sports.io/football/teams/22.png",
+      "model_name": "Iran"
+    },
+    "away": {
+      "id": 4673,
+      "name": "New Zealand",
+      "logo": "https://media.api-sports.io/football/teams/4673.png",
+      "model_name": "New Zealand"
+    },
+    "home_goals": 2,
+    "away_goals": 2
+  },
+  {
+    "id": 1489383,
+    "date": "2026-06-16T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Alireza Faghani, Australia",
+    "venue": "MetLife Stadium",
+    "city": "East Rutherford",
+    "home": {
+      "id": 2,
+      "name": "France",
+      "logo": "https://media.api-sports.io/football/teams/2.png",
+      "model_name": "France"
+    },
+    "away": {
+      "id": 13,
+      "name": "Senegal",
+      "logo": "https://media.api-sports.io/football/teams/13.png",
+      "model_name": "Senegal"
+    },
+    "home_goals": 3,
+    "away_goals": 1
+  },
+  {
+    "id": 1539016,
+    "date": "2026-06-16T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Pierre Ghislain Atcho, Gabon",
+    "venue": "Gillette Stadium",
+    "city": "Boston",
+    "home": {
+      "id": 1567,
+      "name": "Iraq",
+      "logo": "https://media.api-sports.io/football/teams/1567.png",
+      "model_name": "Iraq"
+    },
+    "away": {
+      "id": 1090,
+      "name": "Norway",
+      "logo": "https://media.api-sports.io/football/teams/1090.png",
+      "model_name": "Norway"
+    },
+    "home_goals": 1,
+    "away_goals": 4
+  },
+  {
+    "id": 1489381,
+    "date": "2026-06-17T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Szymon Marciniak, Poland",
+    "venue": "Arrowhead Stadium",
+    "city": "Kansas City",
+    "home": {
+      "id": 26,
+      "name": "Argentina",
+      "logo": "https://media.api-sports.io/football/teams/26.png",
+      "model_name": "Argentina"
+    },
+    "away": {
+      "id": 1532,
+      "name": "Algeria",
+      "logo": "https://media.api-sports.io/football/teams/1532.png",
+      "model_name": "Algeria"
+    },
+    "home_goals": 3,
+    "away_goals": 0
+  },
+  {
+    "id": 1489382,
+    "date": "2026-06-17T04:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Dahane Beida, Mauritania",
+    "venue": "Levi's Stadium",
+    "city": "Santa Clara",
+    "home": {
+      "id": 775,
+      "name": "Austria",
+      "logo": "https://media.api-sports.io/football/teams/775.png",
+      "model_name": "Austria"
+    },
+    "away": {
+      "id": 1548,
+      "name": "Jordan",
+      "logo": "https://media.api-sports.io/football/teams/1548.png",
+      "model_name": "Jordan"
+    },
+    "home_goals": 3,
+    "away_goals": 1
+  },
+  {
+    "id": 1539003,
+    "date": "2026-06-17T17:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Abdulrahman Al-Jassim, Qatar",
+    "venue": "NRG Stadium",
+    "city": "Houston",
+    "home": {
+      "id": 27,
+      "name": "Portugal",
+      "logo": "https://media.api-sports.io/football/teams/27.png",
+      "model_name": "Portugal"
+    },
+    "away": {
+      "id": 1508,
+      "name": "Congo DR",
+      "logo": "https://media.api-sports.io/football/teams/1508.png",
+      "model_name": "DR Congo"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489384,
+    "date": "2026-06-17T20:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Clement Turpin, France",
+    "venue": "AT&T Stadium",
+    "city": "Arlington",
+    "home": {
+      "id": 10,
+      "name": "England",
+      "logo": "https://media.api-sports.io/football/teams/10.png",
+      "model_name": "England"
+    },
+    "away": {
+      "id": 3,
+      "name": "Croatia",
+      "logo": "https://media.api-sports.io/football/teams/3.png",
+      "model_name": "Croatia"
+    },
+    "home_goals": 4,
+    "away_goals": 2
+  },
+  {
+    "id": 1489385,
+    "date": "2026-06-17T23:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Glenn Nyberg, Sweden",
+    "venue": "BMO Field",
+    "city": "Toronto",
+    "home": {
+      "id": 1504,
+      "name": "Ghana",
+      "logo": "https://media.api-sports.io/football/teams/1504.png",
+      "model_name": "Ghana"
+    },
+    "away": {
+      "id": 11,
+      "name": "Panama",
+      "logo": "https://media.api-sports.io/football/teams/11.png",
+      "model_name": "Panama"
+    },
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  {
+    "id": 1489386,
+    "date": "2026-06-18T02:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 1",
+    "referee": "Anthony Taylor, England",
+    "venue": "Estadio Banorte",
+    "city": "Mexico City",
+    "home": {
+      "id": 1568,
+      "name": "Uzbekistan",
+      "logo": "https://media.api-sports.io/football/teams/1568.png",
+      "model_name": "Uzbekistan"
+    },
+    "away": {
+      "id": 8,
+      "name": "Colombia",
+      "logo": "https://media.api-sports.io/football/teams/8.png",
+      "model_name": "Colombia"
+    },
+    "home_goals": 1,
+    "away_goals": 3
+  },
+  {
+    "id": 1539004,
+    "date": "2026-06-18T16:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Tori Penso, USA",
+    "venue": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "home": {
+      "id": 770,
+      "name": "Czechia",
+      "logo": "https://media.api-sports.io/football/teams/770.png",
+      "model_name": "Czech Republic"
+    },
+    "away": {
+      "id": 1531,
+      "name": "South Africa",
+      "logo": "https://media.api-sports.io/football/teams/1531.png",
+      "model_name": "South Africa"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1539005,
+    "date": "2026-06-18T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Joao Pedro Pinheiro, Portugal",
+    "venue": "SoFi Stadium",
+    "city": "Inglewood",
+    "home": {
+      "id": 15,
+      "name": "Switzerland",
+      "logo": "https://media.api-sports.io/football/teams/15.png",
+      "model_name": "Switzerland"
+    },
+    "away": {
+      "id": 1113,
+      "name": "Bosnia & Herzegovina",
+      "logo": "https://media.api-sports.io/football/teams/1113.png",
+      "model_name": "Bosnia and Herzegovina"
+    },
+    "home_goals": 4,
+    "away_goals": 1
+  },
+  {
+    "id": 1489387,
+    "date": "2026-06-18T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Cristian Garay, Chile",
+    "venue": "BC Place",
+    "city": "Vancouver",
+    "home": {
+      "id": 5529,
+      "name": "Canada",
+      "logo": "https://media.api-sports.io/football/teams/5529.png",
+      "model_name": "Canada"
+    },
+    "away": {
+      "id": 1569,
+      "name": "Qatar",
+      "logo": "https://media.api-sports.io/football/teams/1569.png",
+      "model_name": "Qatar"
+    },
+    "home_goals": 6,
+    "away_goals": 0
+  },
+  {
+    "id": 1489388,
+    "date": "2026-06-19T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Gustavo Tejera, Uruguay",
+    "venue": "Estadio Akron",
+    "city": "Zapopan",
+    "home": {
+      "id": 16,
+      "name": "Mexico",
+      "logo": "https://media.api-sports.io/football/teams/16.png",
+      "model_name": "Mexico"
+    },
+    "away": {
+      "id": 17,
+      "name": "South Korea",
+      "logo": "https://media.api-sports.io/football/teams/17.png",
+      "model_name": "South Korea"
+    },
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  {
+    "id": 1489391,
+    "date": "2026-06-19T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Felix Zwayer, Germany",
+    "venue": "Lumen Field",
+    "city": "Seattle",
+    "home": {
+      "id": 2384,
+      "name": "USA",
+      "logo": "https://media.api-sports.io/football/teams/2384.png",
+      "model_name": "United States"
+    },
+    "away": {
+      "id": 20,
+      "name": "Australia",
+      "logo": "https://media.api-sports.io/football/teams/20.png",
+      "model_name": "Australia"
+    },
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  {
+    "id": 1489390,
+    "date": "2026-06-19T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Ilgiz Tantashev, Uzbekistan",
+    "venue": "Gillette Stadium",
+    "city": "Boston",
+    "home": {
+      "id": 1108,
+      "name": "Scotland",
+      "logo": "https://media.api-sports.io/football/teams/1108.png",
+      "model_name": "Scotland"
+    },
+    "away": {
+      "id": 31,
+      "name": "Morocco",
+      "logo": "https://media.api-sports.io/football/teams/31.png",
+      "model_name": "Morocco"
+    },
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  {
+    "id": 1489389,
+    "date": "2026-06-20T00:30:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Alejandro Hernandez, Spain",
+    "venue": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "home": {
+      "id": 6,
+      "name": "Brazil",
+      "logo": "https://media.api-sports.io/football/teams/6.png",
+      "model_name": "Brazil"
+    },
+    "away": {
+      "id": 2386,
+      "name": "Haiti",
+      "logo": "https://media.api-sports.io/football/teams/2386.png",
+      "model_name": "Haiti"
+    },
+    "home_goals": 3,
+    "away_goals": 0
+  },
+  {
+    "id": 1539006,
+    "date": "2026-06-20T03:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Iván Barton, El Salvador",
+    "venue": "Levi's Stadium",
+    "city": "Santa Clara",
+    "home": {
+      "id": 777,
+      "name": "Türkiye",
+      "logo": "https://media.api-sports.io/football/teams/777.png",
+      "model_name": "Turkey"
+    },
+    "away": {
+      "id": 2380,
+      "name": "Paraguay",
+      "logo": "https://media.api-sports.io/football/teams/2380.png",
+      "model_name": "Paraguay"
+    },
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  {
+    "id": 1539007,
+    "date": "2026-06-20T17:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Michael Oliver, England",
+    "venue": "NRG Stadium",
+    "city": "Houston",
+    "home": {
+      "id": 1118,
+      "name": "Netherlands",
+      "logo": "https://media.api-sports.io/football/teams/1118.png",
+      "model_name": "Netherlands"
+    },
+    "away": {
+      "id": 5,
+      "name": "Sweden",
+      "logo": "https://media.api-sports.io/football/teams/5.png",
+      "model_name": "Sweden"
+    },
+    "home_goals": 5,
+    "away_goals": 1
+  },
+  {
+    "id": 1489393,
+    "date": "2026-06-20T20:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Juan Gabriel Benitez, Paraguay",
+    "venue": "BMO Field",
+    "city": "Toronto",
+    "home": {
+      "id": 25,
+      "name": "Germany",
+      "logo": "https://media.api-sports.io/football/teams/25.png",
+      "model_name": "Germany"
+    },
+    "away": {
+      "id": 1501,
+      "name": "Ivory Coast",
+      "logo": "https://media.api-sports.io/football/teams/1501.png",
+      "model_name": "Ivory Coast"
+    },
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  {
+    "id": 1489392,
+    "date": "2026-06-21T00:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Ma Ning, China",
+    "venue": "Arrowhead Stadium",
+    "city": "Kansas City",
+    "home": {
+      "id": 2382,
+      "name": "Ecuador",
+      "logo": "https://media.api-sports.io/football/teams/2382.png",
+      "model_name": "Ecuador"
+    },
+    "away": {
+      "id": 5530,
+      "name": "Curaçao",
+      "logo": "https://media.api-sports.io/football/teams/5530.png",
+      "model_name": "Curaçao"
+    },
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  {
+    "id": 1489394,
+    "date": "2026-06-21T04:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Istvan Kovacs, Romania",
+    "venue": "Estadio BBVA",
+    "city": "Monterrey",
+    "home": {
+      "id": 28,
+      "name": "Tunisia",
+      "logo": "https://media.api-sports.io/football/teams/28.png",
+      "model_name": "Tunisia"
+    },
+    "away": {
+      "id": 12,
+      "name": "Japan",
+      "logo": "https://media.api-sports.io/football/teams/12.png",
+      "model_name": "Japan"
+    },
+    "home_goals": 0,
+    "away_goals": 4
+  },
+  {
+    "id": 1489397,
+    "date": "2026-06-21T16:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Raphael Claus, Brazil",
+    "venue": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "home": {
+      "id": 9,
+      "name": "Spain",
+      "logo": "https://media.api-sports.io/football/teams/9.png",
+      "model_name": "Spain"
+    },
+    "away": {
+      "id": 23,
+      "name": "Saudi Arabia",
+      "logo": "https://media.api-sports.io/football/teams/23.png",
+      "model_name": "Saudi Arabia"
+    },
+    "home_goals": 4,
+    "away_goals": 0
+  },
+  {
+    "id": 1489395,
+    "date": "2026-06-21T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Dario Herrera, Argentina",
+    "venue": "SoFi Stadium",
+    "city": "Inglewood",
+    "home": {
+      "id": 1,
+      "name": "Belgium",
+      "logo": "https://media.api-sports.io/football/teams/1.png",
+      "model_name": "Belgium"
+    },
+    "away": {
+      "id": 22,
+      "name": "Iran",
+      "logo": "https://media.api-sports.io/football/teams/22.png",
+      "model_name": "Iran"
+    },
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  {
+    "id": 1489398,
+    "date": "2026-06-21T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Espen Eskas, Norway",
+    "venue": "Hard Rock Stadium",
+    "city": "Miami Gardens",
+    "home": {
+      "id": 7,
+      "name": "Uruguay",
+      "logo": "https://media.api-sports.io/football/teams/7.png",
+      "model_name": "Uruguay"
+    },
+    "away": {
+      "id": 1533,
+      "name": "Cape Verde Islands",
+      "logo": "https://media.api-sports.io/football/teams/1533.png",
+      "model_name": "Cape Verde"
+    },
+    "home_goals": 2,
+    "away_goals": 2
+  },
+  {
+    "id": 1489396,
+    "date": "2026-06-22T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Omar Mohamed Al Ali, United Arab Emirates",
+    "venue": "BC Place",
+    "city": "Vancouver",
+    "home": {
+      "id": 4673,
+      "name": "New Zealand",
+      "logo": "https://media.api-sports.io/football/teams/4673.png",
+      "model_name": "New Zealand"
+    },
+    "away": {
+      "id": 32,
+      "name": "Egypt",
+      "logo": "https://media.api-sports.io/football/teams/32.png",
+      "model_name": "Egypt"
+    },
+    "home_goals": 1,
+    "away_goals": 3
+  },
+  {
+    "id": 1489399,
+    "date": "2026-06-22T17:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Amin Mohamed Omar, Egypt",
+    "venue": "AT&T Stadium",
+    "city": "Arlington",
+    "home": {
+      "id": 26,
+      "name": "Argentina",
+      "logo": "https://media.api-sports.io/football/teams/26.png",
+      "model_name": "Argentina"
+    },
+    "away": {
+      "id": 775,
+      "name": "Austria",
+      "logo": "https://media.api-sports.io/football/teams/775.png",
+      "model_name": "Austria"
+    },
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  {
+    "id": 1539017,
+    "date": "2026-06-22T21:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Drew Fischer, Canada",
+    "venue": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "home": {
+      "id": 2,
+      "name": "France",
+      "logo": "https://media.api-sports.io/football/teams/2.png",
+      "model_name": "France"
+    },
+    "away": {
+      "id": 1567,
+      "name": "Iraq",
+      "logo": "https://media.api-sports.io/football/teams/1567.png",
+      "model_name": "Iraq"
+    },
+    "home_goals": 3,
+    "away_goals": 0
+  },
+  {
+    "id": 1489401,
+    "date": "2026-06-23T00:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Wilton Pereira Sampaio, Brazil",
+    "venue": "MetLife Stadium",
+    "city": "East Rutherford",
+    "home": {
+      "id": 1090,
+      "name": "Norway",
+      "logo": "https://media.api-sports.io/football/teams/1090.png",
+      "model_name": "Norway"
+    },
+    "away": {
+      "id": 13,
+      "name": "Senegal",
+      "logo": "https://media.api-sports.io/football/teams/13.png",
+      "model_name": "Senegal"
+    },
+    "home_goals": 3,
+    "away_goals": 2
+  },
+  {
+    "id": 1489400,
+    "date": "2026-06-23T03:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Slavko Vinčić, Slovenia",
+    "venue": "Levi's Stadium",
+    "city": "Santa Clara",
+    "home": {
+      "id": 1548,
+      "name": "Jordan",
+      "logo": "https://media.api-sports.io/football/teams/1548.png",
+      "model_name": "Jordan"
+    },
+    "away": {
+      "id": 1532,
+      "name": "Algeria",
+      "logo": "https://media.api-sports.io/football/teams/1532.png",
+      "model_name": "Algeria"
+    },
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  {
+    "id": 1489404,
+    "date": "2026-06-23T17:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Jalal Jayed, Morocco",
+    "venue": "NRG Stadium",
+    "city": "Houston",
+    "home": {
+      "id": 27,
+      "name": "Portugal",
+      "logo": "https://media.api-sports.io/football/teams/27.png",
+      "model_name": "Portugal"
+    },
+    "away": {
+      "id": 1568,
+      "name": "Uzbekistan",
+      "logo": "https://media.api-sports.io/football/teams/1568.png",
+      "model_name": "Uzbekistan"
+    },
+    "home_goals": 5,
+    "away_goals": 0
+  },
+  {
+    "id": 1489402,
+    "date": "2026-06-23T20:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Said Martinez, Honduras",
+    "venue": "Gillette Stadium",
+    "city": "Boston",
+    "home": {
+      "id": 10,
+      "name": "England",
+      "logo": "https://media.api-sports.io/football/teams/10.png",
+      "model_name": "England"
+    },
+    "away": {
+      "id": 1504,
+      "name": "Ghana",
+      "logo": "https://media.api-sports.io/football/teams/1504.png",
+      "model_name": "Ghana"
+    },
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  {
+    "id": 1489403,
+    "date": "2026-06-23T23:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Pierre Ghislain Atcho, Gabon",
+    "venue": "BMO Field",
+    "city": "Toronto",
+    "home": {
+      "id": 11,
+      "name": "Panama",
+      "logo": "https://media.api-sports.io/football/teams/11.png",
+      "model_name": "Panama"
+    },
+    "away": {
+      "id": 3,
+      "name": "Croatia",
+      "logo": "https://media.api-sports.io/football/teams/3.png",
+      "model_name": "Croatia"
+    },
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  {
+    "id": 1539008,
+    "date": "2026-06-24T02:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 2",
+    "referee": "Maurizio Mariani, Italy",
+    "venue": "Estadio Akron",
+    "city": "Zapopan",
+    "home": {
+      "id": 8,
+      "name": "Colombia",
+      "logo": "https://media.api-sports.io/football/teams/8.png",
+      "model_name": "Colombia"
+    },
+    "away": {
+      "id": 1508,
+      "name": "Congo DR",
+      "logo": "https://media.api-sports.io/football/teams/1508.png",
+      "model_name": "DR Congo"
+    },
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  {
+    "id": 1489408,
+    "date": "2026-06-24T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Ramon Abatti Abel, Brazil",
+    "venue": "BC Place",
+    "city": "Vancouver",
+    "home": {
+      "id": 15,
+      "name": "Switzerland",
+      "logo": "https://media.api-sports.io/football/teams/15.png",
+      "model_name": "Switzerland"
+    },
+    "away": {
+      "id": 5529,
+      "name": "Canada",
+      "logo": "https://media.api-sports.io/football/teams/5529.png",
+      "model_name": "Canada"
+    },
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  {
+    "id": 1539009,
+    "date": "2026-06-24T19:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Jesús Valenzuela, Venezuela",
+    "venue": "Lumen Field",
+    "city": "Seattle",
+    "home": {
+      "id": 1113,
+      "name": "Bosnia & Herzegovina",
+      "logo": "https://media.api-sports.io/football/teams/1113.png",
+      "model_name": "Bosnia and Herzegovina"
+    },
+    "away": {
+      "id": 1569,
+      "name": "Qatar",
+      "logo": "https://media.api-sports.io/football/teams/1569.png",
+      "model_name": "Qatar"
+    },
+    "home_goals": 3,
+    "away_goals": 1
+  },
+  {
+    "id": 1489405,
+    "date": "2026-06-24T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Danny Makkelie, Netherlands",
+    "venue": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "home": {
+      "id": 31,
+      "name": "Morocco",
+      "logo": "https://media.api-sports.io/football/teams/31.png",
+      "model_name": "Morocco"
+    },
+    "away": {
+      "id": 2386,
+      "name": "Haiti",
+      "logo": "https://media.api-sports.io/football/teams/2386.png",
+      "model_name": "Haiti"
+    },
+    "home_goals": 4,
+    "away_goals": 2
+  },
+  {
+    "id": 1489406,
+    "date": "2026-06-24T22:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "César Ramos Palazuelos, Mexico",
+    "venue": "Hard Rock Stadium",
+    "city": "Miami Gardens",
+    "home": {
+      "id": 1108,
+      "name": "Scotland",
+      "logo": "https://media.api-sports.io/football/teams/1108.png",
+      "model_name": "Scotland"
+    },
+    "away": {
+      "id": 6,
+      "name": "Brazil",
+      "logo": "https://media.api-sports.io/football/teams/6.png",
+      "model_name": "Brazil"
+    },
+    "home_goals": 0,
+    "away_goals": 3
+  },
+  {
+    "id": 1539010,
+    "date": "2026-06-25T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Yael Falcon Perez, Argentina",
+    "venue": "Estadio Banorte",
+    "city": "Mexico City",
+    "home": {
+      "id": 770,
+      "name": "Czechia",
+      "logo": "https://media.api-sports.io/football/teams/770.png",
+      "model_name": "Czech Republic"
+    },
+    "away": {
+      "id": 16,
+      "name": "Mexico",
+      "logo": "https://media.api-sports.io/football/teams/16.png",
+      "model_name": "Mexico"
+    },
+    "home_goals": 0,
+    "away_goals": 3
+  },
+  {
+    "id": 1489407,
+    "date": "2026-06-25T01:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Facundo Raul Tello Figueroa, Argentina",
+    "venue": "Estadio BBVA",
+    "city": "Monterrey",
+    "home": {
+      "id": 1531,
+      "name": "South Africa",
+      "logo": "https://media.api-sports.io/football/teams/1531.png",
+      "model_name": "South Africa"
+    },
+    "away": {
+      "id": 17,
+      "name": "South Korea",
+      "logo": "https://media.api-sports.io/football/teams/17.png",
+      "model_name": "South Korea"
+    },
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  {
+    "id": 1489410,
+    "date": "2026-06-25T20:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Tori Penso, USA",
+    "venue": "MetLife Stadium",
+    "city": "East Rutherford",
+    "home": {
+      "id": 2382,
+      "name": "Ecuador",
+      "logo": "https://media.api-sports.io/football/teams/2382.png",
+      "model_name": "Ecuador"
+    },
+    "away": {
+      "id": 25,
+      "name": "Germany",
+      "logo": "https://media.api-sports.io/football/teams/25.png",
+      "model_name": "Germany"
+    },
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  {
+    "id": 1489409,
+    "date": "2026-06-25T20:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Glenn Nyberg, Sweden",
+    "venue": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "home": {
+      "id": 5530,
+      "name": "Curaçao",
+      "logo": "https://media.api-sports.io/football/teams/5530.png",
+      "model_name": "Curaçao"
+    },
+    "away": {
+      "id": 1501,
+      "name": "Ivory Coast",
+      "logo": "https://media.api-sports.io/football/teams/1501.png",
+      "model_name": "Ivory Coast"
+    },
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  {
+    "id": 1539011,
+    "date": "2026-06-25T23:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Iván Barton, El Salvador",
+    "venue": "AT&T Stadium",
+    "city": "Arlington",
+    "home": {
+      "id": 12,
+      "name": "Japan",
+      "logo": "https://media.api-sports.io/football/teams/12.png",
+      "model_name": "Japan"
+    },
+    "away": {
+      "id": 5,
+      "name": "Sweden",
+      "logo": "https://media.api-sports.io/football/teams/5.png",
+      "model_name": "Sweden"
+    },
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  {
+    "id": 1489412,
+    "date": "2026-06-25T23:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Katia García, Mexico",
+    "venue": "Arrowhead Stadium",
+    "city": "Kansas City",
+    "home": {
+      "id": 28,
+      "name": "Tunisia",
+      "logo": "https://media.api-sports.io/football/teams/28.png",
+      "model_name": "Tunisia"
+    },
+    "away": {
+      "id": 1118,
+      "name": "Netherlands",
+      "logo": "https://media.api-sports.io/football/teams/1118.png",
+      "model_name": "Netherlands"
+    },
+    "home_goals": 1,
+    "away_goals": 3
+  },
+  {
+    "id": 1539012,
+    "date": "2026-06-26T02:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Mustapha Ghorbal, Algeria",
+    "venue": "SoFi Stadium",
+    "city": "Inglewood",
+    "home": {
+      "id": 777,
+      "name": "Türkiye",
+      "logo": "https://media.api-sports.io/football/teams/777.png",
+      "model_name": "Turkey"
+    },
+    "away": {
+      "id": 2384,
+      "name": "USA",
+      "logo": "https://media.api-sports.io/football/teams/2384.png",
+      "model_name": "United States"
+    },
+    "home_goals": 3,
+    "away_goals": 2
+  },
+  {
+    "id": 1489411,
+    "date": "2026-06-26T02:00:00+00:00",
+    "status": "FT",
+    "round": "Group Stage - 3",
+    "referee": "Clement Turpin, France",
+    "venue": "Levi's Stadium",
+    "city": "Santa Clara",
+    "home": {
+      "id": 2380,
+      "name": "Paraguay",
+      "logo": "https://media.api-sports.io/football/teams/2380.png",
+      "model_name": "Paraguay"
+    },
+    "away": {
+      "id": 20,
+      "name": "Australia",
+      "logo": "https://media.api-sports.io/football/teams/20.png",
+      "model_name": "Australia"
+    },
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  {
+    "id": 1539074,
+    "date": "2026-06-26T19:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "A. Taylor",
+    "venue": "BMO Field",
+    "city": "Toronto",
+    "home": {
+      "id": 13,
+      "name": "Senegal",
+      "logo": "https://media.api-sports.io/football/teams/13.png",
+      "model_name": "Senegal"
+    },
+    "away": {
+      "id": 1567,
+      "name": "Iraq",
+      "logo": "https://media.api-sports.io/football/teams/1567.png",
+      "model_name": "Iraq"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489416,
+    "date": "2026-06-26T19:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "M. Oliver",
+    "venue": "Gillette Stadium",
+    "city": "Boston",
+    "home": {
+      "id": 1090,
+      "name": "Norway",
+      "logo": "https://media.api-sports.io/football/teams/1090.png",
+      "model_name": "Norway"
+    },
+    "away": {
+      "id": 2,
+      "name": "France",
+      "logo": "https://media.api-sports.io/football/teams/2.png",
+      "model_name": "France"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489417,
+    "date": "2026-06-27T00:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "I. Elfath",
+    "venue": "Estadio Akron",
+    "city": "Zapopan",
+    "home": {
+      "id": 7,
+      "name": "Uruguay",
+      "logo": "https://media.api-sports.io/football/teams/7.png",
+      "model_name": "Uruguay"
+    },
+    "away": {
+      "id": 9,
+      "name": "Spain",
+      "logo": "https://media.api-sports.io/football/teams/9.png",
+      "model_name": "Spain"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489413,
+    "date": "2026-06-27T00:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "F. Letexier",
+    "venue": "NRG Stadium",
+    "city": "Houston",
+    "home": {
+      "id": 1533,
+      "name": "Cape Verde Islands",
+      "logo": "https://media.api-sports.io/football/teams/1533.png",
+      "model_name": "Cape Verde"
+    },
+    "away": {
+      "id": 23,
+      "name": "Saudi Arabia",
+      "logo": "https://media.api-sports.io/football/teams/23.png",
+      "model_name": "Saudi Arabia"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489414,
+    "date": "2026-06-27T03:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "S. Marciniak",
+    "venue": "Lumen Field",
+    "city": "Seattle",
+    "home": {
+      "id": 32,
+      "name": "Egypt",
+      "logo": "https://media.api-sports.io/football/teams/32.png",
+      "model_name": "Egypt"
+    },
+    "away": {
+      "id": 22,
+      "name": "Iran",
+      "logo": "https://media.api-sports.io/football/teams/22.png",
+      "model_name": "Iran"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489415,
+    "date": "2026-06-27T03:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "A. Makhadmeh",
+    "venue": "BC Place",
+    "city": "Vancouver",
+    "home": {
+      "id": 4673,
+      "name": "New Zealand",
+      "logo": "https://media.api-sports.io/football/teams/4673.png",
+      "model_name": "New Zealand"
+    },
+    "away": {
+      "id": 1,
+      "name": "Belgium",
+      "logo": "https://media.api-sports.io/football/teams/1.png",
+      "model_name": "Belgium"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489420,
+    "date": "2026-06-27T21:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "D. Fischer",
+    "venue": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "home": {
+      "id": 3,
+      "name": "Croatia",
+      "logo": "https://media.api-sports.io/football/teams/3.png",
+      "model_name": "Croatia"
+    },
+    "away": {
+      "id": 1504,
+      "name": "Ghana",
+      "logo": "https://media.api-sports.io/football/teams/1504.png",
+      "model_name": "Ghana"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489422,
+    "date": "2026-06-27T21:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "A. Al Jassim",
+    "venue": "MetLife Stadium",
+    "city": "New York New Jersey",
+    "home": {
+      "id": 11,
+      "name": "Panama",
+      "logo": "https://media.api-sports.io/football/teams/11.png",
+      "model_name": "Panama"
+    },
+    "away": {
+      "id": 10,
+      "name": "England",
+      "logo": "https://media.api-sports.io/football/teams/10.png",
+      "model_name": "England"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489419,
+    "date": "2026-06-27T23:30:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "A. Faghani",
+    "venue": "Hard Rock Stadium",
+    "city": "Miami",
+    "home": {
+      "id": 8,
+      "name": "Colombia",
+      "logo": "https://media.api-sports.io/football/teams/8.png",
+      "model_name": "Colombia"
+    },
+    "away": {
+      "id": 27,
+      "name": "Portugal",
+      "logo": "https://media.api-sports.io/football/teams/27.png",
+      "model_name": "Portugal"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1539013,
+    "date": "2026-06-27T23:30:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "F. Zwayer",
+    "venue": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "home": {
+      "id": 1508,
+      "name": "Congo DR",
+      "logo": "https://media.api-sports.io/football/teams/1508.png",
+      "model_name": "DR Congo"
+    },
+    "away": {
+      "id": 1568,
+      "name": "Uzbekistan",
+      "logo": "https://media.api-sports.io/football/teams/1568.png",
+      "model_name": "Uzbekistan"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489418,
+    "date": "2026-06-28T02:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "I. Tantashev",
+    "venue": "Arrowhead Stadium",
+    "city": "Kansas City",
+    "home": {
+      "id": 1532,
+      "name": "Algeria",
+      "logo": "https://media.api-sports.io/football/teams/1532.png",
+      "model_name": "Algeria"
+    },
+    "away": {
+      "id": 775,
+      "name": "Austria",
+      "logo": "https://media.api-sports.io/football/teams/775.png",
+      "model_name": "Austria"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1489421,
+    "date": "2026-06-28T02:00:00+00:00",
+    "status": "NS",
+    "round": "Group Stage - 3",
+    "referee": "I. Kovacs",
+    "venue": "AT&T Stadium",
+    "city": "Dallas",
+    "home": {
+      "id": 1548,
+      "name": "Jordan",
+      "logo": "https://media.api-sports.io/football/teams/1548.png",
+      "model_name": "Jordan"
+    },
+    "away": {
+      "id": 26,
+      "name": "Argentina",
+      "logo": "https://media.api-sports.io/football/teams/26.png",
+      "model_name": "Argentina"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1561329,
+    "date": "2026-06-28T19:00:00+00:00",
+    "status": "NS",
+    "round": "Round of 32",
+    "referee": null,
+    "venue": "SoFi Stadium",
+    "city": null,
+    "home": {
+      "id": 1531,
+      "name": "South Africa",
+      "logo": "https://media.api-sports.io/football/teams/1531.png",
+      "model_name": "South Africa"
+    },
+    "away": {
+      "id": 5529,
+      "name": "Canada",
+      "logo": "https://media.api-sports.io/football/teams/5529.png",
+      "model_name": "Canada"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1562344,
+    "date": "2026-06-29T17:00:00+00:00",
+    "status": "NS",
+    "round": "Round of 32",
+    "referee": null,
+    "venue": null,
+    "city": null,
+    "home": {
+      "id": 6,
+      "name": "Brazil",
+      "logo": "https://media.api-sports.io/football/teams/6.png",
+      "model_name": "Brazil"
+    },
+    "away": {
+      "id": 12,
+      "name": "Japan",
+      "logo": "https://media.api-sports.io/football/teams/12.png",
+      "model_name": "Japan"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1562345,
+    "date": "2026-06-30T01:00:00+00:00",
+    "status": "NS",
+    "round": "Round of 32",
+    "referee": null,
+    "venue": null,
+    "city": null,
+    "home": {
+      "id": 1118,
+      "name": "Netherlands",
+      "logo": "https://media.api-sports.io/football/teams/1118.png",
+      "model_name": "Netherlands"
+    },
+    "away": {
+      "id": 31,
+      "name": "Morocco",
+      "logo": "https://media.api-sports.io/football/teams/31.png",
+      "model_name": "Morocco"
+    },
+    "home_goals": null,
+    "away_goals": null
+  },
+  {
+    "id": 1562586,
+    "date": "2026-07-02T00:00:00+00:00",
+    "status": "NS",
+    "round": "Round of 32",
+    "referee": null,
+    "venue": null,
+    "city": null,
+    "home": {
+      "id": 2384,
+      "name": "USA",
+      "logo": "https://media.api-sports.io/football/teams/2384.png",
+      "model_name": "United States"
+    },
+    "away": {
+      "id": 1113,
+      "name": "Bosnia & Herzegovina",
+      "logo": "https://media.api-sports.io/football/teams/1113.png",
+      "model_name": "Bosnia and Herzegovina"
+    },
+    "home_goals": null,
+    "away_goals": null
+  }
+]

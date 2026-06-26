@@ -35,6 +35,12 @@ _CARD_LADDER = (2.5, 3.5, 4.5, 5.5, 6.5)
 _SHOT_LADDER = (5.5, 6.5, 7.5, 8.5, 9.5, 10.5)
 
 
+def _centered_ladder(mean: float) -> tuple[float, ...]:
+    """Escalera de líneas .5 centrada en el valor esperado (para remates totales)."""
+    base = round(mean)
+    return tuple(base + o - 0.5 for o in (-5, -3, -1, 1, 3, 5) if base + o - 0.5 > 0)
+
+
 @dataclass(frozen=True)
 class Selection:
     """Una apuesta concreta con su probabilidad y cuota justa (considera el push)."""
@@ -264,6 +270,7 @@ def build_market_book(
     corners: CornersModel | None = None,
     cards=None,
     shots=None,
+    total_shots=None,
     referee: str | None = None,
     knockout: bool = False,
     neutral: bool = True,
@@ -311,6 +318,13 @@ def build_market_book(
         selections += _count_selections(
             "Tiros al arco Más/Menos", sp.total, sp.total * shots.dispersion,
             _SHOT_LADDER, "Total ShotOnGoal",
+        )
+
+    if total_shots is not None:
+        tsp = total_shots.predict(home, away)
+        selections += _count_selections(
+            "Remates Más/Menos", tsp.total, tsp.total * total_shots.dispersion,
+            _centered_ladder(tsp.total), "Total Shots",
         )
 
     return MarketBook(

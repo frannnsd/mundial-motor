@@ -1,0 +1,695 @@
+match_id,date,team,opponent,corners_for,corners_against,cards,fouls,shots,sot_for,sot_against,referee,is_home
+1489395,2026-06-21 19:00:00,Belgium,Iran,4,2,2,7,23,7,3,"Dario Herrera, Argentina",1
+1489395,2026-06-21 19:00:00,Iran,Belgium,2,4,1,9,7,3,7,"Dario Herrera, Argentina",0
+1489377,2026-06-15 19:00:00,Belgium,Egypt,2,7,2,15,15,3,3,"Ramon Abatti Abel, Brazil",1
+1489377,2026-06-15 19:00:00,Egypt,Belgium,7,2,2,15,14,3,3,"Ramon Abatti Abel, Brazil",0
+1512767,2026-06-06 13:00:00,Belgium,Tunisia,13,0,0,9,27,12,1,"Anastasios Sidiropoulos, Greece",1
+1512767,2026-06-06 13:00:00,Tunisia,Belgium,0,13,3,9,7,1,12,"Anastasios Sidiropoulos, Greece",0
+1512766,2026-06-02 16:00:00,Croatia,Belgium,3,4,2,13,5,1,4,"Rade Obrenovič, Slovenia",1
+1512766,2026-06-02 16:00:00,Belgium,Croatia,4,3,2,13,8,4,1,"Rade Obrenovič, Slovenia",0
+1514471,2026-04-01 01:00:00,Mexico,Belgium,3,2,2,14,10,3,2,R. Mendoza,1
+1514471,2026-04-01 01:00:00,Belgium,Mexico,2,3,3,20,5,2,3,R. Mendoza,0
+1503003,2026-03-28 19:30:00,United States,Belgium,6,6,2,12,12,5,10,"Esteban Ostojich, Uruguay",1
+1503003,2026-03-28 19:30:00,Belgium,United States,6,6,0,21,21,10,5,"Esteban Ostojich, Uruguay",0
+1323373,2025-11-18 19:45:00,Belgium,Liechtenstein,15,0,0,9,23,13,1,M. Al-Hakim,1
+1323373,2025-11-18 19:45:00,Liechtenstein,Belgium,0,15,1,10,2,1,13,M. Al-Hakim,0
+1323351,2025-11-15 14:00:00,Kazakhstan,Belgium,5,12,5,17,9,3,8,D. Rumsas,1
+1323351,2025-11-15 14:00:00,Belgium,Kazakhstan,12,5,1,5,20,8,3,D. Rumsas,0
+1323337,2025-10-13 18:45:00,Wales,Belgium,6,5,2,10,9,3,6,D. Siebert,1
+1323337,2025-10-13 18:45:00,Belgium,Wales,5,6,1,6,16,6,3,D. Siebert,0
+1323321,2025-10-10 18:45:00,Belgium,FYR Macedonia,13,2,3,15,25,5,0,H. U. Meler,1
+1323321,2025-10-10 18:45:00,FYR Macedonia,Belgium,2,13,2,8,3,0,5,H. U. Meler,0
+1323299,2025-09-07 18:45:00,Belgium,Kazakhstan,11,1,0,6,35,15,2,R. M. Petrescu,1
+1323299,2025-09-07 18:45:00,Kazakhstan,Belgium,1,11,2,10,5,2,15,R. M. Petrescu,0
+1323283,2025-09-04 18:45:00,Liechtenstein,Belgium,0,10,2,11,0,0,9,M. Krogh,1
+1323283,2025-09-04 18:45:00,Belgium,Liechtenstein,10,0,0,12,24,9,0,M. Krogh,0
+1539017,2026-06-22 21:00:00,France,Iraq,4,2,0,8,19,5,0,"Drew Fischer, Canada",1
+1539017,2026-06-22 21:00:00,Iraq,France,2,4,1,4,4,0,5,"Drew Fischer, Canada",0
+1489383,2026-06-16 19:00:00,France,Senegal,6,4,0,5,11,8,2,"Alireza Faghani, Australia",1
+1489383,2026-06-16 19:00:00,Senegal,France,4,6,0,9,6,2,8,"Alireza Faghani, Australia",0
+1542183,2026-06-08 19:10:00,France,Northern Ireland,5,1,0,6,27,5,2,"Sascha Stegemann, Germany",1
+1542183,2026-06-08 19:10:00,Northern Ireland,France,1,5,0,7,4,2,5,"Sascha Stegemann, Germany",0
+1536931,2026-06-04 19:10:00,France,Ivory Coast,8,2,0,8,15,6,3,"Sebastian Gishamer, Austria",1
+1536931,2026-06-04 19:10:00,Ivory Coast,France,2,8,1,9,7,3,6,"Sebastian Gishamer, Austria",0
+1514465,2026-03-29 19:00:00,Colombia,France,9,5,1,13,13,5,5,V. Rivas,1
+1514465,2026-03-29 19:00:00,France,Colombia,5,9,3,14,14,5,5,V. Rivas,0
+1501815,2026-03-26 20:00:00,Brazil,France,5,2,4,17,17,4,3,"Ismail Elfath, USA",1
+1501815,2026-03-26 20:00:00,France,Brazil,2,5,4,7,7,3,4,"Ismail Elfath, USA",0
+1366320,2025-11-16 17:00:00,Azerbaijan,France,1,8,2,10,2,1,4,A. Treimanis,1
+1366320,2025-11-16 17:00:00,France,Azerbaijan,8,1,0,12,17,4,1,A. Treimanis,0
+1366311,2025-11-13 19:45:00,France,Ukraine,7,0,1,9,25,10,0,S. Vincic,1
+1366311,2025-11-13 19:45:00,Ukraine,France,0,7,2,10,1,0,10,S. Vincic,0
+1366307,2025-10-13 18:45:00,Iceland,France,0,9,1,16,4,2,9,O. Grinfeld,1
+1366307,2025-10-13 18:45:00,France,Iceland,9,0,1,12,20,9,2,O. Grinfeld,0
+1366299,2025-10-10 18:45:00,France,Azerbaijan,10,0,1,8,33,9,0,R. Saggi,1
+1366299,2025-10-10 18:45:00,Azerbaijan,France,0,10,2,14,1,0,9,R. Saggi,0
+1366293,2025-09-09 18:45:00,France,Iceland,3,2,4,12,20,8,2,A. Nobre,1
+1366293,2025-09-09 18:45:00,Iceland,France,2,3,2,13,7,2,8,A. Nobre,0
+1366283,2025-09-05 18:45:00,Ukraine,France,4,4,0,10,8,3,6,D. Makkelie,1
+1366283,2025-09-05 18:45:00,France,Ukraine,4,4,0,8,16,6,3,D. Makkelie,0
+1489384,2026-06-17 20:00:00,England,Croatia,8,2,0,10,22,11,5,"Clement Turpin, France",1
+1489384,2026-06-17 20:00:00,Croatia,England,2,8,0,12,10,5,11,"Clement Turpin, France",0
+1512768,2026-06-07 18:45:00,Croatia,Slovenia,8,4,0,5,22,6,4,"Bence Csonka, Hungary",1
+1512768,2026-06-07 18:45:00,Slovenia,Croatia,4,8,0,11,13,4,6,"Bence Csonka, Hungary",0
+1512757,2026-03-26 23:30:00,Colombia,Croatia,0,2,0,3,3,1,1,"Rubiel Vazquez, USA",1
+1512757,2026-03-26 23:30:00,Croatia,Colombia,2,0,0,5,5,1,1,"Rubiel Vazquez, USA",0
+1366324,2025-11-17 19:45:00,Montenegro,Croatia,5,3,3,17,13,5,7,H. U. Meler,1
+1366324,2025-11-17 19:45:00,Croatia,Montenegro,3,5,1,16,17,7,5,H. U. Meler,0
+1366316,2025-11-14 19:45:00,Croatia,Faroe Islands,11,2,0,9,20,4,4,A. Aghayev,1
+1366316,2025-11-14 19:45:00,Faroe Islands,Croatia,2,11,2,11,4,4,4,A. Aghayev,0
+1366305,2025-10-12 18:45:00,Croatia,Gibraltar,18,0,0,7,28,10,0,O. Derevinskyi,1
+1366305,2025-10-12 18:45:00,Gibraltar,Croatia,0,18,0,7,1,0,10,O. Derevinskyi,0
+1366297,2025-10-09 18:45:00,Czech Republic,Croatia,5,6,0,17,11,2,2,F. Letexier,1
+1366297,2025-10-09 18:45:00,Croatia,Czech Republic,6,5,2,8,10,2,2,F. Letexier,0
+1366292,2025-09-08 18:45:00,Croatia,Montenegro,7,3,1,10,32,13,1,F. Zwayer,1
+1366292,2025-09-08 18:45:00,Montenegro,Croatia,3,7,4,6,3,1,13,F. Zwayer,0
+1366285,2025-09-05 18:45:00,Faroe Islands,Croatia,3,17,2,12,6,3,8,K. Tohver,1
+1366285,2025-09-05 18:45:00,Croatia,Faroe Islands,17,3,1,8,26,8,3,K. Tohver,0
+1366277,2025-06-09 18:45:00,Croatia,Czech Republic,0,6,0,3,18,11,5,J. Manzano,1
+1366277,2025-06-09 18:45:00,Czech Republic,Croatia,6,0,2,11,14,5,11,J. Manzano,0
+1539007,2026-06-20 17:00:00,Netherlands,Sweden,2,5,0,9,10,7,8,"Michael Oliver, England",1
+1539007,2026-06-20 17:00:00,Sweden,Netherlands,5,2,3,12,16,8,7,"Michael Oliver, England",0
+1539002,2026-06-15 02:00:00,Sweden,Tunisia,4,2,0,10,13,7,2,"Yael Falcon Perez, Argentina",1
+1539002,2026-06-15 02:00:00,Tunisia,Sweden,2,4,1,8,6,2,7,"Yael Falcon Perez, Argentina",0
+1542552,2026-06-04 17:00:00,Sweden,Greece,1,4,0,6,13,5,4,"Aaron Wyn Jones, Wales",1
+1542552,2026-06-04 17:00:00,Greece,Sweden,4,1,2,11,13,4,5,"Aaron Wyn Jones, Wales",0
+1536927,2026-06-01 17:00:00,Norway,Sweden,6,1,0,6,22,7,5,"Balazs Berke, Hungary",1
+1536927,2026-06-01 17:00:00,Sweden,Norway,1,6,1,6,9,5,7,"Balazs Berke, Hungary",0
+1537581,2026-03-31 18:45:00,Sweden,Poland,2,9,2,15,9,5,7,S. Vincic,1
+1537581,2026-03-31 18:45:00,Poland,Sweden,9,2,3,15,15,7,5,S. Vincic,0
+1487928,2026-03-26 19:45:00,Ukraine,Sweden,9,3,2,12,10,4,4,J. Pinheiro,1
+1487928,2026-03-26 19:45:00,Sweden,Ukraine,3,9,1,10,10,4,4,J. Pinheiro,0
+1323368,2025-11-18 19:45:00,Sweden,Slovenia,6,7,2,6,11,2,3,M. Mariani,1
+1323368,2025-11-18 19:45:00,Slovenia,Sweden,7,6,1,11,17,3,2,M. Mariani,0
+1323356,2025-11-15 19:45:00,Switzerland,Sweden,4,3,1,13,9,7,3,E. Lambrechts,1
+1323356,2025-11-15 19:45:00,Sweden,Switzerland,3,4,4,18,6,3,7,E. Lambrechts,0
+1323334,2025-10-13 18:45:00,Sweden,Kosovo,12,0,0,16,13,4,3,D. Makkelie,1
+1323334,2025-10-13 18:45:00,Kosovo,Sweden,0,12,2,10,7,3,4,D. Makkelie,0
+1323319,2025-10-10 18:45:00,Sweden,Switzerland,4,9,1,13,7,0,8,A. Taylor,1
+1323319,2025-10-10 18:45:00,Switzerland,Sweden,9,4,1,10,17,8,0,A. Taylor,0
+1323300,2025-09-08 18:45:00,Kosovo,Sweden,1,5,6,13,11,5,5,A. Lindhout,1
+1323300,2025-09-08 18:45:00,Sweden,Kosovo,5,1,4,12,14,5,5,A. Lindhout,0
+1323284,2025-09-05 18:45:00,Slovenia,Sweden,1,4,2,19,9,4,2,J. Sanchez,1
+1323284,2025-09-05 18:45:00,Sweden,Slovenia,4,1,2,21,6,2,4,J. Sanchez,0
+1489389,2026-06-20 00:30:00,Brazil,Haiti,4,4,1,13,8,5,3,"Alejandro Hernandez, Spain",1
+1489389,2026-06-20 00:30:00,Haiti,Brazil,4,4,3,14,7,3,5,"Alejandro Hernandez, Spain",0
+1489371,2026-06-13 22:00:00,Brazil,Morocco,6,2,2,16,12,5,3,"Slavko Vinčić, Slovenia",1
+1489371,2026-06-13 22:00:00,Morocco,Brazil,2,6,0,14,14,3,5,"Slavko Vinčić, Slovenia",0
+1528287,2026-06-06 22:00:00,Brazil,Egypt,5,3,1,9,12,7,2,"Adonai Escobedo Gonzalez, Mexico",1
+1528287,2026-06-06 22:00:00,Egypt,Brazil,3,5,1,9,4,2,7,"Adonai Escobedo Gonzalez, Mexico",0
+1536926,2026-05-31 21:30:00,Brazil,Panama,1,1,0,13,19,12,9,"Daniel Schlager, Germany",1
+1536926,2026-05-31 21:30:00,Panama,Brazil,1,1,1,5,16,9,12,"Daniel Schlager, Germany",0
+1485023,2025-11-18 19:30:00,Brazil,Tunisia,7,1,1,22,22,3,2,"Jérôme Brisard, France",1
+1485023,2025-11-18 19:30:00,Tunisia,Brazil,1,7,1,7,7,2,3,"Jérôme Brisard, France",0
+1485012,2025-11-15 16:00:00,Brazil,Senegal,7,7,1,14,14,6,1,"Jarred Gillett, Australia",1
+1485012,2025-11-15 16:00:00,Senegal,Brazil,7,7,4,11,11,1,6,"Jarred Gillett, Australia",0
+1449844,2025-10-14 10:30:00,Japan,Brazil,4,2,1,15,15,6,4,"Jong-Hyeok Kim, South Korea",1
+1449844,2025-10-14 10:30:00,Brazil,Japan,2,4,1,9,9,4,6,"Jong-Hyeok Kim, South Korea",0
+1449843,2025-10-10 11:00:00,South Korea,Brazil,5,3,3,13,4,1,7,"Abdulrahman Al-Jassim, Qatar",1
+1449843,2025-10-10 11:00:00,Brazil,South Korea,3,5,1,9,14,7,1,"Abdulrahman Al-Jassim, Qatar",0
+1100318,2025-09-09 23:30:00,Bolivia,Brazil,5,4,0,18,23,10,3,"Cristian Garay, Chile",1
+1100318,2025-09-09 23:30:00,Brazil,Bolivia,4,5,2,9,10,3,10,"Cristian Garay, Chile",0
+1100315,2025-09-05 00:30:00,Brazil,Chile,4,3,1,14,22,7,0,"Alexis Herrera, Venezuela",1
+1100315,2025-09-05 00:30:00,Chile,Brazil,3,4,1,11,3,0,7,"Alexis Herrera, Venezuela",0
+1489398,2026-06-21 22:00:00,Uruguay,Cape Verde,11,4,2,11,17,2,4,"Espen Eskas, Norway",1
+1489398,2026-06-21 22:00:00,Cape Verde,Uruguay,4,11,2,4,12,4,2,"Espen Eskas, Norway",0
+1489379,2026-06-15 22:00:00,Saudi Arabia,Uruguay,4,14,1,11,7,3,10,"Maurizio Mariani, Italy",1
+1489379,2026-06-15 22:00:00,Uruguay,Saudi Arabia,14,4,0,6,27,10,3,"Maurizio Mariani, Italy",0
+1528280,2026-03-31 18:30:00,Algeria,Uruguay,5,6,4,12,6,0,1,L. Pairetto,1
+1528280,2026-03-31 18:30:00,Uruguay,Algeria,6,5,3,16,11,1,0,L. Pairetto,0
+1502470,2026-03-27 19:45:00,England,Uruguay,7,0,1,13,13,5,1,"Sven Jablonski, Germany",1
+1502470,2026-03-27 19:45:00,Uruguay,England,0,7,2,9,9,1,5,"Sven Jablonski, Germany",0
+1457379,2025-11-19 00:00:00,United States,Uruguay,7,5,2,0,10,7,2,"Julio Cesar de Jesus Luna Guzman, Guatemala",1
+1457379,2025-11-19 00:00:00,Uruguay,United States,5,7,3,0,9,2,7,"Julio Cesar de Jesus Luna Guzman, Guatemala",0
+1469292,2025-11-16 01:00:00,Mexico,Uruguay,0,0,3,10,10,3,2,,1
+1469292,2025-11-16 01:00:00,Uruguay,Mexico,0,0,6,3,3,2,3,,0
+1466848,2025-10-13 12:45:00,Uzbekistan,Uruguay,2,6,0,7,7,2,4,,1
+1466848,2025-10-13 12:45:00,Uruguay,Uzbekistan,6,2,0,13,13,4,2,,0
+1466665,2025-10-10 12:45:00,Uruguay,Dominican Republic,3,2,1,17,11,1,4,,1
+1466665,2025-10-10 12:45:00,Dominican Republic,Uruguay,2,3,2,10,7,4,1,,0
+1100321,2025-09-09 23:30:00,Chile,Uruguay,8,3,1,8,16,3,3,"Anderson Daronco, Brazil",1
+1100321,2025-09-09 23:30:00,Uruguay,Chile,3,8,1,14,6,3,3,"Anderson Daronco, Brazil",0
+1100314,2025-09-04 23:30:00,Uruguay,Peru,6,1,2,8,24,7,3,"Facundo Raul Tello Figueroa, Argentina",1
+1100314,2025-09-04 23:30:00,Peru,Uruguay,1,6,3,14,11,3,7,"Facundo Raul Tello Figueroa, Argentina",0
+1100309,2025-06-10 23:00:00,Uruguay,Venezuela,10,1,2,15,10,5,1,"Raphael Claus, Brazil",1
+1100309,2025-06-10 23:00:00,Venezuela,Uruguay,1,10,3,10,10,1,5,"Raphael Claus, Brazil",0
+1100304,2025-06-05 23:00:00,Paraguay,Uruguay,5,7,2,18,12,5,1,D. Herrera,1
+1100304,2025-06-05 23:00:00,Uruguay,Paraguay,7,5,0,9,5,1,5,D. Herrera,0
+1489386,2026-06-18 02:00:00,Uzbekistan,Colombia,3,4,1,14,8,2,4,"Anthony Taylor, England",1
+1489386,2026-06-18 02:00:00,Colombia,Uzbekistan,4,3,1,11,15,4,2,"Anthony Taylor, England",0
+1528288,2026-06-07 23:00:00,Colombia,Jordan,1,1,0,4,4,3,0,J. Valle,1
+1528288,2026-06-07 23:00:00,Jordan,Colombia,1,1,0,6,4,0,3,J. Valle,0
+1537648,2026-06-01 23:00:00,Colombia,Costa Rica,4,2,1,5,8,4,3,"Guillermo Enrique Guerrero Alcivar, Ecuador",1
+1537648,2026-06-01 23:00:00,Costa Rica,Colombia,2,4,1,7,6,3,4,"Guillermo Enrique Guerrero Alcivar, Ecuador",0
+1485025,2025-11-19 01:30:00,Colombia,Australia,3,0,2,16,16,8,1,"Tori Penso, USA",1
+1485025,2025-11-19 01:30:00,Australia,Colombia,0,3,2,2,2,1,8,"Tori Penso, USA",0
+1469291,2025-11-16 00:30:00,Colombia,New Zealand,7,7,0,22,22,8,3,,1
+1469291,2025-11-16 00:30:00,New Zealand,Colombia,7,7,1,10,10,3,8,,0
+1396845,2025-10-15 00:30:00,Canada,Colombia,2,2,3,4,4,1,1,"Guido Gonzales Jr, USA",1
+1396845,2025-10-15 00:30:00,Colombia,Canada,2,2,0,6,6,1,1,"Guido Gonzales Jr, USA",0
+1400027,2025-10-12 01:00:00,Mexico,Colombia,2,2,3,13,10,2,4,,1
+1400027,2025-10-12 01:00:00,Colombia,Mexico,2,2,1,17,7,4,2,,0
+1100319,2025-09-09 23:30:00,Venezuela,Colombia,3,2,0,14,11,8,9,"Wilton Pereira Sampaio, Brazil",1
+1100319,2025-09-09 23:30:00,Colombia,Venezuela,2,3,0,16,13,9,8,"Wilton Pereira Sampaio, Brazil",0
+1100313,2025-09-04 23:30:00,Colombia,Bolivia,4,2,1,10,12,8,3,"Dario Herrera, Argentina",1
+1100313,2025-09-04 23:30:00,Bolivia,Colombia,2,4,1,7,8,3,8,"Dario Herrera, Argentina",0
+1100310,2025-06-11 00:00:00,Argentina,Colombia,4,6,3,16,10,3,5,"Juan Gabriel Benitez, Paraguay",1
+1100310,2025-06-11 00:00:00,Colombia,Argentina,6,4,3,12,11,5,3,"Juan Gabriel Benitez, Paraguay",0
+1489397,2026-06-21 16:00:00,Spain,Saudi Arabia,6,1,0,10,22,8,1,"Raphael Claus, Brazil",1
+1489397,2026-06-21 16:00:00,Saudi Arabia,Spain,1,6,2,2,3,1,8,"Raphael Claus, Brazil",0
+1489380,2026-06-15 16:00:00,Spain,Cape Verde,11,1,1,10,27,7,1,"Adham Mohammad, Jordan",1
+1489380,2026-06-15 16:00:00,Cape Verde,Spain,1,11,1,1,6,1,7,"Adham Mohammad, Jordan",0
+1544359,2026-06-04 19:00:00,Spain,Iraq,5,3,2,8,13,4,2,"Florian Badstubner, Germany",1
+1544359,2026-06-04 19:00:00,Iraq,Spain,3,5,2,10,3,2,4,"Florian Badstubner, Germany",0
+1511778,2026-03-31 19:00:00,Spain,Egypt,11,0,0,11,25,6,1,G. Kabakov,1
+1511778,2026-03-31 19:00:00,Egypt,Spain,0,11,6,9,4,1,6,G. Kabakov,0
+1536910,2026-03-27 20:00:00,Spain,Serbia,5,1,0,14,14,8,2,"Luís Godinho, Portugal",1
+1536910,2026-03-27 20:00:00,Serbia,Spain,1,5,0,2,2,2,8,"Luís Godinho, Portugal",0
+1366326,2025-11-18 19:45:00,Spain,Turkey,6,3,1,5,21,9,7,F. Zwayer,1
+1366326,2025-11-18 19:45:00,Turkey,Spain,3,6,5,8,13,7,9,F. Zwayer,0
+1366317,2025-11-15 17:00:00,Georgia,Spain,4,6,0,9,6,2,7,B. Bastien,1
+1366317,2025-11-15 17:00:00,Spain,Georgia,6,4,1,9,14,7,2,B. Bastien,0
+1366308,2025-10-14 18:45:00,Spain,Bulgaria,11,0,0,7,33,11,0,W. Delajod,1
+1366308,2025-10-14 18:45:00,Bulgaria,Spain,0,11,0,6,3,0,11,W. Delajod,0
+1366300,2025-10-11 18:45:00,Spain,Georgia,10,0,1,12,24,7,1,M. Lukjancukas,1
+1366300,2025-10-11 18:45:00,Georgia,Spain,0,10,0,8,1,1,7,M. Lukjancukas,0
+1366289,2025-09-07 18:45:00,Turkey,Spain,8,4,0,6,11,2,12,M. Oliver,1
+1366289,2025-09-07 18:45:00,Spain,Turkey,4,8,0,9,21,12,2,M. Oliver,0
+1525494,2026-06-10 20:00:00,England,Costa Rica,11,1,0,7,28,8,0,"Facundo Raul Tello Figueroa, Argentina",1
+1525494,2026-06-10 20:00:00,Costa Rica,England,1,11,4,24,1,0,8,"Facundo Raul Tello Figueroa, Argentina",0
+1525492,2026-06-06 20:00:00,England,New Zealand,8,1,0,10,23,4,1,"Natalie Simon, USA",1
+1525492,2026-06-06 20:00:00,New Zealand,England,1,8,0,13,3,1,4,"Natalie Simon, USA",0
+1502473,2026-03-31 18:45:00,England,Japan,11,1,0,7,19,4,2,N. Walsh,1
+1502473,2026-03-31 18:45:00,Japan,England,1,11,2,13,7,2,4,N. Walsh,0
+1323361,2025-11-16 17:00:00,Albania,England,5,5,1,9,6,3,7,M. Guida,1
+1323361,2025-11-16 17:00:00,England,Albania,5,5,2,10,14,7,3,M. Guida,0
+1323347,2025-11-13 19:45:00,England,Serbia,6,5,0,13,19,6,1,I. Kruzliak,1
+1323347,2025-11-13 19:45:00,Serbia,England,5,6,1,10,7,1,6,I. Kruzliak,0
+1323342,2025-10-14 18:45:00,Latvia,England,2,9,4,11,6,1,7,A. Sidiropoulos,1
+1323342,2025-10-14 18:45:00,England,Latvia,9,2,1,5,24,7,1,A. Sidiropoulos,0
+1352905,2025-10-09 18:45:00,England,Wales,8,2,2,10,17,5,2,"Urs Schnyder, Switzerland",1
+1352905,2025-10-09 18:45:00,Wales,England,2,8,1,9,10,2,5,"Urs Schnyder, Switzerland",0
+1323310,2025-09-09 18:45:00,Serbia,England,2,6,2,11,3,0,12,C. Turpin,1
+1323310,2025-09-09 18:45:00,England,Serbia,6,2,1,10,24,12,0,C. Turpin,0
+1323291,2025-09-06 16:00:00,England,Andorra,8,0,1,10,11,7,0,M. Al-Emara,1
+1323291,2025-09-06 16:00:00,Andorra,England,0,8,1,8,2,0,7,M. Al-Emara,0
+1352903,2025-06-10 18:45:00,England,Senegal,5,3,2,12,9,4,9,"Stephanie Frappart, France",1
+1352903,2025-06-10 18:45:00,Senegal,England,3,5,1,18,11,9,4,"Stephanie Frappart, France",0
+1489385,2026-06-17 23:00:00,Ghana,Panama,2,2,1,9,8,2,4,"Glenn Nyberg, Sweden",1
+1489385,2026-06-17 23:00:00,Panama,Ghana,2,2,2,11,11,4,2,"Glenn Nyberg, Sweden",0
+1528276,2026-03-31 17:30:00,South Africa,Panama,1,1,3,11,6,1,4,T. Ketshabile,1
+1528276,2026-03-31 17:30:00,Panama,South Africa,1,1,4,13,8,4,1,T. Ketshabile,0
+1527857,2026-03-27 17:00:00,South Africa,Panama,5,1,1,12,12,5,2,T. Ketshabile,1
+1527857,2026-03-27 17:00:00,Panama,South Africa,1,5,2,3,3,2,5,T. Ketshabile,0
+1501810,2026-01-23 01:00:00,Panama,Mexico,1,9,1,4,4,1,3,G. J. Gonzalez,1
+1501810,2026-01-23 01:00:00,Mexico,Panama,9,1,2,9,9,3,1,G. J. Gonzalez,0
+1397467,2025-11-19 01:00:00,Panama,El Salvador,4,1,1,22,21,10,1,,1
+1397467,2025-11-19 01:00:00,El Salvador,Panama,1,4,2,17,6,1,10,,0
+1446018,2025-11-14 02:00:00,Guatemala,Panama,9,2,0,11,24,8,5,"César Ramos Palazuelos, Mexico",1
+1446018,2025-11-14 02:00:00,Panama,Guatemala,2,9,2,10,10,5,8,"César Ramos Palazuelos, Mexico",0
+1446014,2025-10-15 01:00:00,Panama,Suriname,7,3,0,14,28,8,4,,1
+1446014,2025-10-15 01:00:00,Suriname,Panama,3,7,1,11,8,4,8,,0
+1397449,2025-10-11 01:00:00,El Salvador,Panama,3,5,3,21,10,2,2,D. Fischer,1
+1397449,2025-10-11 01:00:00,Panama,El Salvador,5,3,0,14,7,2,2,D. Fischer,0
+1489394,2026-06-21 04:00:00,Tunisia,Japan,3,5,0,8,2,0,5,"Istvan Kovacs, Romania",1
+1489394,2026-06-21 04:00:00,Japan,Tunisia,5,3,0,15,11,5,0,"Istvan Kovacs, Romania",0
+1489376,2026-06-14 20:00:00,Netherlands,Japan,5,4,3,7,10,6,3,"Ismail Elfath, USA",1
+1489376,2026-06-14 20:00:00,Japan,Netherlands,4,5,0,7,10,3,6,"Ismail Elfath, USA",0
+1540351,2026-05-31 10:25:00,Japan,Iceland,5,1,0,11,15,7,2,"Damian Kos, Poland",1
+1540351,2026-05-31 10:25:00,Iceland,Japan,1,5,2,9,8,2,7,"Damian Kos, Poland",0
+1511777,2026-03-28 17:00:00,Scotland,Japan,3,8,0,8,8,3,7,"Shaun Evans, Australia",1
+1511777,2026-03-28 17:00:00,Japan,Scotland,8,3,2,18,18,7,3,"Shaun Evans, Australia",0
+1469293,2025-11-18 10:15:00,Japan,Bolivia,1,2,2,8,8,6,0,,1
+1469293,2025-11-18 10:15:00,Bolivia,Japan,2,1,1,12,12,0,6,,0
+1485003,2025-11-14 10:20:00,Japan,Ghana,4,1,0,14,14,5,2,"Benjamin Abraham, Australia",1
+1485003,2025-11-14 10:20:00,Ghana,Japan,1,4,0,7,7,2,5,"Benjamin Abraham, Australia",0
+1396843,2025-10-10 10:20:00,Japan,Paraguay,6,1,1,14,11,6,2,"Ko Hyung-jin, South Korea",1
+1396843,2025-10-10 10:20:00,Paraguay,Japan,1,6,0,10,7,2,6,"Ko Hyung-jin, South Korea",0
+1375501,2025-09-09 23:30:00,United States,Japan,0,1,0,1,4,2,2,Bryan López,1
+1375501,2025-09-09 23:30:00,Japan,United States,1,0,0,3,2,2,2,Bryan López,0
+1375499,2025-09-07 02:00:00,Mexico,Japan,1,3,1,18,8,1,2,"Rubiel Vazquez, USA",1
+1375499,2025-09-07 02:00:00,Japan,Mexico,3,1,1,20,9,2,1,"Rubiel Vazquez, USA",0
+1489401,2026-06-23 00:00:00,Norway,Senegal,5,4,0,13,13,7,4,"Wilton Pereira Sampaio, Brazil",1
+1489401,2026-06-23 00:00:00,Senegal,Norway,4,5,0,5,16,4,7,"Wilton Pereira Sampaio, Brazil",0
+1503008,2026-05-31 19:30:00,United States,Senegal,3,7,1,21,13,3,3,"Nick Walsh, Scotland",1
+1503008,2026-05-31 19:30:00,Senegal,United States,7,3,0,9,7,3,3,"Nick Walsh, Scotland",0
+1527861,2026-03-28 16:00:00,Senegal,Peru,7,6,1,12,12,6,2,,1
+1527861,2026-03-28 16:00:00,Peru,Senegal,6,7,1,7,7,2,6,,0
+1508003,2026-01-18 19:00:00,Senegal,Morocco,8,10,5,25,14,7,3,"Ndala Ngambo, DR Congo",1
+1508003,2026-01-18 19:00:00,Morocco,Senegal,10,8,2,17,20,3,7,"Ndala Ngambo, DR Congo",0
+1505616,2026-01-14 17:00:00,Senegal,Egypt,6,1,2,10,12,4,1,"Pierre Ghislain Atcho, Gabon",1
+1505616,2026-01-14 17:00:00,Egypt,Senegal,1,6,1,11,3,1,4,"Pierre Ghislain Atcho, Gabon",0
+1502450,2026-01-09 16:00:00,Mali,Senegal,5,7,4,8,8,2,8,"Abongile Tom, South Africa",1
+1502450,2026-01-09 16:00:00,Senegal,Mali,7,5,5,14,19,8,2,"Abongile Tom, South Africa",0
+1501834,2026-01-03 16:00:00,Senegal,Sudan,7,4,2,22,14,9,3,"Beida Dahane, Mauritania",1
+1501834,2026-01-03 16:00:00,Sudan,Senegal,4,7,2,17,9,3,9,"Beida Dahane, Mauritania",0
+1347269,2025-12-30 19:00:00,Benin,Senegal,4,4,4,20,6,4,6,"Samuel Uwikunda, Rwanda",1
+1347269,2025-12-30 19:00:00,Senegal,Benin,4,4,2,19,10,6,4,"Samuel Uwikunda, Rwanda",0
+1347257,2025-12-27 15:00:00,Senegal,DR Congo,5,2,1,18,11,3,3,"Lahlou Benbraham, Algeria",1
+1347257,2025-12-27 15:00:00,DR Congo,Senegal,2,5,0,12,7,3,3,"Lahlou Benbraham, Algeria",0
+1539005,2026-06-18 19:00:00,Switzerland,Bosnia and Herzegovina,7,3,1,7,13,7,3,"Joao Pedro Pinheiro, Portugal",1
+1539005,2026-06-18 19:00:00,Bosnia and Herzegovina,Switzerland,3,7,3,18,5,3,7,"Joao Pedro Pinheiro, Portugal",0
+1489373,2026-06-13 19:00:00,Qatar,Switzerland,3,10,2,12,6,3,7,"Said Martinez, Honduras",1
+1489373,2026-06-13 19:00:00,Switzerland,Qatar,10,3,1,11,26,7,3,"Said Martinez, Honduras",0
+1542181,2026-06-06 19:00:00,Switzerland,Australia,7,2,3,10,9,3,2,"Katja Koroleva, USA",1
+1542181,2026-06-06 19:00:00,Australia,Switzerland,2,7,2,14,5,2,3,"Katja Koroleva, USA",0
+1528283,2026-05-31 13:00:00,Switzerland,Jordan,6,4,0,10,19,10,4,"Rohit Saggi, Norway",1
+1528283,2026-05-31 13:00:00,Jordan,Switzerland,4,6,0,9,12,4,10,"Rohit Saggi, Norway",0
+1503006,2026-03-31 16:00:00,Norway,Switzerland,4,2,0,5,5,1,1,J. Vergoote,1
+1503006,2026-03-31 16:00:00,Switzerland,Norway,2,4,0,8,10,1,1,J. Vergoote,0
+1502471,2026-03-27 19:45:00,Switzerland,Germany,0,10,0,7,7,3,9,"Chris Kavanagh, England",1
+1502471,2026-03-27 19:45:00,Germany,Switzerland,10,0,0,22,22,9,3,"Chris Kavanagh, England",0
+1323367,2025-11-18 19:45:00,Kosovo,Switzerland,3,1,2,9,11,4,3,D. Massa,1
+1323367,2025-11-18 19:45:00,Switzerland,Kosovo,1,3,0,9,6,3,4,D. Massa,0
+1323333,2025-10-13 18:45:00,Slovenia,Switzerland,3,4,1,10,4,0,3,F. Zwayer,1
+1323333,2025-10-13 18:45:00,Switzerland,Slovenia,4,3,0,5,11,3,0,F. Zwayer,0
+1323301,2025-09-08 18:45:00,Switzerland,Slovenia,5,2,0,10,12,6,1,F. Letexier,1
+1323301,2025-09-08 18:45:00,Slovenia,Switzerland,2,5,2,15,6,1,6,F. Letexier,0
+1323285,2025-09-05 18:45:00,Switzerland,Kosovo,3,4,2,11,10,5,1,S. Marciniak,1
+1323285,2025-09-05 18:45:00,Kosovo,Switzerland,4,3,0,10,7,1,5,S. Marciniak,0
+1489388,2026-06-19 01:00:00,Mexico,South Korea,0,2,0,9,8,4,2,"Gustavo Tejera, Uruguay",1
+1489388,2026-06-19 01:00:00,South Korea,Mexico,2,0,2,7,9,2,4,"Gustavo Tejera, Uruguay",0
+1489369,2026-06-11 19:00:00,Mexico,South Africa,3,1,2,12,16,4,2,"Wilton Pereira Sampaio, Brazil",1
+1489369,2026-06-11 19:00:00,South Africa,Mexico,1,3,4,11,3,2,4,"Wilton Pereira Sampaio, Brazil",0
+1528284,2026-06-05 02:00:00,Mexico,Serbia,6,1,2,12,17,7,1,"Tori Penso, USA",1
+1528284,2026-06-05 02:00:00,Serbia,Mexico,1,6,2,5,3,1,7,"Tori Penso, USA",0
+1527865,2026-05-31 02:00:00,Mexico,Australia,5,3,1,7,13,3,1,"Rubiel Vazquez, USA",1
+1527865,2026-05-31 02:00:00,Australia,Mexico,3,5,1,10,7,1,3,"Rubiel Vazquez, USA",0
+1528281,2026-05-23 02:00:00,Mexico,Ghana,9,3,1,16,16,8,3,S. Brown,1
+1528281,2026-05-23 02:00:00,Ghana,Mexico,3,9,1,9,7,3,8,S. Brown,0
+1514464,2026-03-29 01:00:00,Mexico,Portugal,0,4,1,7,7,1,2,"Walter Lopez, Guatemala",1
+1514464,2026-03-29 01:00:00,Portugal,Mexico,4,0,1,10,10,2,1,"Walter Lopez, Guatemala",0
+1502468,2026-02-26 02:00:00,Mexico,Iceland,8,2,1,24,24,11,2,,1
+1502468,2026-02-26 02:00:00,Iceland,Mexico,2,8,1,4,4,2,11,,0
+1501811,2026-01-25 19:30:00,Bolivia,Mexico,4,4,2,13,13,4,2,C. A. Betancur Gutierrez,1
+1501811,2026-01-25 19:30:00,Mexico,Bolivia,4,4,5,3,3,2,4,C. A. Betancur Gutierrez,0
+1472256,2025-11-19 01:30:00,Mexico,Paraguay,3,3,3,9,9,4,7,"Joseph Dickerson, USA",1
+1472256,2025-11-19 01:30:00,Paraguay,Mexico,3,3,1,14,14,7,4,"Joseph Dickerson, USA",0
+1538999,2026-06-12 02:00:00,South Korea,Czech Republic,4,5,1,9,15,6,4,"Amin Mohamed Omar, Egypt",1
+1538999,2026-06-12 02:00:00,Czech Republic,South Korea,5,4,0,16,7,4,6,"Amin Mohamed Omar, Egypt",0
+1544807,2026-06-04 01:00:00,South Korea,El Salvador,6,1,4,17,13,6,0,N. Simon,1
+1544807,2026-06-04 01:00:00,El Salvador,South Korea,1,6,1,20,3,0,6,N. Simon,0
+1545263,2026-05-31 01:00:00,South Korea,Trinidad and Tobago,7,1,1,12,19,11,1,"Victor Rivas, USA",1
+1545263,2026-05-31 01:00:00,Trinidad and Tobago,South Korea,1,7,3,10,2,1,11,"Victor Rivas, USA",0
+1511732,2026-03-31 18:45:00,Austria,South Korea,4,6,1,11,5,1,2,S. van der Eijk,1
+1511732,2026-03-31 18:45:00,South Korea,Austria,6,4,0,9,11,2,1,S. van der Eijk,0
+1527860,2026-03-28 14:00:00,South Korea,Ivory Coast,7,5,0,12,12,2,8,"Ian McNabb, Northern Ireland",1
+1527860,2026-03-28 14:00:00,Ivory Coast,South Korea,5,7,0,13,13,8,2,"Ian McNabb, Northern Ireland",0
+1485019,2025-11-18 11:00:00,South Korea,Ghana,5,2,1,7,7,4,1,"Ahmad Alali, Kuwait",1
+1485019,2025-11-18 11:00:00,Ghana,South Korea,2,5,1,8,8,1,4,"Ahmad Alali, Kuwait",0
+1469290,2025-11-14 11:00:00,South Korea,Bolivia,8,5,2,12,12,5,4,"Ning Ma, China",1
+1469290,2025-11-14 11:00:00,Bolivia,South Korea,5,8,2,6,6,4,5,"Ning Ma, China",0
+1449845,2025-10-14 11:00:00,South Korea,Paraguay,1,1,2,8,8,3,1,"Yusuke Araki, Japan",1
+1449845,2025-10-14 11:00:00,Paraguay,South Korea,1,1,1,10,10,1,3,"Yusuke Araki, Japan",0
+1375500,2025-09-10 01:30:00,Mexico,South Korea,3,1,1,12,14,6,3,"Guido Gonzalez, USA",1
+1375500,2025-09-10 01:30:00,South Korea,Mexico,1,3,0,13,9,3,6,"Guido Gonzalez, USA",0
+1375498,2025-09-06 21:00:00,United States,South Korea,6,3,1,8,18,5,4,"Reon Radix, Grenada",1
+1375498,2025-09-06 21:00:00,South Korea,United States,3,6,0,4,5,4,5,"Reon Radix, Grenada",0
+1489391,2026-06-19 19:00:00,United States,Australia,7,4,3,12,10,2,2,"Felix Zwayer, Germany",1
+1489391,2026-06-19 19:00:00,Australia,United States,4,7,4,16,5,2,2,"Felix Zwayer, Germany",0
+1539001,2026-06-14 04:00:00,Australia,Turkey,5,8,0,12,9,4,8,"Jesús Valenzuela, Venezuela",1
+1539001,2026-06-14 04:00:00,Turkey,Australia,8,5,1,4,30,8,4,"Jesús Valenzuela, Venezuela",0
+1485010,2025-11-15 02:30:00,Venezuela,Australia,5,4,1,10,10,5,4,"Armando Villarrea, USA",1
+1485010,2025-11-15 02:30:00,Australia,Venezuela,4,5,1,9,9,4,5,"Armando Villarrea, USA",0
+1405465,2025-10-15 01:00:00,United States,Australia,3,2,1,11,11,4,3,"Pierre Luce Lauziere, Canada",1
+1405465,2025-10-15 01:00:00,Australia,United States,2,3,1,9,9,3,4,"Pierre Luce Lauziere, Canada",0
+1396844,2025-10-10 23:30:00,Canada,Australia,8,1,3,17,17,8,1,,1
+1396844,2025-10-10 23:30:00,Australia,Canada,1,8,3,5,5,1,8,,0
+1396842,2025-09-09 07:00:00,New Zealand,Australia,2,2,3,12,8,4,6,Don Robertson,1
+1396842,2025-09-09 07:00:00,Australia,New Zealand,2,2,1,9,13,6,4,Don Robertson,0
+1396840,2025-09-05 09:45:00,Australia,New Zealand,2,5,0,11,6,3,4,Don Robertson,1
+1396840,2025-09-05 09:45:00,New Zealand,Australia,5,2,1,12,9,4,3,Don Robertson,0
+1489378,2026-06-16 01:00:00,Iran,New Zealand,4,1,1,10,17,4,8,"César Ramos Palazuelos, Mexico",1
+1489378,2026-06-16 01:00:00,New Zealand,Iran,1,4,0,8,14,8,4,"César Ramos Palazuelos, Mexico",0
+1367144,2025-10-10 17:00:00,Russia,Iran,7,6,3,11,14,5,2,,1
+1367144,2025-10-10 17:00:00,Iran,Russia,6,7,1,16,8,2,5,,0
+1540948,2026-05-31 00:00:00,Ecuador,Saudi Arabia,2,2,1,16,11,6,2,"Pierre-Luc Lauziere, Canada",1
+1540948,2026-05-31 00:00:00,Saudi Arabia,Ecuador,2,2,1,11,12,2,6,"Pierre-Luc Lauziere, Canada",0
+1514468,2026-03-31 16:00:00,Serbia,Saudi Arabia,10,1,0,11,23,10,1,B. Berke,1
+1514468,2026-03-31 16:00:00,Saudi Arabia,Serbia,1,10,2,8,3,1,10,B. Berke,0
+1514461,2026-03-27 17:30:00,Saudi Arabia,Egypt,3,1,2,7,7,0,8,A. Al Athbah,1
+1514461,2026-03-27 17:30:00,Egypt,Saudi Arabia,1,3,0,13,13,8,0,A. Al Athbah,0
+1489393,2026-06-20 20:00:00,Germany,Ivory Coast,8,3,0,5,16,7,2,"Juan Gabriel Benitez, Paraguay",1
+1489393,2026-06-20 20:00:00,Ivory Coast,Germany,3,8,0,7,9,2,7,"Juan Gabriel Benitez, Paraguay",0
+1489374,2026-06-14 17:00:00,Germany,Curaçao,8,1,0,18,26,12,2,"Jalal Jayed, Morocco",1
+1489374,2026-06-14 17:00:00,Curaçao,Germany,1,8,0,11,8,2,12,"Jalal Jayed, Morocco",0
+1502474,2026-06-06 18:30:00,United States,Germany,10,2,1,11,16,4,4,"Piero Maza, Chile",1
+1502474,2026-06-06 18:30:00,Germany,United States,2,10,3,10,12,4,4,"Piero Maza, Chile",0
+1501818,2026-05-31 18:45:00,Germany,Finland,10,3,0,12,22,12,0,"Matheus Delgado Candançan, Brazil",1
+1501818,2026-05-31 18:45:00,Finland,Germany,3,10,0,6,7,0,12,"Matheus Delgado Candançan, Brazil",0
+1501816,2026-03-30 18:45:00,Germany,Ghana,9,4,1,23,23,6,1,"Stuart Attwell, England",1
+1501816,2026-03-30 18:45:00,Ghana,Germany,4,9,3,6,6,1,6,"Stuart Attwell, England",0
+1366322,2025-11-17 19:45:00,Germany,Slovakia,8,3,1,11,22,10,2,F. Letexier,1
+1366322,2025-11-17 19:45:00,Slovakia,Germany,3,8,0,3,6,2,10,F. Letexier,0
+1366314,2025-11-14 19:45:00,Luxembourg,Germany,4,4,3,11,7,1,7,J. Brooks,1
+1366314,2025-11-14 19:45:00,Germany,Luxembourg,4,4,2,10,14,7,1,J. Brooks,0
+1366306,2025-10-13 18:45:00,Northern Ireland,Germany,4,5,4,18,12,3,2,J. Manzano,1
+1366306,2025-10-13 18:45:00,Germany,Northern Ireland,5,4,2,14,11,2,3,J. Manzano,0
+1366298,2025-10-10 18:45:00,Germany,Luxembourg,7,0,0,10,31,8,1,N. Minakovic,1
+1366298,2025-10-10 18:45:00,Luxembourg,Germany,0,7,2,5,1,1,8,N. Minakovic,0
+1366288,2025-09-07 18:45:00,Germany,Northern Ireland,3,5,1,9,11,6,1,E. Eskas,1
+1366288,2025-09-07 18:45:00,Northern Ireland,Germany,5,3,4,13,3,1,6,E. Eskas,0
+1366279,2025-09-04 18:45:00,Slovakia,Germany,5,8,1,12,8,5,4,S. Gozubuyuk,1
+1366279,2025-09-04 18:45:00,Germany,Slovakia,8,5,2,18,14,4,5,S. Gozubuyuk,0
+1489399,2026-06-22 17:00:00,Argentina,Austria,1,3,2,13,12,5,1,"Amin Mohamed Omar, Egypt",1
+1489399,2026-06-22 17:00:00,Austria,Argentina,3,1,2,13,6,1,5,"Amin Mohamed Omar, Egypt",0
+1489381,2026-06-17 01:00:00,Argentina,Algeria,2,2,0,13,10,6,0,"Szymon Marciniak, Poland",1
+1489381,2026-06-17 01:00:00,Algeria,Argentina,2,2,0,8,7,0,6,"Szymon Marciniak, Poland",0
+1540357,2026-06-10 01:00:00,Argentina,Iceland,2,2,2,13,15,7,1,"Rosendo Mendoza, USA",1
+1540357,2026-06-10 01:00:00,Iceland,Argentina,2,2,6,21,6,1,7,"Rosendo Mendoza, USA",0
+1540355,2026-06-07 00:00:00,Argentina,Honduras,6,1,4,16,20,8,0,"Yoshito Nakagawa, Japan",1
+1540355,2026-06-07 00:00:00,Honduras,Argentina,1,6,1,12,4,0,8,"Yoshito Nakagawa, Japan",0
+1536923,2026-03-31 23:30:00,Argentina,Zambia,1,3,0,1,1,1,0,A. Herrera,1
+1536923,2026-03-31 23:30:00,Zambia,Argentina,3,1,0,2,1,0,1,A. Herrera,0
+1536911,2026-03-27 23:15:00,Argentina,Mauritania,0,0,0,6,6,4,0,D. Lopez,1
+1536911,2026-03-27 23:15:00,Mauritania,Argentina,0,0,0,2,2,0,4,D. Lopez,0
+1485004,2025-11-14 16:00:00,Angola,Argentina,5,6,1,7,7,2,3,"Hilary Hambaba, Zambia",1
+1485004,2025-11-14 16:00:00,Argentina,Angola,6,5,1,8,8,3,2,"Hilary Hambaba, Zambia",0
+1457376,2025-10-15 00:00:00,Puerto Rico,Argentina,1,1,0,5,5,3,11,,1
+1457376,2025-10-15 00:00:00,Argentina,Puerto Rico,1,1,0,25,25,11,3,,0
+1466666,2025-10-11 00:00:00,Argentina,Venezuela,8,1,0,10,19,11,1,,1
+1466666,2025-10-11 00:00:00,Venezuela,Argentina,1,8,3,12,5,1,11,,0
+1100320,2025-09-09 23:00:00,Ecuador,Argentina,2,8,5,13,11,4,0,"Wilmar Roldan, Colombia",1
+1100320,2025-09-09 23:00:00,Argentina,Ecuador,8,2,4,10,8,0,4,"Wilmar Roldan, Colombia",0
+1489404,2026-06-23 17:00:00,Portugal,Uzbekistan,3,2,1,13,17,9,2,"Jalal Jayed, Morocco",1
+1489404,2026-06-23 17:00:00,Uzbekistan,Portugal,2,3,1,15,7,2,9,"Jalal Jayed, Morocco",0
+1539003,2026-06-17 17:00:00,Portugal,DR Congo,5,4,3,9,7,1,2,"Abdulrahman Al-Jassim, Qatar",1
+1539003,2026-06-17 17:00:00,DR Congo,Portugal,4,5,1,10,8,2,1,"Abdulrahman Al-Jassim, Qatar",0
+1540358,2026-06-10 19:45:00,Portugal,Nigeria,3,2,2,11,13,6,2,"Mateo Busquets Ferrer, Spain",1
+1540358,2026-06-10 19:45:00,Nigeria,Portugal,2,3,2,19,5,2,6,"Mateo Busquets Ferrer, Spain",0
+1528286,2026-06-06 17:45:00,Portugal,Chile,9,3,1,8,18,8,4,"Luca Zufferli, Italy",1
+1528286,2026-06-06 17:45:00,Chile,Portugal,3,9,1,17,11,4,8,"Luca Zufferli, Italy",0
+1503004,2026-03-31 23:00:00,United States,Portugal,1,3,0,4,7,2,2,S. Jablonski,1
+1503004,2026-03-31 23:00:00,Portugal,United States,3,1,1,2,3,2,2,S. Jablonski,0
+1366319,2025-11-16 14:00:00,Portugal,Armenia,7,1,0,7,34,15,2,I. Peljto,1
+1366319,2025-11-16 14:00:00,Armenia,Portugal,1,7,1,10,4,2,15,I. Peljto,0
+1366312,2025-11-13 19:45:00,Rep. Of Ireland,Portugal,5,9,3,5,14,3,5,G. Nyberg,1
+1366312,2025-11-13 19:45:00,Portugal,Rep. Of Ireland,9,5,3,6,27,5,3,G. Nyberg,0
+1366309,2025-10-14 18:45:00,Portugal,Hungary,5,4,2,20,20,8,7,S. Jovanovic,1
+1366309,2025-10-14 18:45:00,Hungary,Portugal,4,5,2,17,17,7,8,S. Jovanovic,0
+1366301,2025-10-11 18:45:00,Portugal,Rep. Of Ireland,9,0,2,30,30,6,0,I. Kruzliak,1
+1366301,2025-10-11 18:45:00,Rep. Of Ireland,Portugal,0,9,5,2,2,0,6,I. Kruzliak,0
+1366294,2025-09-09 18:45:00,Hungary,Portugal,1,6,1,6,5,2,7,E. Lambrechts,1
+1366294,2025-09-09 18:45:00,Portugal,Hungary,6,1,2,9,15,7,2,E. Lambrechts,0
+1366286,2025-09-06 16:00:00,Armenia,Portugal,2,4,1,10,7,3,9,A. Taylor,1
+1366286,2025-09-06 16:00:00,Portugal,Armenia,4,2,0,7,24,9,3,A. Taylor,0
+1511733,2026-06-01 18:45:00,Austria,Tunisia,2,4,3,12,9,4,2,"Jeremie Pignard, France",1
+1511733,2026-06-01 18:45:00,Tunisia,Austria,4,2,1,12,14,2,4,"Jeremie Pignard, France",0
+1501835,2026-01-03 19:00:00,Mali,Tunisia,4,11,5,12,8,1,4,"Abongile Tom, South Africa",1
+1501835,2026-01-03 19:00:00,Tunisia,Mali,11,4,6,29,13,4,1,"Abongile Tom, South Africa",0
+1347268,2025-12-30 16:00:00,Tanzania,Tunisia,2,2,3,9,6,2,2,"Ndala Ngambo, DR Congo",1
+1347268,2025-12-30 16:00:00,Tunisia,Tanzania,2,2,1,14,6,2,2,"Ndala Ngambo, DR Congo",0
+1347255,2025-12-27 20:00:00,Nigeria,Tunisia,4,6,3,18,15,5,2,"Boubou Traore, Mali",1
+1347255,2025-12-27 20:00:00,Tunisia,Nigeria,6,4,0,15,8,2,5,"Boubou Traore, Mali",0
+1347244,2025-12-23 20:00:00,Tunisia,Uganda,8,2,1,15,15,6,1,"Patrice Tanguy Mebiame, Gabon",1
+1347244,2025-12-23 20:00:00,Uganda,Tunisia,2,8,2,15,9,1,6,"Patrice Tanguy Mebiame, Gabon",0
+1489390,2026-06-19 22:00:00,Scotland,Morocco,2,5,1,11,6,0,2,"Ilgiz Tantashev, Uzbekistan",1
+1489390,2026-06-19 22:00:00,Morocco,Scotland,5,2,1,8,12,2,0,"Ilgiz Tantashev, Uzbekistan",0
+1540950,2026-06-07 19:00:00,Morocco,Norway,3,11,1,6,13,5,2,"Pierre-Luc Lauziere, Canada",1
+1540950,2026-06-07 19:00:00,Norway,Morocco,11,3,1,12,9,2,5,"Pierre-Luc Lauziere, Canada",0
+1545264,2026-06-02 17:00:00,Morocco,Madagascar,12,1,2,12,20,9,1,T. Boubou,1
+1545264,2026-06-02 17:00:00,Madagascar,Morocco,1,12,3,12,2,1,9,T. Boubou,0
+1522230,2026-03-31 18:00:00,Morocco,Paraguay,1,3,3,8,6,4,7,E. Wattellier,1
+1522230,2026-03-31 18:00:00,Paraguay,Morocco,3,1,6,11,11,7,4,E. Wattellier,0
+1522229,2026-03-27 20:15:00,Morocco,Ecuador,2,1,1,12,12,3,2,"José Luis Munuera Montero, Spain",1
+1522229,2026-03-27 20:15:00,Ecuador,Morocco,1,2,0,8,8,2,3,"José Luis Munuera Montero, Spain",0
+1505617,2026-01-14 20:00:00,Nigeria,Morocco,1,5,2,29,2,1,5,"Daniel Laryea, Ghana",1
+1505617,2026-01-14 20:00:00,Morocco,Nigeria,5,1,0,22,16,5,1,"Daniel Laryea, Ghana",0
+1502467,2026-01-09 19:00:00,Cameroon,Morocco,4,7,2,19,5,0,3,"Beida Dahane, Mauritania",1
+1502467,2026-01-09 19:00:00,Morocco,Cameroon,7,4,2,24,9,3,0,"Beida Dahane, Mauritania",0
+1501836,2026-01-04 16:00:00,Morocco,Tanzania,4,0,1,12,12,4,1,"Boubou Traore, Mali",1
+1501836,2026-01-04 16:00:00,Tanzania,Morocco,0,4,5,19,4,1,4,"Boubou Traore, Mali",0
+1347263,2025-12-29 19:00:00,Zambia,Morocco,1,5,4,23,5,0,9,"Issa Sy, Senegal",1
+1347263,2025-12-29 19:00:00,Morocco,Zambia,5,1,1,12,19,9,0,"Issa Sy, Senegal",0
+1489396,2026-06-22 01:00:00,New Zealand,Egypt,4,3,2,14,11,5,7,"Omar Mohamed Al Ali, United Arab Emirates",1
+1489396,2026-06-22 01:00:00,Egypt,New Zealand,3,4,1,8,19,7,5,"Omar Mohamed Al Ali, United Arab Emirates",0
+1543816,2026-05-28 18:00:00,Egypt,Russia,5,6,1,13,11,4,1,"L Benbraham, Algeria",1
+1543816,2026-05-28 18:00:00,Russia,Egypt,6,5,2,19,8,1,4,"L Benbraham, Algeria",0
+1508002,2026-01-17 16:00:00,Egypt,Nigeria,2,4,0,15,5,1,4,"Jalal Jayed, Morocco",1
+1508002,2026-01-17 16:00:00,Nigeria,Egypt,4,2,3,16,4,4,1,"Jalal Jayed, Morocco",0
+1503402,2026-01-10 19:00:00,Egypt,Ivory Coast,3,7,2,10,6,4,4,"Mustapha Ghorbal, Algeria",1
+1503402,2026-01-10 19:00:00,Ivory Coast,Egypt,7,3,0,15,13,4,4,"Mustapha Ghorbal, Algeria",0
+1501838,2026-01-05 16:00:00,Egypt,Benin,5,5,4,15,12,7,3,"Pierre Ghislain Atcho, Gabon",1
+1501838,2026-01-05 16:00:00,Benin,Egypt,5,5,4,19,8,3,7,"Pierre Ghislain Atcho, Gabon",0
+1347265,2025-12-29 16:00:00,Angola,Egypt,4,2,1,15,16,4,2,"Clement Franklin Kpan, Côte d'Ivoire",1
+1347265,2025-12-29 16:00:00,Egypt,Angola,2,4,2,11,5,2,4,"Clement Franklin Kpan, Côte d'Ivoire",0
+1347253,2025-12-26 15:00:00,Egypt,South Africa,4,7,3,10,6,3,6,"Pacifique Ndabihawenimana, Burundi",1
+1347253,2025-12-26 15:00:00,South Africa,Egypt,7,4,3,9,18,6,3,"Pacifique Ndabihawenimana, Burundi",0
+1539004,2026-06-18 16:00:00,Czech Republic,South Africa,5,5,1,12,14,3,4,"Tori Penso, USA",1
+1539004,2026-06-18 16:00:00,South Africa,Czech Republic,5,5,2,10,17,4,3,"Tori Penso, USA",0
+1537579,2026-03-31 18:45:00,Czech Republic,Denmark,7,4,1,20,9,4,8,M. Mariani,1
+1537579,2026-03-31 18:45:00,Denmark,Czech Republic,4,7,2,11,22,8,4,M. Mariani,0
+1487923,2026-03-26 19:45:00,Czech Republic,Rep. Of Ireland,6,9,1,25,12,3,3,G. Nyberg,1
+1487923,2026-03-26 19:45:00,Rep. Of Ireland,Czech Republic,9,6,2,14,10,3,3,G. Nyberg,0
+1323366,2025-11-17 19:45:00,Czech Republic,Gibraltar,12,1,0,9,25,10,0,S. Stegemann,1
+1323366,2025-11-17 19:45:00,Gibraltar,Czech Republic,1,12,1,9,0,0,10,S. Stegemann,0
+1450867,2025-11-13 17:00:00,Czech Republic,San Marino,6,1,3,15,0,1,0,"Paweł Raczkowski, Poland",1
+1450867,2025-11-13 17:00:00,San Marino,Czech Republic,1,6,3,13,0,0,1,"Paweł Raczkowski, Poland",0
+1323329,2025-10-12 16:00:00,Faroe Islands,Czech Republic,1,7,3,10,6,3,1,A. Colombo,1
+1323329,2025-10-12 16:00:00,Czech Republic,Faroe Islands,7,1,1,13,14,1,3,A. Colombo,0
+1396841,2025-09-08 17:15:00,Czech Republic,Saudi Arabia,1,2,2,20,6,1,5,Martin Dohál,1
+1396841,2025-09-08 17:15:00,Saudi Arabia,Czech Republic,2,1,3,9,9,5,1,Martin Dohál,0
+1323289,2025-09-05 18:45:00,Montenegro,Czech Republic,6,6,4,13,22,5,10,M. Guida,1
+1323289,2025-09-05 18:45:00,Czech Republic,Montenegro,6,6,1,16,20,10,5,M. Guida,0
+1489382,2026-06-17 04:00:00,Austria,Jordan,4,3,1,12,11,4,4,"Dahane Beida, Mauritania",1
+1489382,2026-06-17 04:00:00,Jordan,Austria,3,4,0,7,11,4,4,"Dahane Beida, Mauritania",0
+1511731,2026-03-27 17:00:00,Austria,Ghana,5,3,1,11,11,7,1,"Mohammed Khled Hoish, Saudi Arabia",1
+1511731,2026-03-27 17:00:00,Ghana,Austria,3,5,2,5,5,1,7,"Mohammed Khled Hoish, Saudi Arabia",0
+1323371,2025-11-18 19:45:00,Austria,Bosnia and Herzegovina,4,2,1,8,10,3,1,J. Pinheiro,1
+1323371,2025-11-18 19:45:00,Bosnia and Herzegovina,Austria,2,4,2,9,8,1,3,J. Pinheiro,0
+1323353,2025-11-15 17:00:00,Cyprus,Austria,6,3,2,13,4,0,6,U. Schnyder,1
+1323353,2025-11-15 17:00:00,Austria,Cyprus,3,6,0,15,12,6,0,U. Schnyder,0
+1323331,2025-10-12 18:45:00,Romania,Austria,2,4,2,10,10,2,1,D. Massa,1
+1323331,2025-10-12 18:45:00,Austria,Romania,4,2,4,3,3,1,2,D. Massa,0
+1323313,2025-10-09 18:45:00,Austria,San Marino,4,2,1,14,25,14,1,I. Frid,1
+1323313,2025-10-09 18:45:00,San Marino,Austria,2,4,3,9,4,1,14,I. Frid,0
+1323307,2025-09-09 18:45:00,Bosnia and Herzegovina,Austria,3,2,2,16,16,3,5,J. Manzano,1
+1323307,2025-09-09 18:45:00,Austria,Bosnia and Herzegovina,2,3,6,21,11,5,3,J. Manzano,0
+1323293,2025-09-06 18:45:00,Austria,Cyprus,7,3,1,14,10,3,5,J. Kehlet,1
+1323293,2025-09-06 18:45:00,Cyprus,Austria,3,7,4,6,16,5,3,J. Kehlet,0
+1539006,2026-06-20 03:00:00,Turkey,Paraguay,12,0,1,14,32,5,2,"Iván Barton, El Salvador",1
+1539006,2026-06-20 03:00:00,Paraguay,Turkey,0,12,2,15,7,2,5,"Iván Barton, El Salvador",0
+1543829,2026-06-06 22:00:00,Venezuela,Turkey,2,12,2,16,9,2,8,D. Quintero,1
+1543829,2026-06-06 22:00:00,Turkey,Venezuela,12,2,1,12,16,8,2,D. Quintero,0
+1543821,2026-06-01 17:30:00,Turkey,FYR Macedonia,13,1,0,14,20,8,2,"José Luis Munuera Montero, Spain",1
+1543821,2026-06-01 17:30:00,FYR Macedonia,Turkey,1,13,1,12,6,2,8,"José Luis Munuera Montero, Spain",0
+1537580,2026-03-31 18:45:00,Kosovo,Turkey,3,2,3,12,11,2,3,M. Oliver,1
+1537580,2026-03-31 18:45:00,Turkey,Kosovo,2,3,5,10,12,3,2,M. Oliver,0
+1487922,2026-03-26 17:00:00,Turkey,Romania,9,3,2,7,16,2,0,F. Letexier,1
+1487922,2026-03-26 17:00:00,Romania,Turkey,3,9,1,12,6,0,2,F. Letexier,0
+1323352,2025-11-15 17:00:00,Turkey,Bulgaria,9,6,3,11,19,6,2,N. Walsh,1
+1323352,2025-11-15 17:00:00,Bulgaria,Turkey,6,9,1,12,9,2,6,N. Walsh,0
+1323338,2025-10-14 18:45:00,Turkey,Georgia,7,6,1,14,10,6,3,R. M. Petrescu,1
+1323338,2025-10-14 18:45:00,Georgia,Turkey,6,7,1,16,12,3,6,R. M. Petrescu,0
+1323325,2025-10-11 18:45:00,Bulgaria,Turkey,5,8,2,11,4,2,8,L. M. Branco Godinho,1
+1323325,2025-10-11 18:45:00,Turkey,Bulgaria,8,5,1,4,18,8,2,L. M. Branco Godinho,0
+1323280,2025-09-04 16:00:00,Georgia,Turkey,6,2,4,13,15,4,3,D. Massa,1
+1323280,2025-09-04 16:00:00,Turkey,Georgia,2,6,4,14,6,3,4,D. Massa,0
+1539016,2026-06-16 22:00:00,Iraq,Norway,2,5,1,12,11,1,5,"Pierre Ghislain Atcho, Gabon",1
+1539016,2026-06-16 22:00:00,Norway,Iraq,5,2,0,13,12,5,1,"Pierre Ghislain Atcho, Gabon",0
+1503005,2026-03-27 19:45:00,Netherlands,Norway,8,2,0,14,14,5,2,"Lawrence Visser, Belgium",1
+1503005,2026-03-27 19:45:00,Norway,Netherlands,2,8,1,5,5,2,5,"Lawrence Visser, Belgium",0
+1366321,2025-11-16 19:45:00,Italy,Norway,6,2,3,15,15,4,5,A. Hernandez,1
+1366321,2025-11-16 19:45:00,Norway,Italy,2,6,2,8,13,5,4,A. Hernandez,0
+1323345,2025-11-13 17:00:00,Norway,Estonia,8,0,0,9,18,7,3,M. Jug,1
+1323345,2025-11-13 17:00:00,Estonia,Norway,0,8,0,17,6,3,7,M. Jug,0
+1352746,2025-10-14 16:00:00,Norway,New Zealand,6,3,1,23,23,6,5,"Horatiu Fesnic, Romania",1
+1352746,2025-10-14 16:00:00,New Zealand,Norway,3,6,1,9,9,5,6,"Horatiu Fesnic, Romania",0
+1323324,2025-10-11 16:00:00,Norway,Israel,5,1,0,10,16,5,1,S. Marciniak,1
+1323324,2025-10-11 16:00:00,Israel,Norway,1,5,1,11,4,1,5,S. Marciniak,0
+1323303,2025-09-09 18:45:00,Norway,Moldova,4,1,0,6,34,17,0,B. Berke,1
+1323303,2025-09-09 18:45:00,Moldova,Norway,1,4,1,10,2,0,17,B. Berke,0
+1352744,2025-09-04 16:00:00,Norway,Finland,9,0,1,13,14,2,1,"Robert Hennessy, Ireland",1
+1352744,2025-09-04 16:00:00,Finland,Norway,0,9,1,13,3,1,2,"Robert Hennessy, Ireland",0
+1489372,2026-06-14 01:00:00,Haiti,Scotland,4,3,1,23,15,2,2,"Mustapha Ghorbal, Algeria",1
+1489372,2026-06-14 01:00:00,Scotland,Haiti,3,4,3,21,9,2,2,"Mustapha Ghorbal, Algeria",0
+1540949,2026-06-06 20:00:00,Bolivia,Scotland,3,6,3,13,7,3,8,"Rosendo Mendoza, USA",1
+1540949,2026-06-06 20:00:00,Scotland,Bolivia,6,3,1,16,20,8,3,"Rosendo Mendoza, USA",0
+1511779,2026-05-30 12:00:00,Scotland,Curaçao,8,2,2,17,18,11,3,"Goga Kikacheishvili, Georgia",1
+1511779,2026-05-30 12:00:00,Curaçao,Scotland,2,8,3,11,9,3,11,"Goga Kikacheishvili, Georgia",0
+1528278,2026-03-31 18:30:00,Scotland,Ivory Coast,7,5,0,9,14,4,3,D. Elder,1
+1528278,2026-03-31 18:30:00,Ivory Coast,Scotland,5,7,0,9,12,3,4,D. Elder,0
+1366325,2025-11-18 19:45:00,Scotland,Denmark,2,9,1,15,10,5,3,S. Marciniak,1
+1366325,2025-11-18 19:45:00,Denmark,Scotland,9,2,4,12,18,3,5,S. Marciniak,0
+1323357,2025-11-15 19:45:00,Greece,Scotland,6,8,3,9,18,10,6,J. Manzano,1
+1323357,2025-11-15 19:45:00,Scotland,Greece,8,6,3,14,12,6,10,J. Manzano,0
+1323328,2025-10-12 16:00:00,Scotland,Belarus,7,6,0,10,12,6,3,M. Barbu,1
+1323328,2025-10-12 16:00:00,Belarus,Scotland,6,7,2,14,22,3,6,M. Barbu,0
+1323311,2025-10-09 18:45:00,Scotland,Greece,4,4,2,12,8,3,3,E. Eskas,1
+1323311,2025-10-09 18:45:00,Greece,Scotland,4,4,4,19,15,3,3,E. Eskas,0
+1323302,2025-09-08 18:45:00,Belarus,Scotland,2,2,2,14,6,3,8,N. Dabanovic,1
+1323302,2025-09-08 18:45:00,Scotland,Belarus,2,2,1,10,14,8,3,N. Dabanovic,0
+1366282,2025-09-05 18:45:00,Denmark,Scotland,13,4,3,12,16,2,1,D. Siebert,1
+1366282,2025-09-05 18:45:00,Scotland,Denmark,4,13,5,15,11,1,2,D. Siebert,0
+1539000,2026-06-12 19:00:00,Canada,Bosnia and Herzegovina,9,4,2,10,13,4,3,"Facundo Raul Tello Figueroa, Argentina",1
+1539000,2026-06-12 19:00:00,Bosnia and Herzegovina,Canada,4,9,3,20,8,3,4,"Facundo Raul Tello Figueroa, Argentina",0
+1540947,2026-05-29 18:30:00,Bosnia and Herzegovina,FYR Macedonia,2,1,0,12,13,3,1,"Rade Obrenovič, Slovenia",1
+1540947,2026-05-29 18:30:00,FYR Macedonia,Bosnia and Herzegovina,1,2,1,19,2,1,3,"Rade Obrenovič, Slovenia",0
+1537578,2026-03-31 18:45:00,Bosnia and Herzegovina,Italy,10,4,3,18,30,11,3,C. Turpin,1
+1537578,2026-03-31 18:45:00,Italy,Bosnia and Herzegovina,4,10,3,9,9,3,11,C. Turpin,0
+1487929,2026-03-26 19:45:00,Wales,Bosnia and Herzegovina,9,3,1,8,19,3,5,I. Kovacs,1
+1487929,2026-03-26 19:45:00,Bosnia and Herzegovina,Wales,3,9,4,20,14,5,3,I. Kovacs,0
+1323358,2025-11-15 19:45:00,Bosnia and Herzegovina,Romania,4,1,5,15,16,4,3,M. Oliver,1
+1323358,2025-11-15 19:45:00,Romania,Bosnia and Herzegovina,1,4,3,16,9,3,4,M. Oliver,0
+1323314,2025-10-09 18:45:00,Cyprus,Bosnia and Herzegovina,3,5,2,16,14,3,6,L. Visser,1
+1323314,2025-10-09 18:45:00,Bosnia and Herzegovina,Cyprus,5,3,4,19,14,6,3,L. Visser,0
+1323294,2025-09-06 18:45:00,San Marino,Bosnia and Herzegovina,0,6,3,17,4,1,10,E. Jorgji,1
+1323294,2025-09-06 18:45:00,Bosnia and Herzegovina,San Marino,6,0,2,20,22,10,1,E. Jorgji,0
+1544812,2026-06-08 18:45:00,Netherlands,Uzbekistan,3,3,2,13,15,4,1,"Ilgiz Tantashev, Uzbekistan",1
+1544812,2026-06-08 18:45:00,Uzbekistan,Netherlands,3,3,1,14,8,1,4,"Ilgiz Tantashev, Uzbekistan",0
+1536930,2026-06-03 18:45:00,Netherlands,Algeria,6,3,0,11,17,6,2,"Jakob Semler, Austria",1
+1536930,2026-06-03 18:45:00,Algeria,Netherlands,3,6,0,9,8,2,6,"Jakob Semler, Austria",0
+1503007,2026-03-31 18:45:00,Netherlands,Ecuador,2,10,1,6,2,1,3,S. Stegemann,1
+1503007,2026-03-31 18:45:00,Ecuador,Netherlands,10,2,2,16,17,3,1,S. Stegemann,0
+1366323,2025-11-17 19:45:00,Netherlands,Lithuania,5,3,0,10,20,8,1,L. M. Branco Godinho,1
+1366323,2025-11-17 19:45:00,Lithuania,Netherlands,3,5,2,10,9,1,8,L. M. Branco Godinho,0
+1366315,2025-11-14 19:45:00,Poland,Netherlands,2,3,2,10,12,5,3,M. Mariani,1
+1366315,2025-11-14 19:45:00,Netherlands,Poland,3,2,1,14,8,3,5,M. Mariani,0
+1366303,2025-10-12 16:00:00,Netherlands,Finland,12,1,0,8,17,6,3,S. Vincic,1
+1366303,2025-10-12 16:00:00,Finland,Netherlands,1,12,2,13,7,3,6,S. Vincic,0
+1366296,2025-10-09 18:45:00,Malta,Netherlands,1,6,5,15,7,0,8,D. Strukan,1
+1366296,2025-10-09 18:45:00,Netherlands,Malta,6,1,2,6,22,8,0,D. Strukan,0
+1366287,2025-09-07 16:00:00,Lithuania,Netherlands,1,7,2,13,4,3,7,E. Masiyev,1
+1366287,2025-09-07 16:00:00,Netherlands,Lithuania,7,1,0,10,14,7,3,E. Masiyev,0
+1366281,2025-09-04 18:45:00,Netherlands,Poland,7,4,0,11,14,5,2,S. Sozza,1
+1366281,2025-09-04 18:45:00,Poland,Netherlands,4,7,0,11,6,2,5,S. Sozza,0
+1489375,2026-06-14 23:00:00,Ivory Coast,Ecuador,3,5,3,10,15,4,1,"François Letexier, France",1
+1489375,2026-06-14 23:00:00,Ecuador,Ivory Coast,5,3,1,13,12,1,4,"François Letexier, France",0
+1501841,2026-01-06 19:00:00,Ivory Coast,Burkina Faso,5,2,2,20,21,4,2,"Ali Mahmood Mahmood Ismail, Sudan",1
+1501841,2026-01-06 19:00:00,Burkina Faso,Ivory Coast,2,5,1,17,8,2,4,"Ali Mahmood Mahmood Ismail, Sudan",0
+1347273,2025-12-31 19:00:00,Gabon,Ivory Coast,2,8,1,15,9,3,5,"Omar Abdulkadir Artan, Somalia",1
+1347273,2025-12-31 19:00:00,Ivory Coast,Gabon,8,2,2,19,21,5,3,"Omar Abdulkadir Artan, Somalia",0
+1347261,2025-12-28 20:00:00,Ivory Coast,Cameroon,7,3,2,18,13,2,2,"Mustapha Ghorbal, Algeria",1
+1347261,2025-12-28 20:00:00,Cameroon,Ivory Coast,3,7,2,15,12,2,2,"Mustapha Ghorbal, Algeria",0
+1347249,2025-12-24 17:30:00,Ivory Coast,Mozambique,9,3,1,17,15,5,2,"Samuel Uwikunda, Rwanda",1
+1347249,2025-12-24 17:30:00,Mozambique,Ivory Coast,3,9,2,7,4,2,5,"Samuel Uwikunda, Rwanda",0
+1486550,2025-11-18 15:00:00,Oman,Ivory Coast,0,0,0,0,0,0,0,,1
+1486550,2025-11-18 15:00:00,Ivory Coast,Oman,0,0,0,1,0,0,0,,0
+1536929,2026-06-02 18:45:00,Wales,Ghana,5,4,0,7,18,3,5,"Oscar Johnson, Sweden",1
+1536929,2026-06-02 18:45:00,Ghana,Wales,4,5,2,13,11,5,3,"Oscar Johnson, Sweden",0
+1126113,2025-10-12 19:00:00,Ghana,Comoros,0,0,2,0,0,0,0,P. Atcho,1
+1126113,2025-10-12 19:00:00,Comoros,Ghana,0,0,0,0,0,0,0,P. Atcho,0
+1126087,2025-10-08 16:00:00,Central African Republic,Ghana,0,0,2,0,0,0,0,P. Milazare,1
+1126087,2025-10-08 16:00:00,Ghana,Central African Republic,0,0,1,0,0,0,0,P. Milazare,0
+1126059,2025-09-08 19:00:00,Ghana,Mali,0,0,2,0,0,0,0,L. Badi,1
+1126059,2025-09-08 19:00:00,Mali,Ghana,0,0,0,0,0,0,0,L. Badi,0
+1544367,2026-06-09 16:00:00,DR Congo,Chile,7,2,1,16,10,4,3,,1
+1544367,2026-06-09 16:00:00,Chile,DR Congo,2,7,3,16,7,3,4,,0
+1537582,2026-03-31 21:00:00,DR Congo,Jamaica,5,7,0,16,19,3,1,F. Tello,1
+1537582,2026-03-31 21:00:00,Jamaica,DR Congo,7,5,2,13,6,1,3,F. Tello,0
+1501840,2026-01-06 16:00:00,Algeria,DR Congo,4,6,3,17,12,6,2,"Mohamed Maarouf Eid Mansour, Egypt",1
+1501840,2026-01-06 16:00:00,DR Congo,Algeria,6,4,2,24,6,2,6,"Mohamed Maarouf Eid Mansour, Egypt",0
+1347270,2025-12-30 19:00:00,Botswana,DR Congo,0,3,0,6,6,1,6,"Ahmad Imetehaz Heeralall, Mauritius",1
+1347270,2025-12-30 19:00:00,DR Congo,Botswana,3,0,0,16,28,6,1,"Ahmad Imetehaz Heeralall, Mauritius",0
+1347246,2025-12-23 12:30:00,DR Congo,Benin,5,5,3,16,11,3,2,"Abongile Tom, South Africa",1
+1347246,2025-12-23 12:30:00,Benin,DR Congo,5,5,3,11,12,2,3,"Abongile Tom, South Africa",0
+1491700,2025-12-16 15:00:00,DR Congo,Zambia,9,6,0,5,0,0,0,,1
+1491700,2025-12-16 15:00:00,Zambia,DR Congo,6,9,0,14,0,0,0,,0
+1486230,2025-11-16 19:00:00,Nigeria,DR Congo,0,0,0,0,0,0,0,"Jalal Jayed, Morocco",1
+1486230,2025-11-16 19:00:00,DR Congo,Nigeria,0,0,0,0,0,0,0,"Jalal Jayed, Morocco",0
+1483272,2025-11-13 19:00:00,Cameroon,DR Congo,0,0,3,0,0,0,0,"Ali Mahmood Mahmood Ismail, Sudan",1
+1483272,2025-11-13 19:00:00,DR Congo,Cameroon,0,0,1,0,0,0,0,"Ali Mahmood Mahmood Ismail, Sudan",0
+1543817,2026-05-29 16:00:00,South Africa,Nicaragua,6,1,0,8,21,6,0,L. Mokete,1
+1543817,2026-05-29 16:00:00,Nicaragua,South Africa,1,6,2,10,3,0,6,L. Mokete,0
+1501837,2026-01-04 19:00:00,South Africa,Cameroon,6,3,5,14,18,4,4,"Peter Waweru, Kenya",1
+1501837,2026-01-04 19:00:00,Cameroon,South Africa,3,6,2,13,10,4,4,"Peter Waweru, Kenya",0
+1347266,2025-12-29 16:00:00,Zimbabwe,South Africa,3,3,1,14,10,3,9,"Mustapha Kechaf, Morocco",1
+1347266,2025-12-29 16:00:00,South Africa,Zimbabwe,3,3,1,11,16,9,3,"Mustapha Kechaf, Morocco",0
+1347242,2025-12-22 17:00:00,South Africa,Angola,1,9,2,17,10,4,4,"Ali Mahmood Mahmood Ismail, Sudan",1
+1347242,2025-12-22 17:00:00,Angola,South Africa,9,1,2,23,10,4,4,"Ali Mahmood Mahmood Ismail, Sudan",0
+1485007,2025-11-15 13:00:00,South Africa,Zambia,1,7,1,14,14,6,1,,1
+1485007,2025-11-15 13:00:00,Zambia,South Africa,7,1,1,5,5,1,6,,0
+1489400,2026-06-23 03:00:00,Jordan,Algeria,1,10,1,11,8,4,8,"Slavko Vinčić, Slovenia",1
+1489400,2026-06-23 03:00:00,Algeria,Jordan,10,1,1,6,17,8,4,"Slavko Vinčić, Slovenia",0
+1503401,2026-01-10 16:00:00,Algeria,Nigeria,2,4,5,23,3,0,5,"Issa Sy, Senegal",1
+1503401,2026-01-10 16:00:00,Nigeria,Algeria,4,2,3,14,13,5,0,"Issa Sy, Senegal",0
+1347271,2025-12-31 16:00:00,Equatorial Guinea,Algeria,4,5,4,13,9,3,6,"Pacifique Ndabihawenimana, Burundi",1
+1347271,2025-12-31 16:00:00,Algeria,Equatorial Guinea,5,4,1,15,16,6,3,"Pacifique Ndabihawenimana, Burundi",0
+1347259,2025-12-28 17:30:00,Algeria,Burkina Faso,2,6,2,24,10,5,2,"Daniel Laryea, Ghana",1
+1347259,2025-12-28 17:30:00,Burkina Faso,Algeria,6,2,3,19,14,2,5,"Daniel Laryea, Ghana",0
+1347247,2025-12-24 15:00:00,Algeria,Sudan,11,1,0,16,14,7,2,"Pierre Ghislain Atcho, Gabon",1
+1347247,2025-12-24 15:00:00,Sudan,Algeria,1,11,4,9,5,2,7,"Pierre Ghislain Atcho, Gabon",0
+1126098,2025-10-13 16:00:00,Cape Verde,Eswatini,0,0,2,0,0,0,0,,1
+1126098,2025-10-13 16:00:00,Eswatini,Cape Verde,0,0,3,0,0,0,0,,0
+1126072,2025-10-08 13:00:00,Libya,Cape Verde,0,0,2,0,0,0,0,M. Ismail,1
+1126072,2025-10-08 13:00:00,Cape Verde,Libya,0,0,1,0,0,0,0,M. Ismail,0
+1126044,2025-09-09 16:00:00,Cape Verde,Cameroon,0,0,2,0,0,0,0,D. Nii Ayi Laryea,1
+1126044,2025-09-09 16:00:00,Cameroon,Cape Verde,0,0,2,0,0,0,0,D. Nii Ayi Laryea,0
+1481800,2025-11-18 16:00:00,Iraq,United Arab Emirates,4,3,1,8,10,2,4,"Yusuke Araki, Japan",1
+1481800,2025-11-18 16:00:00,United Arab Emirates,Iraq,3,4,4,12,13,4,2,"Yusuke Araki, Japan",0
+1481801,2025-11-13 16:00:00,United Arab Emirates,Iraq,9,7,0,9,19,4,5,"Shaun Evans, Australia",1
+1481801,2025-11-13 16:00:00,Iraq,United Arab Emirates,7,9,1,11,10,5,4,"Shaun Evans, Australia",0
+1514472,2026-06-02 01:00:00,Canada,Uzbekistan,7,3,2,9,10,4,2,"Marco Antonio Ortiz Nava, Mexico",1
+1514472,2026-06-02 01:00:00,Uzbekistan,Canada,3,7,2,15,6,2,4,"Marco Antonio Ortiz Nava, Mexico",0
+1484886,2025-10-09 13:00:00,Uzbekistan,Kuwait,4,2,1,12,0,4,4,,1
+1484886,2025-10-09 13:00:00,Kuwait,Uzbekistan,2,4,1,7,0,4,4,,0
+1489387,2026-06-18 22:00:00,Canada,Qatar,19,1,1,9,32,10,0,"Cristian Garay, Chile",1
+1489387,2026-06-18 22:00:00,Qatar,Canada,1,19,3,10,2,0,10,"Cristian Garay, Chile",0
+1544361,2026-06-06 20:00:00,Qatar,El Salvador,3,4,1,10,8,1,3,"Rubiel Vazquez, USA",1
+1544361,2026-06-06 20:00:00,El Salvador,Qatar,4,3,1,19,11,3,1,"Rubiel Vazquez, USA",0
+1528282,2026-05-28 18:45:00,Rep. Of Ireland,Qatar,7,3,1,9,11,3,1,"Jamie Robinson, Northern Ireland",1
+1528282,2026-05-28 18:45:00,Qatar,Rep. Of Ireland,3,7,1,16,8,1,3,"Jamie Robinson, Northern Ireland",0
+1486542,2025-11-17 16:30:00,Qatar,Zimbabwe,6,6,0,8,8,5,3,,1
+1486542,2025-11-17 16:30:00,Zimbabwe,Qatar,6,6,1,7,7,3,5,,0
+1479254,2025-10-14 17:00:00,Qatar,United Arab Emirates,1,2,3,7,7,3,4,"Ilgiz Tantashev, Uzbekistan",1
+1479254,2025-10-14 17:00:00,United Arab Emirates,Qatar,2,1,3,13,15,4,3,"Ilgiz Tantashev, Uzbekistan",0
+1489370,2026-06-13 01:00:00,United States,Paraguay,3,1,1,13,16,6,1,"Danny Makkelie, Netherlands",1
+1489370,2026-06-13 01:00:00,Paraguay,United States,1,3,5,17,9,1,6,"Danny Makkelie, Netherlands",0
+1457378,2025-11-15 22:00:00,United States,Paraguay,5,8,2,8,8,3,3,,1
+1457378,2025-11-15 22:00:00,Paraguay,United States,8,5,2,7,7,3,3,,0
+1100322,2025-09-09 23:30:00,Peru,Paraguay,6,7,0,6,12,3,5,"Nicolas Ramirez, Argentina",1
+1100322,2025-09-09 23:30:00,Paraguay,Peru,7,6,1,12,7,5,3,"Nicolas Ramirez, Argentina",0
+1100316,2025-09-04 23:30:00,Paraguay,Ecuador,6,1,3,15,7,3,1,"Raphael Claus, Brazil",1
+1100316,2025-09-04 23:30:00,Ecuador,Paraguay,1,6,1,8,6,1,3,"Raphael Claus, Brazil",0
+1100311,2025-06-11 00:45:00,Brazil,Paraguay,11,3,2,11,11,4,1,"Facundo Raul Tello Figueroa, Argentina",1
+1100311,2025-06-11 00:45:00,Paraguay,Brazil,3,11,1,16,5,1,4,"Facundo Raul Tello Figueroa, Argentina",0
+1489392,2026-06-21 00:00:00,Ecuador,Curaçao,9,0,1,7,27,15,3,"Ma Ning, China",1
+1489392,2026-06-21 00:00:00,Curaçao,Ecuador,0,9,5,10,10,3,15,"Ma Ning, China",0
+1542182,2026-06-07 20:00:00,Ecuador,Guatemala,6,0,3,11,18,6,0,"Marco Antonio Ortiz Nava, Mexico",1
+1542182,2026-06-07 20:00:00,Guatemala,Ecuador,0,6,1,3,3,0,6,"Marco Antonio Ortiz Nava, Mexico",0
+1469294,2025-11-19 01:30:00,Ecuador,New Zealand,8,3,1,24,24,8,2,,1
+1469294,2025-11-19 01:30:00,New Zealand,Ecuador,3,8,0,10,10,2,8,,0
+1457377,2025-11-14 00:30:00,Canada,Ecuador,4,2,2,4,4,1,0,,1
+1457377,2025-11-14 00:30:00,Ecuador,Canada,2,4,3,4,4,0,1,,0
+1436252,2025-10-15 02:30:00,Mexico,Ecuador,5,5,2,13,13,4,5,,1
+1436252,2025-10-15 02:30:00,Ecuador,Mexico,5,5,4,7,7,5,4,,0
+1402649,2025-10-11 00:30:00,United States,Ecuador,8,4,2,9,11,5,4,,1
+1402649,2025-10-11 00:30:00,Ecuador,United States,4,8,2,12,8,4,5,,0
+1544811,2026-06-06 00:00:00,Haiti,Peru,3,3,1,14,8,1,5,,1
+1544811,2026-06-06 00:00:00,Peru,Haiti,3,3,4,18,10,5,1,,0
+1544806,2026-06-03 00:00:00,Haiti,New Zealand,5,8,0,9,13,7,3,"Rubiel Vazquez, USA",1
+1544806,2026-06-03 00:00:00,New Zealand,Haiti,8,5,1,10,12,3,7,"Rubiel Vazquez, USA",0
+1397472,2025-11-19 01:00:00,Haiti,Nicaragua,3,4,4,20,9,4,3,,1
+1397472,2025-11-19 01:00:00,Nicaragua,Haiti,4,3,3,13,9,3,4,,0
+1446022,2025-11-14 02:00:00,Haiti,Costa Rica,1,7,2,20,9,3,6,,1
+1446022,2025-11-14 02:00:00,Costa Rica,Haiti,7,1,1,12,14,6,3,,0
+1397460,2025-10-14 00:00:00,Honduras,Haiti,7,2,3,18,20,8,3,O. Nation,1
+1397460,2025-10-14 00:00:00,Haiti,Honduras,2,7,0,16,12,3,8,O. Nation,0
+1397454,2025-10-10 00:00:00,Nicaragua,Haiti,7,7,1,11,13,3,6,V. Caceres,1
+1397454,2025-10-10 00:00:00,Haiti,Nicaragua,7,7,2,15,10,6,3,V. Caceres,0
+1397447,2025-09-10 02:00:00,Costa Rica,Haiti,1,0,0,1,8,4,0,T. Penso,1
+1397447,2025-09-10 02:00:00,Haiti,Costa Rica,0,1,0,1,1,0,4,T. Penso,0
+1397442,2025-09-06 00:00:00,Haiti,Honduras,8,5,0,12,15,7,3,P. Lauziere,1
+1397442,2025-09-06 00:00:00,Honduras,Haiti,5,8,0,7,14,3,7,P. Lauziere,0
+1436809,2025-10-09 18:45:00,Poland,New Zealand,7,4,1,17,17,3,4,"Eric Lambrechts, Belgium",1
+1436809,2025-10-09 18:45:00,New Zealand,Poland,4,7,3,12,12,4,3,"Eric Lambrechts, Belgium",0
+1528285,2026-06-05 23:30:00,Canada,Rep. Of Ireland,1,0,0,0,3,1,0,,1
+1528285,2026-06-05 23:30:00,Rep. Of Ireland,Canada,0,1,0,0,2,0,1,,0
+1512760,2026-03-28 17:00:00,Canada,Iceland,8,1,1,15,15,5,3,J. Freemon,1
+1512760,2026-03-28 17:00:00,Iceland,Canada,1,8,2,4,4,3,5,J. Freemon,0
+1501808,2026-01-18 03:00:00,Canada,Guatemala,12,5,2,14,14,7,3,,1
+1501808,2026-01-18 03:00:00,Guatemala,Canada,5,12,2,6,6,3,7,,0
+1352904,2025-09-09 18:45:00,Wales,Canada,3,4,4,16,6,3,2,Robert Jones,1
+1352904,2025-09-09 18:45:00,Canada,Wales,4,3,3,16,12,2,3,Robert Jones,0
+1453336,2025-11-19 01:00:00,Jamaica,Curaçao,3,3,5,17,13,1,4,"Iván Barton, El Salvador",1
+1453336,2025-11-19 01:00:00,Curaçao,Jamaica,3,3,2,19,16,4,1,"Iván Barton, El Salvador",0
+1446020,2025-11-14 00:00:00,Bermuda,Curaçao,3,7,5,20,5,1,15,"Tori Penso, USA",1
+1446020,2025-11-14 00:00:00,Curaçao,Bermuda,7,3,1,8,27,15,1,"Tori Penso, USA",0
+1446015,2025-10-14 23:00:00,Curaçao,Trinidad and Tobago,4,7,3,15,9,1,7,,1
+1446015,2025-10-14 23:00:00,Trinidad and Tobago,Curaçao,7,4,1,11,18,7,1,,0
+1397451,2025-10-10 23:00:00,Curaçao,Jamaica,0,4,0,10,7,4,7,B. Lopez,1
+1397451,2025-10-10 23:00:00,Jamaica,Curaçao,4,0,1,7,18,7,4,B. Lopez,0
+1466347,2025-09-10 00:00:00,Curaçao,Bermuda,10,3,2,11,23,10,3,A. Carrasco,1
+1466347,2025-09-10 00:00:00,Bermuda,Curaçao,3,10,1,16,6,3,10,A. Carrasco,0
+1397440,2025-09-06 00:00:00,Trinidad and Tobago,Curaçao,4,3,5,13,14,7,2,K. I. Garcia Mendoza,1
+1397440,2025-09-06 00:00:00,Curaçao,Trinidad and Tobago,3,4,1,10,5,2,7,K. I. Garcia Mendoza,0

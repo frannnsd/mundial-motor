@@ -1,0 +1,23 @@
+# Render Blueprint — MOTOR (API FastAPI) del Mundial. El web va a Vercel aparte.
+# El build entrena y CONGELA el cerebro + backtest (brain.pkl / backtest.json) →
+# en runtime no re-entrena: arranca rápido y entra en la RAM del plan free.
+services:
+  - type: web
+    name: mundial-motor
+    runtime: python
+    plan: free
+    buildCommand: "pip install -e '.[model,xg,api]' && python scripts/freeze_brain.py"
+    startCommand: "uvicorn mundial_bot.api.app:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: API_FOOTBALL_KEY
+        sync: false   # se carga en el dashboard de Render (no en git)
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ODDSPAPI_KEY
+        sync: false
+      - key: PREFERRED_BOOKS
+        value: "Bet365,Betano"
