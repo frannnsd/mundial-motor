@@ -19,6 +19,18 @@ def main() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     print("Entrenando el cerebro (Elo + Dixon-Coles)...", flush=True)
     brain = load_brain()
+
+    # Guard: el simulador NO sirve sin modelo de goles. Si no entrenó, fallar fuerte
+    # acá (en vez de shippear un cerebro mudo que rompe /simulate en producción).
+    goals = getattr(getattr(brain, "models", None), "goals", None)
+    n_teams = len(getattr(goals, "teams", ()) or ()) if goals is not None else 0
+    if goals is None or n_teams <= 50:
+        raise SystemExit(
+            f"ABORT: el modelo de goles no entrenó (goals={goals!r}, equipos={n_teams}). "
+            "No congelo un cerebro sin goles."
+        )
+    print(f"Modelo de goles OK: {n_teams} equipos.", flush=True)
+
     path = DATA_DIR / "brain.pkl"
     with path.open("wb") as f:
         pickle.dump(brain, f, protocol=pickle.HIGHEST_PROTOCOL)

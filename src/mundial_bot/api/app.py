@@ -240,6 +240,12 @@ async def _refresh_loop() -> None:
             logger.warning("Auto-refresh falló: %s", e)
 
 
+def _brain_has_goals(brain: object | None) -> bool:
+    """True si el cerebro tiene un modelo de goles utilizable (con equipos)."""
+    g = getattr(getattr(brain, "models", None), "goals", None)
+    return bool(g is not None and len(getattr(g, "teams", ()) or ()) > 50)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Cargando datos del cache...")
@@ -255,13 +261,25 @@ async def lifespan(app: FastAPI):
         import pickle
 
         logger.info("Cargando cerebro congelado (arranque rápido)...")
-        with brain_pkl.open("rb") as f:
-            STATE.brain = pickle.load(f)
-        STATE.frozen = True
+        try:
+            with brain_pkl.open("rb") as f:
+                STATE.brain = pickle.load(f)
+        except Exception as e:  # noqa: BLE001 — pickle corrupto/incompatible → reentreno
+            logger.warning("No pude cargar el cerebro congelado (%s); reentreno al vuelo.", e)
+            STATE.brain = None
+        # Red de seguridad: si el pickle vino sin modelo de goles, reentreno (el simulador lo necesita).
+        if _brain_has_goals(STATE.brain):
+            STATE.frozen = True
+        else:
+            logger.warning("El cerebro congelado no trae modelo de goles; reentrenando al vuelo...")
+            STATE.brain = load_brain()
     else:
         logger.info("Entrenando el cerebro (Elo + Dixon-Coles)... ~25s")
         STATE.brain = load_brain()
-    logger.info("Cerebro listo. %d equipos, %d fixtures.", len(STATE.teams), len(STATE.fixtures))
+    logger.info(
+        "Cerebro listo (goles=%s). %d equipos, %d fixtures.",
+        _brain_has_goals(STATE.brain), len(STATE.teams), len(STATE.fixtures),
+    )
     try:
         logger.info("Refresh inicial: %s", _refresh_live_data())
     except Exception as e:  # noqa: BLE001
@@ -292,6 +310,8 @@ def health() -> dict:
     return {
         "status": "ok",
         "brain_loaded": STATE.brain is not None,
+        "goals_ok": _brain_has_goals(STATE.brain),
+        "frozen": STATE.frozen,
         "teams": len(STATE.teams),
         "fixtures": len(STATE.fixtures),
     }

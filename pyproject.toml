@@ -4,9 +4,11 @@ version = "0.1.0"
 description = "Bot multi-agente de value betting para el Mundial 2026 — modelo probabilístico + detección de valor + Telegram"
 requires-python = ">=3.12"
 dependencies = [
-    "pandas>=2.2",
-    "numpy>=1.26",
-    "scipy>=1.13",
+    # Stack científico FIJADO: el cerebro se commitea ya entrenado (data/brain.pkl);
+    # Render debe instalar EXACTAMENTE estas versiones para que el pickle cargue idéntico.
+    "pandas==3.0.3",
+    "numpy==2.4.6",
+    "scipy==1.17.1",
     "requests>=2.32",
     "httpx>=0.27",
     "pydantic>=2.7",
@@ -20,7 +22,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-model = ["penaltyblog>=1.0"]
+model = ["penaltyblog==1.11.0"]
 xg = ["statsbombpy>=1.11"]
 api = ["fastapi>=0.110", "uvicorn[standard]>=0.30"]
 dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]

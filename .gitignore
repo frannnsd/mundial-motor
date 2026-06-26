@@ -20,9 +20,11 @@ data/cache/*
 !data/cache/team_match_stats.csv
 !data/cache/wc2026_results.csv
 !data/cache/setpiece_events.csv
-# Artefactos que genera el build en la nube (no se versionan):
-data/brain.pkl
-data/backtest.json
+# El cerebro entrenado SÍ se versiona: lo armamos local (donde el Dixon-Coles entrena
+# bien) y Render solo lo carga — así no depende del entorno de build de la nube.
+# (Regenerar con `python scripts/freeze_brain.py` y commitear.)
+!data/brain.pkl
+!data/backtest.json
 *.sqlite
 *.db
 ledger.sqlite

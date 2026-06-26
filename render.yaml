@@ -6,7 +6,9 @@ services:
     name: mundial-motor
     runtime: python
     plan: free
-    buildCommand: "pip install -e '.[model,xg,api]' && python scripts/freeze_brain.py"
+    # El cerebro ya viene entrenado y commiteado (data/brain.pkl + backtest.json),
+    # armado localmente donde el Dixon-Coles entrena bien. Render solo lo carga.
+    buildCommand: "pip install -e '.[model,xg,api]'"
     startCommand: "uvicorn mundial_bot.api.app:app --host 0.0.0.0 --port $PORT"
     healthCheckPath: /health
     autoDeploy: true
