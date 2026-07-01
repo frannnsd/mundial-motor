@@ -259,3 +259,104 @@ def _empty_frame() -> pd.DataFrame:
         "psc_h", "psc_d", "psc_a", "ps_h", "ps_d", "ps_a",
     ]
     return pd.DataFrame({col: pd.Series(dtype="object") for col in columns})
+
+
+# ============================================================================
+# HECHOS DE PARTIDO (Fase A — competencia de cerebros)
+# ============================================================================
+# Además de las cuotas, los CSV traen los HECHOS reales por partido: córners,
+# remates, remates al arco, faltas, amarillas, rojas y goles por mitad. Este
+# loader paralelo los expone para la competencia de cerebros (research). Es
+# ADITIVO: no toca el esquema de cuotas de la Fase 2.
+
+# Columnas de hechos del CSV origen → nombre normalizado del repo.
+STAT_COLUMNS: dict[str, str] = {
+    "HC": "corners_h", "AC": "corners_a",
+    "HS": "shots_h", "AS": "shots_a",
+    "HST": "sot_h", "AST": "sot_a",
+    "HF": "fouls_h", "AF": "fouls_a",
+    "HY": "yellows_h", "AY": "yellows_a",
+    "HR": "reds_h", "AR": "reds_a",
+    "HTHG": "ht_goals_h", "HTAG": "ht_goals_a",
+}
+
+
+def parse_football_stats_csv(csv_text: str, *, league: str, season: str) -> pd.DataFrame:
+    """Parsea un CSV crudo al esquema de HECHOS de partido. Función PURA (sin red).
+
+    Devuelve: date, home_team, away_team, home_score/away_score (goles FT),
+    las columnas de ``STAT_COLUMNS`` (int), league, season, match_id.
+    Descarta filas sin marcador o sin alguna de las stats principales.
+    """
+    df = pd.read_csv(StringIO(csv_text))
+    missing_base = [col for col in BASE_COLUMNS if col not in df.columns]
+    if missing_base:
+        raise ValueError(f"Faltan columnas base en {league} {season}: {sorted(missing_base)}")
+
+    date = pd.to_datetime(df["Date"], format="mixed", dayfirst=True, errors="coerce")
+
+    def _stat(col: str) -> pd.Series:
+        if col in df.columns:
+            return pd.to_numeric(df[col], errors="coerce")
+        return pd.Series(float("nan"), index=df.index, dtype="float64")
+
+    out = pd.DataFrame({
+        "date": date,
+        "home_team": df["HomeTeam"].astype("string"),
+        "away_team": df["AwayTeam"].astype("string"),
+        "home_score": pd.to_numeric(df["FTHG"], errors="coerce"),
+        "away_score": pd.to_numeric(df["FTAG"], errors="coerce"),
+        **{norm: _stat(raw) for raw, norm in STAT_COLUMNS.items()},
+        "league": league,
+        "season": season,
+    })
+
+    # Point-in-time nota: los hechos son del PARTIDO YA JUGADO — solo se usan como
+    # historia (features con fecha < kickoff) o como resultado a puntuar. El split
+    # temporal lo maneja el harness, no este loader.
+    core = ["date", "home_score", "away_score",
+            "corners_h", "corners_a", "shots_h", "shots_a", "sot_h", "sot_a",
+            "yellows_h", "yellows_a"]
+    n_original = len(out)
+    out = out.dropna(subset=core).reset_index(drop=True)
+    if n_original - len(out):
+        logger.info("%s %s (stats): descarto %d/%d filas incompletas",
+                    league, season, n_original - len(out), n_original)
+
+    int_cols = ["home_score", "away_score", *STAT_COLUMNS.values()]
+    for col in int_cols:
+        # ht_goals/reds/fouls pueden tener NaN residual en filas raras → nullable Int64.
+        out[col] = out[col].astype("Int64") if out[col].isna().any() else out[col].astype(int)
+    out["home_team"] = out["home_team"].astype(str)
+    out["away_team"] = out["away_team"].astype(str)
+    out["match_id"] = [f"{league}_{season}_{i}" for i in range(len(out))]
+    return out
+
+
+def load_football_stats(
+    *,
+    leagues: tuple[str, ...] = DEFAULT_LEAGUES,
+    seasons: tuple[str, ...] = DEFAULT_SEASONS,
+    force_download: bool = False,
+) -> pd.DataFrame:
+    """Carga los HECHOS de partido de todas las ligas/temporadas (descarga si falta).
+
+    Mismo contrato que ``load_football_data`` pero con las stats reales del partido
+    (córners/remates/al arco/faltas/amarillas/rojas/goles por mitad) en vez de cuotas.
+    """
+    download_football_data(leagues=leagues, seasons=seasons, force_download=force_download)
+    frames: list[pd.DataFrame] = []
+    for league in leagues:
+        for season in seasons:
+            path = _cache_path(league, season)
+            if not path.exists():
+                continue
+            try:
+                text = path.read_text(encoding="utf-8", errors="replace")
+                frames.append(parse_football_stats_csv(text, league=league, season=season))
+            except (ValueError, pd.errors.ParserError) as exc:
+                logger.warning("Salteo %s %s (parseo stats): %s", league, season, exc)
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True)
+    return df.sort_values("date").reset_index(drop=True)
