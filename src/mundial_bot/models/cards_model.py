@@ -48,9 +48,19 @@ class CardsModel:
     dispersion: float = 1.0          # factor de Fano (var/media) de las tarjetas totales
 
     @classmethod
-    def from_events(cls, events: pd.DataFrame) -> CardsModel:
-        """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
-        means, eff = weighted_means(events, ["cards"])
+    def from_events(
+        cls, events: pd.DataFrame, *, as_of: pd.Timestamp | str | None = None
+    ) -> CardsModel:
+        """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football).
+
+        ``as_of`` (POINT-IN-TIME): descarta partidos con fecha >= kickoff antes de armar
+        las medias de equipo y de árbitro. ``as_of=None`` = comportamiento histórico.
+        """
+        if as_of is not None and "date" in events.columns:
+            events = events.loc[
+                pd.to_datetime(events["date"], errors="coerce") < pd.Timestamp(as_of)
+            ].copy()
+        means, eff = weighted_means(events, ["cards"], as_of=as_of)
         cards_w = means["cards"]
         league_team_avg = float(events["cards"].mean())
         team_cards = {t: shrink(cards_w[t], eff[t], league_team_avg) for t in cards_w}

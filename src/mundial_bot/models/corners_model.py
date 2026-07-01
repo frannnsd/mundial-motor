@@ -47,10 +47,21 @@ class CornersModel:
     calibration: float = 1.0        # corrige el sesgo del total (auto-calibrado con datos)
 
     @classmethod
-    def from_events(cls, events: pd.DataFrame) -> CornersModel:
-        """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football)."""
+    def from_events(
+        cls, events: pd.DataFrame, *, as_of: pd.Timestamp | str | None = None
+    ) -> CornersModel:
+        """Construye el modelo desde el DataFrame de estadísticas (StatsBomb o API-Football).
+
+        ``as_of`` (POINT-IN-TIME): si se pasa el kickoff, se descartan los partidos con
+        fecha >= kickoff antes de armar cualquier feature. ``as_of=None`` = comportamiento
+        histórico (path live intacto).
+        """
+        if as_of is not None and "date" in events.columns:
+            events = events.loc[
+                pd.to_datetime(events["date"], errors="coerce") < pd.Timestamp(as_of)
+            ].copy()
         # Media ponderada por recencia (partidos recientes pesan más) + shrinkage.
-        means, eff = weighted_means(events, ["corners_for", "corners_against"])
+        means, eff = weighted_means(events, ["corners_for", "corners_against"], as_of=as_of)
         for_w, against_w = means["corners_for"], means["corners_against"]
         league_avg = float(events["corners_for"].mean())
         team_for = {t: shrink(for_w[t], eff[t], league_avg) for t in for_w}

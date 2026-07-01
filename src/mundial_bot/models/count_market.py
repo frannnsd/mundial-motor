@@ -25,18 +25,37 @@ DEFAULT_HALFLIFE_DAYS = 200.0
 
 
 def weighted_means(
-    events: pd.DataFrame, cols: list[str], *, halflife_days: float = DEFAULT_HALFLIFE_DAYS
+    events: pd.DataFrame,
+    cols: list[str],
+    *,
+    halflife_days: float = DEFAULT_HALFLIFE_DAYS,
+    as_of: pd.Timestamp | str | None = None,
 ) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
     """Media ponderada por recencia de varias columnas, por equipo.
 
     Los partidos recientes pesan más (decaimiento exponencial por fecha). Devuelve
     ({col: {team: media}}, {team: muestra_efectiva}). Si no hay fecha, peso uniforme.
+
+    ``as_of`` (POINT-IN-TIME): si se pasa la fecha de kickoff, se EXCLUYE cualquier
+    partido con fecha >= kickoff y el decaimiento se ancla al kickoff (no al último
+    partido del cache). Con ``as_of=None`` el comportamiento es idéntico al histórico
+    (ref = último partido del set) — así el path live de scoreo no cambia.
     """
     ev = events.copy()
     if "date" in ev.columns:
         dates = pd.to_datetime(ev["date"], errors="coerce")
-        if dates.notna().any():
-            ref = dates.max()
+        if as_of is not None:
+            as_of_ts = pd.Timestamp(as_of)
+            # Decisión: `NaT < ts` es False, así que las filas con fecha NULA quedan
+            # EXCLUIDAS bajo point-in-time (conservador: si no sabemos cuándo pasó, no
+            # la usamos para no arriesgar leakage). En modo live (as_of=None) no se filtra.
+            keep = dates < as_of_ts  # nunca datos del kickoff en adelante
+            ev = ev.loc[keep].copy()
+            dates = dates.loc[keep]
+            ref = as_of_ts
+        else:
+            ref = dates.max() if dates.notna().any() else None
+        if ref is not None and len(ev):
             days = (ref - dates).dt.days.clip(lower=0)
             days = days.fillna(days.max() if days.notna().any() else 0.0)
             ev["_w"] = np.exp(-np.log(2) / halflife_days * days)

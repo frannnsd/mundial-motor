@@ -33,11 +33,21 @@ class TotalShotsModel:
     dispersion: float = 1.0
 
     @classmethod
-    def from_events(cls, events: pd.DataFrame) -> "TotalShotsModel | None":
-        """Construye el modelo si están las columnas necesarias; si no, None."""
+    def from_events(
+        cls, events: pd.DataFrame, *, as_of: pd.Timestamp | str | None = None
+    ) -> TotalShotsModel | None:
+        """Construye el modelo si están las columnas necesarias; si no, None.
+
+        ``as_of`` (POINT-IN-TIME): descarta partidos con fecha >= kickoff. ``None`` =
+        comportamiento histórico (path live intacto).
+        """
         need = {"shots", "match_id", "team"}
         if not need.issubset(events.columns):
             return None
+        if as_of is not None and "date" in events.columns:
+            events = events.loc[
+                pd.to_datetime(events["date"], errors="coerce") < pd.Timestamp(as_of)
+            ].copy()
         ev = events.dropna(subset=["shots"]).copy()
         if ev.empty or float(ev["shots"].sum()) <= 0:
             return None
@@ -51,13 +61,14 @@ class TotalShotsModel:
                 against[(mid, a["team"])] = b["shots"]
                 against[(mid, b["team"])] = a["shots"]
         ev["shots_against"] = [
-            against.get((m, t), np.nan) for m, t in zip(ev["match_id"], ev["team"])
+            against.get((m, t), np.nan)
+            for m, t in zip(ev["match_id"], ev["team"], strict=False)
         ]
         ev = ev.dropna(subset=["shots_against"])
         if ev.empty:
             return None
 
-        means, eff = weighted_means(ev, ["shots", "shots_against"])
+        means, eff = weighted_means(ev, ["shots", "shots_against"], as_of=as_of)
         for_w, against_w = means["shots"], means["shots_against"]
         league_avg = float(ev["shots"].mean())
         team_for = {t: shrink(for_w[t], eff[t], league_avg) for t in for_w}

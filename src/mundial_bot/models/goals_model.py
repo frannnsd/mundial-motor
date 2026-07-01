@@ -81,16 +81,29 @@ class GoalsModel:
         return (pm / s if s > 0 else pm), lh, la
 
     def fit_calibration(
-        self, df: pd.DataFrame, *, min_matches: int = 15, bounds: tuple[float, float] = (0.9, 1.3)
+        self,
+        df: pd.DataFrame,
+        *,
+        min_matches: int = 15,
+        bounds: tuple[float, float] = (0.9, 1.3),
+        as_of: pd.Timestamp | str | None = None,
     ) -> float:
         """Calibra el total de goles para matchear el ritmo real del df (ej. el Mundial).
 
         Corrige el sesgo del Dixon-Coles cuando el torneo tiene más (o menos) goles que el
         promedio histórico con el que se entrenó. Devuelve el factor aplicado.
+
+        ``as_of`` (POINT-IN-TIME): si se pasa el kickoff, la recalibración usa SOLO los
+        partidos con fecha < kickoff (no todos los jugados globalmente). ``as_of=None`` =
+        comportamiento histórico (path live intacto).
         """
         needed = {"home_team", "away_team", "home_score", "away_score"}
         if df is None or df.empty or not needed.issubset(df.columns):
             return self.calibration
+        if as_of is not None and "date" in df.columns:
+            df = df.loc[pd.to_datetime(df["date"], errors="coerce") < pd.Timestamp(as_of)]
+            if df.empty:
+                return self.calibration
         self.calibration = 1.0  # medir el sesgo crudo
         pred: list[float] = []
         act: list[float] = []
