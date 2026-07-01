@@ -34,3 +34,7 @@ ledger.sqlite
 .idea/
 .DS_Store
 Thumbs.db
+
+# Fase B: cache de stats por jugador y log del forward test (no se commitean)
+data/players_cache/
+data/forward_test.sqlite

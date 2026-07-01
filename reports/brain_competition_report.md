@@ -137,3 +137,86 @@ proyección no rompe la calibración.
    el unificado usa el bobo en `reds_a`.
 7. Dispersión común (Fano de liga por lado) para los 4: compiten en la MEDIA
    condicional; ninguno recibe ventaja distribucional.
+
+---
+
+## FASE B — Capa de props por jugador (Mundial en vivo)
+
+**Principio:** el modelo de jugador NO compite con el de equipo — REPARTE lo que el
+equipo predice: μ_jugador = total_equipo × (tasa_i·min_i) / Σ_XI(tasa_j·min_j).
+La normalización sobre el "equipo-partido esperado" garantiza **coherencia exacta**:
+Σ jugadores == media del equipo (verificado en tests y sobre datos reales).
+
+### Cobertura (sonda B.1 — sin STOP)
+- WC 2026 (league=1): lineups ✅ · statistics_fixtures ✅ · statistics_players ✅.
+- **78 partidos jugados** disponibles; convención de la API: `None` = 0 en conteos
+  (verificado empíricamente contra jugadores con valores no nulos).
+
+### Datos y piezas
+- **4.001 filas jugador-partido** · 78 fixtures · 48 selecciones · 1.248 jugadores
+  (cache local `data/players_cache/`, gitignored; re-correr = 0 llamadas).
+- `collectors/players_wc.py` (fetch cache-primero + tabla consolidada) ·
+  `players/shares.py` (tasas por-90 + **shrinkage al puesto**: (min·raw + 180·puesto)/(min+180)) ·
+  `players/props.py` (minutos esperados: probable / XI confirmado / afuera; horizon 90/120;
+  props: μ remates, al arco, faltas, P(anota)=1−e^(−μg), P(tarjeta), P(anota o asiste)) ·
+  `forward_test/log.py` (SQLite idempotente: log de predicciones + liquidación automática
+  post-partido vía API + Brier/MAE — cada partido restante del Mundial = data de validación).
+- **Sin leakage de XI:** `lineup_confirmed` es un parámetro opcional que el caller pasa
+  SOLO después de la publicación (~20-40 min antes del kickoff); sin él se usa el XI
+  probable. Ningún camino baja lineups de partidos futuros.
+
+### Ejemplo real (próximo partido: United States vs Bosnia, 2026-07-02)
+Top jugadores por μ remates (XI probable, totales de equipo de referencia):
+USA: Balogun 1.66 (P anota 35%) · Pepi 1.53 · McKennie 1.40 · Tillman 1.19 · Pulišić 1.05.
+BiH: Demirović 1.78 (P anota 18%, P tarjeta 28%) · Džeko 1.24 · Memić 1.17.
+Detalle completo: `reports/fase_b_ejemplo.md`.
+
+### Consumo API Fase B: 80 llamadas (presupuesto 120; límite diario 7.500). Tests: 13 nuevos, suite 215 verde.
+
+### Limitaciones honestas (Fase B)
+1. `fetch_lineups` no se ejercitó contra la API real (el partido del ejemplo es futuro y
+   usar sus lineups habría sido el leakage prohibido); implementado + testeado sintético.
+2. Los totales de equipo del ejemplo son de referencia manual: integrar el cerebro
+   unificado end-to-end al Mundial es el paso siguiente (Fase A entrenó en clubes).
+3. Shares con ~3 partidos por selección son ruidosos; el shrinkage al puesto (K=180')
+   lo templa pero P(anota) de jugadores con pocos minutos sigue ancho. El forward-test
+   está montado justamente para medir esto en vivo.
+
+---
+
+## FASE C — Factibilidad del backtest histórico de props (solo sonda)
+
+| Chequeo | Resultado |
+|---|---|
+| EPL 2023/24, muestra de 20 fixtures vía `fixtures/players` | **20/20 completos** (minutos, remates, faltas, tarjetas, entradas) |
+| Profundidad histórica (sondas 2016 y 2019) | **Disponible** — el plan cubre ≥10 temporadas |
+| Tamaño medio de respuesta | 29.9 KB |
+| **Costo del histórico completo** (3 ligas × 10 temporadas = 11.400 fixtures) | **11.400 llamadas** → **1.5 días** al límite (1.9 con margen 6.000/día) · **~0.33 GB** de cache |
+| Llamadas consumidas por la sonda | 25 |
+
+**Recomendación:** FACTIBLE y barato. Si se decide hacerlo, conviene bajarlo en 2 días
+(mitad y mitad) dejando margen diario para el bot live del Mundial, cachear todo, y
+recién después construir el backtest de props offline (mismo patrón point-in-time +
+guard que la Fase A). **La decisión de ejecutarlo es humana** — no se bajó nada más
+que la muestra.
+
+---
+
+## CIERRE — caveats globales y config
+
+- **Point-in-time:** guard `assert_point_in_time()` DENTRO del loop en la competencia
+  (una llamada por partido, testeado que corta ante leak). Same-day batching en todos
+  los walk-forward. Cero calls de features sin `as_of` en los paths nuevos.
+- **Hold-out 2324:** un solo toque (evaluación del unificado). La selección de pesos
+  usó exclusivamente validación (verificado por el guardian: `unify()` no tiene acceso
+  al hold-out por construcción).
+- **Reproducible:** sin RNG en ningún cerebro (todo determinístico); config en
+  `reports/brain_competition_A.json` (halflife 300/45d, shrink k=3, GLM refit 30d,
+  ridge 1e-3, Fano de liga como dispersión común).
+- **Independencia local/visita** en proyecciones (tau DC: TODO). **MT/RF, mitad con
+  más goles y horizon 120': TODO explícitos** (raise), con la data ya cargada.
+- La competencia corrió sobre CLUBES (ligas top). Trasladar el unificado al Mundial
+  (selecciones) requiere re-entrenar los mismos cerebros sobre data internacional —
+  la arquitectura ya lo permite (mismo esquema de columnas).
+- Consumo API total de la sesión: ~111 llamadas de 7.500/día. Branch
+  `feat/brain-competition`, NO mergeada a main.
