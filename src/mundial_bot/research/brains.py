@@ -49,6 +49,18 @@ class BrainConfig:
     min_fit_rows: int = 500          # filas mínimas para el primer fit del GLM
     l2: float = 1e-3                 # regularización ridge del IRLS
     var_floor_fano: float = 1.0      # piso del Fano (var >= media → Poisson)
+    # --- SELECCIONES (None/{} = comportamiento de clubes, sin cambios) ---
+    # Peso por tipo de partido (amistosos pesan menos por las rotaciones masivas).
+    # Solo aplica si el DataFrame trae la columna `match_type`.
+    match_type_weights: dict[str, float] | None = None
+    # El bobo (y el Fano de liga) usan SOLO partidos competitivos si esto es True
+    # (spec selecciones: "promedio de internacionales competitivos hasta la fecha").
+    dumb_competitive_only: bool = False
+
+    def match_weight(self, match_type: str | None) -> float:
+        if not self.match_type_weights or match_type is None:
+            return 1.0
+        return float(self.match_type_weights.get(match_type, 1.0))
 
 
 @dataclass
@@ -75,10 +87,14 @@ class _Decayed:
     def eff_n(self, at: pd.Timestamp, halflife: float) -> float:
         return self.w * self._factor(at, halflife) if self.last is not None else 0.0
 
-    def update(self, value: float, at: pd.Timestamp, halflife: float) -> None:
+    def update(
+        self, value: float, at: pd.Timestamp, halflife: float, weight: float = 1.0
+    ) -> None:
+        """Incorpora una observación. ``weight`` < 1 la hace pesar menos (ej. amistosos:
+        cuentan, pero con rotaciones masivas informan menos que un partido oficial)."""
         f = self._factor(at, halflife)
-        self.s = self.s * f + value
-        self.w = self.w * f + 1.0
+        self.s = self.s * f + value * weight
+        self.w = self.w * f + weight
         self.last = at
 
 
@@ -228,6 +244,8 @@ class LeagueState:
         cuando el partido se revele — replay exacto point-in-time.
         """
         home, away, season = row["home_team"], row["away_team"], row["season"]
+        # Cancha neutral (selecciones): sin ventaja de localía en los ajustes.
+        neutral = bool(row.get("neutral", False))
         th, ta = self._team(home), self._team(away)
         out: dict[str, dict[str, tuple[float, float]]] = {b: {} for b in BRAINS}
 
@@ -239,7 +257,10 @@ class LeagueState:
             ):
                 lg_side = self._lg_side_mean(family, side, lg_all)
                 fano = self._fano(family, side)
-                home_adj = lg_side / lg_all if lg_all > 0 else 1.0
+                if neutral:
+                    home_adj = 1.0
+                else:
+                    home_adj = lg_side / lg_all if lg_all > 0 else 1.0
 
                 att = self._shrunk_rate(tstate.dec(tstate.for_, family), day, lg_all)
                 con = self._shrunk_rate(ostate.dec(ostate.conc, family), day, lg_all)
@@ -253,12 +274,23 @@ class LeagueState:
                 out["B"][col_key(family, side)] = (mean_b, mean_b * fano)
 
                 # bobo — media/var de la liga-TEMPORADA hasta hoy (fallback all-time).
-                mom_s = self._mom_season(season, family, side)
+                # En cancha neutral el lado local/visita es arbitrario → se agrupan
+                # ambos lados (el bobo no debe premiar al slot "local" del fixture).
+                if neutral:
+                    mh = self._mom_season(season, family, "h")
+                    ma = self._mom_season(season, family, "a")
+                    pooled = _Moments(
+                        n=mh.n + ma.n, total=mh.total + ma.total,
+                        total_sq=mh.total_sq + ma.total_sq,
+                    )
+                    mom_s = pooled
+                else:
+                    mom_s = self._mom_season(season, family, side)
                 if mom_s.n >= 30 and mom_s.mean is not None:
                     mean_d = mom_s.mean
                     var_d = mom_s.var or (mean_d * fano)
                 else:
-                    mean_d = lg_side
+                    mean_d = lg_all if neutral else lg_side
                     var_d = mean_d * fano
                 out["bobo"][col_key(family, side)] = (max(mean_d, 1e-6), max(var_d, 1e-9))
 
@@ -266,6 +298,7 @@ class LeagueState:
                 x = self._features_c(
                     family=family, side=side, team=team, opp=opp,
                     tstate=tstate, day=day, att=att, con=con, lg_all=lg_all,
+                    neutral=neutral,
                 )
                 beta = self._c_beta[family]
                 if beta is not None:
@@ -275,14 +308,18 @@ class LeagueState:
                     mean_c = mean_a  # sin modelo aún: hereda A (se flaggea en el reporte)
                 out["C"][col_key(family, side)] = (mean_c, mean_c * fano)
 
-                actual = float(row[col_of(family, side)])
-                self._pending.append((family, side, x, actual))
+                # Partido futuro (pipeline vivo): no hay actual → no genera fila de
+                # entrenamiento. Partido histórico (backtest): sí (replay point-in-time).
+                actual = row.get(col_of(family, side))
+                if actual is not None and not pd.isna(actual):
+                    self._pending.append((family, side, x, float(actual)))
 
         return out
 
     def _features_c(
         self, *, family: str, side: str, team: str, opp: str,
         tstate: _TeamState, day: pd.Timestamp, att: float, con: float, lg_all: float,
+        neutral: bool = False,
     ) -> np.ndarray:
         cfg = self.cfg
         rest = 7.0
@@ -296,9 +333,11 @@ class LeagueState:
         else:
             h2h = lg_all
         eps = 0.25
+        # En cancha neutral el flag de localía es 0.5 para ambos lados (simétrico).
+        home_flag = 0.5 if neutral else (1.0 if side == "h" else 0.0)
         return np.array([
             1.0,
-            1.0 if side == "h" else 0.0,
+            home_flag,
             np.log((att + eps) / (lg_all + eps)),
             np.log((con + eps) / (lg_all + eps)),
             np.log(rest / 7.0),
@@ -309,23 +348,32 @@ class LeagueState:
     # ---------- revelado (después de predecir TODO el día) ----------
 
     def reveal(self, row: pd.Series, day: pd.Timestamp) -> None:
-        """Incorpora el resultado del partido al estado (tasas, liga, H2H, filas C)."""
+        """Incorpora el resultado del partido al estado (tasas, liga, H2H, filas C).
+
+        Selecciones: las tasas de equipo pesan por ``match_type`` (amistoso < oficial);
+        con ``dumb_competitive_only`` los momentos de liga (bobo + Fano) excluyen
+        amistosos ("promedio de internacionales COMPETITIVOS hasta la fecha").
+        """
         cfg = self.cfg
         home, away, season = row["home_team"], row["away_team"], row["season"]
+        mtype = row.get("match_type")
+        mw = cfg.match_weight(mtype)
+        count_in_league = not (cfg.dumb_competitive_only and mtype == "amistoso")
         th, ta = self._team(home), self._team(away)
         for family in FAMILIES:
             vh = float(row[col_of(family, "h")])
             va = float(row[col_of(family, "a")])
-            th.dec(th.for_, family).update(vh, day, cfg.halflife_days)
-            th.dec(th.conc, family).update(va, day, cfg.halflife_days)
-            ta.dec(ta.for_, family).update(va, day, cfg.halflife_days)
-            ta.dec(ta.conc, family).update(vh, day, cfg.halflife_days)
-            th.dec(th.form, family).update(vh, day, cfg.form_halflife_days)
-            ta.dec(ta.form, family).update(va, day, cfg.form_halflife_days)
-            self._mom(family, "h").add(vh)
-            self._mom(family, "a").add(va)
-            self._mom_season(season, family, "h").add(vh)
-            self._mom_season(season, family, "a").add(va)
+            th.dec(th.for_, family).update(vh, day, cfg.halflife_days, weight=mw)
+            th.dec(th.conc, family).update(va, day, cfg.halflife_days, weight=mw)
+            ta.dec(ta.for_, family).update(va, day, cfg.halflife_days, weight=mw)
+            ta.dec(ta.conc, family).update(vh, day, cfg.halflife_days, weight=mw)
+            th.dec(th.form, family).update(vh, day, cfg.form_halflife_days, weight=mw)
+            ta.dec(ta.form, family).update(va, day, cfg.form_halflife_days, weight=mw)
+            if count_in_league:
+                self._mom(family, "h").add(vh)
+                self._mom(family, "a").add(va)
+                self._mom_season(season, family, "h").add(vh)
+                self._mom_season(season, family, "a").add(va)
             self.h2h.setdefault((home, away), {}).setdefault(family, _Decayed()).update(
                 vh, day, cfg.halflife_days * 2
             )

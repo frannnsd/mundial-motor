@@ -97,12 +97,19 @@ def run_competition(
     *,
     config: BrainConfig | None = None,
     player_adjuster=None,
+    score_filter=None,
 ) -> CompetitionResult:
     """Corre los 4 cerebros sobre todos los partidos, point-in-time, guard en el loop.
 
     ``player_adjuster`` es el ENGANCHE de la Fase B (ajuste por XI/jugadores): si se
     pasa, se aplica a las predicciones de cada cerebro antes de puntuar. Hoy nadie
     lo implementa (default None = no-op).
+
+    ``score_filter``: callable(row) -> bool. Si se pasa, SOLO se puntúan las filas
+    donde devuelve True (el resto igual alimenta el estado — walk-forward completo).
+    Lo usa la validación de selecciones: el estado camina por TODO el histórico
+    internacional pero solo se puntúan los partidos del Mundial. Default None =
+    comportamiento de clubes sin cambios.
     """
     if df is None:
         from mundial_bot.collectors.football_data import load_football_stats
@@ -138,6 +145,8 @@ def run_competition(
                 season = row["season"]
                 if season == WARMUP_SEASON:
                     continue  # calienta el estado (reveal abajo) pero no puntúa
+                if score_filter is not None and not score_filter(row):
+                    continue  # fuera del set a puntuar (igual alimenta el estado)
                 split = "holdout" if season == HOLDOUT_SEASON else "validation"
                 _score_match(row, preds, split, acc, calib, res)
 
