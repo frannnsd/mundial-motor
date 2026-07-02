@@ -213,3 +213,102 @@ def admin_backup() -> Response:
         media_type="application/json",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+# ---------------------------------------------------------------------------
+# Cuotas EN VIVO de bet365 (API-Football, filtradas a las casas de Franco)
+# ---------------------------------------------------------------------------
+# El bot NO apuesta ni se conecta a bet365: esto solo MUESTRA las cuotas para
+# que el humano decida. Cache en memoria 10 min por fixture (quota-friendly).
+
+_ODDS_TTL_S = 600
+_odds_cache: dict[int, tuple[float, dict]] = {}
+
+# Mapeo mercado API-Football → (id web, cómo leer los outcomes).
+_OU_MARKETS = {
+    "Goals Over/Under": ("goles_ou", ("1.5", "2.5", "3.5")),
+    "Corners Over Under": ("corners_ou", ("8.5", "9.5", "10.5", "11.5")),
+    "Corners Over/Under": ("corners_ou", ("8.5", "9.5", "10.5", "11.5")),
+    "Total Corners": ("corners_ou", ("8.5", "9.5", "10.5", "11.5")),
+    "Cards Over/Under": ("tarjetas_ou", ("2.5", "3.5", "4.5", "5.5")),
+    "Total Cards": ("tarjetas_ou", ("2.5", "3.5", "4.5", "5.5")),
+    "Total ShotOnGoal": ("remates_arco_ou", ("7.5", "8.5", "9.5")),
+}
+
+
+def _map_live_odds(raw: dict) -> dict:
+    """dict[market → MarketOdds] de odds_af → estructura por id web para el front."""
+    out: dict = {}
+
+    def put(group: str, key: str, sel: tuple[float, str] | None) -> None:
+        if sel is None:
+            return
+        odd, book = sel
+        out.setdefault(group, {})[key] = {"odd": float(odd), "book": book}
+
+    mw = raw.get("Match Winner")
+    if mw:
+        for api_name, ours in (("Home", "home"), ("Draw", "draw"), ("Away", "away")):
+            put("1x2", ours, mw.best.get(api_name))
+    btts = raw.get("Both Teams Score")
+    if btts:
+        put("btts", "yes", btts.best.get("Yes"))
+        put("btts", "no", btts.best.get("No"))
+    tq = raw.get("To Qualify")
+    if tq:
+        put("se_clasifica", "home", tq.best.get("Home"))
+        put("se_clasifica", "away", tq.best.get("Away"))
+    for api_market, (group, lines) in _OU_MARKETS.items():
+        mo = raw.get(api_market)
+        if not mo:
+            continue
+        for line in lines:
+            over = mo.best.get(f"Over {line}")
+            under = mo.best.get(f"Under {line}")
+            if over or under:
+                out.setdefault(group, {}).setdefault(line, {})
+                if over:
+                    out[group][line]["over"] = {"odd": float(over[0]), "book": over[1]}
+                if under:
+                    out[group][line]["under"] = {"odd": float(under[0]), "book": under[1]}
+    return out
+
+
+@router.get("/live-odds/{fixture_id}")
+def live_odds(fixture_id: int, refresh: bool = False) -> dict:
+    """Cuotas actuales (Bet365/Betano) del fixture, cacheadas 10 min.
+
+    Solo lectura para que el humano compare y decida — acá no se apuesta nada.
+    """
+    import time as _time
+
+    from mundial_bot.collectors.odds_af import fetch_odds
+    from mundial_bot.config import get_settings
+
+    now = _time.time()
+    cached = _odds_cache.get(fixture_id)
+    # refresh manual respeta un piso de 60s para no golpear la API.
+    if cached and (now - cached[0] < (60 if refresh else _ODDS_TTL_S)):
+        age = int(now - cached[0])
+        return {**cached[1], "cache_age_s": age}
+
+    settings = get_settings()
+    if not settings.has_api_football:
+        raise HTTPException(status_code=503, detail="API_FOOTBALL_KEY no configurada.")
+    try:
+        raw = fetch_odds(settings.api_football_key, fixture_id,
+                         books=settings.preferred_books_set)
+    except requests.RequestException as exc:
+        if cached:  # degradación elegante: mejor cuota vieja que error
+            return {**cached[1], "cache_age_s": int(now - cached[0]), "stale": True}
+        raise HTTPException(status_code=502, detail=f"Sin cuotas ahora: {exc}") from exc
+
+    body = {
+        "fixture_id": fixture_id,
+        "fetched_at": datetime.now(AR_TZ).isoformat(),
+        "books": sorted(settings.preferred_books_set) or ["todas"],
+        "markets": _map_live_odds(raw),
+        "raw_market_names": sorted(raw.keys()),
+    }
+    _odds_cache[fixture_id] = (now, body)
+    return body
