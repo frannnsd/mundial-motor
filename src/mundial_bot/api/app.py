@@ -285,11 +285,18 @@ async def lifespan(app: FastAPI):
     except Exception as e:  # noqa: BLE001
         logger.warning("Refresh inicial falló: %s", e)
     task = asyncio.create_task(_refresh_loop())
+    # Automatización del Mundial (aditivo): scheduler de jobs solo si WC_SCHEDULER=1.
+    from mundial_bot.wc.scheduler import start_if_enabled
+    start_if_enabled()
     yield
     task.cancel()
 
 
 app = FastAPI(title="Mundial Stats API", version="1.0.0", lifespan=lifespan)
+# API del sistema Mundial automatizado (predicciones/cuotas/forward-test para la web).
+from mundial_bot.api.wc_api import router as _wc_router  # noqa: E402
+
+app.include_router(_wc_router)
 # Permite localhost y cualquier IP de red local (para abrir desde el celu en la WiFi).
 app.add_middleware(
     CORSMiddleware,
