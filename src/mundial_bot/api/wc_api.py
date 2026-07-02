@@ -12,6 +12,7 @@ Convención del payload: claves JSON siempre string (las líneas O/U son "2.5", 
 from __future__ import annotations
 
 import json
+import hmac
 import os
 import threading
 from datetime import datetime
@@ -43,7 +44,7 @@ def require_access_key(x_access_key: str | None = Header(default=None)) -> None:
             detail="WEB_ACCESS_KEY no está configurada en el backend: "
                    "setearla en el entorno para habilitar la API /wc.",
         )
-    if x_access_key != expected:
+    if not hmac.compare_digest((x_access_key or "").encode(), expected.encode()):
         raise HTTPException(status_code=401, detail="X-Access-Key inválida o ausente.")
 
 
