@@ -27,8 +27,8 @@ Horizon = str  # "90" | "120"
 def _check_horizon(horizon: Horizon) -> None:
     if horizon == "120":
         raise NotImplementedError(
-            "Horizonte 120' (prórroga) es TODO: requiere reescalar las tasas a 120 "
-            "minutos + el submodelo empate→prórroga→penales (fase Mundial)."
+            "Este mercado liquida a 90' (convención bet365: 1X2/marcador/margen/BTTS "
+            "son tiempo reglamentario). Para mercados TE usá pmf_te()/knockout_markets()."
         )
     if horizon != "90":
         raise ValueError(f"Horizonte desconocido: {horizon!r} (usar '90' o '120')")
@@ -185,3 +185,132 @@ def project_all(unified_pmfs: dict[str, np.ndarray], *, horizon: Horizon = "90")
         "remates_arco_ou": {ln: total_over_under(th, ta, ln, horizon=horizon)
                             for ln in (7.5, 8.5, 9.5)},
     }
+
+
+# ============================================================================
+# HORIZONTE 120' — prórroga condicional (eliminatorias del Mundial)
+# ============================================================================
+# Modelo simple y honesto: la prórroga OCURRE solo si el partido va empatado a
+# 90' (p_et = P(empate a 90')). Las tasas de los 30' extra = tasa por-minuto del
+# partido × 30 × FATIGUE (factor fijo de fatiga/cautela — NO se tunea con 78
+# partidos). La pmf TE de cualquier cantidad es la mixtura:
+#   pmf_TE = (1−p_et)·pmf_90 + p_et·(pmf_90 ⊛ Poisson(media_90·(30/90)·FATIGUE))
+# Penales: 50/50 como default honesto (sin data de tandas no se inventa un prior).
+
+ET_FATIGUE = 0.9      # factor fijo documentado (cautela/fatiga en los 30')
+ET_FRACTION = 30.0 / 90.0
+PENALTY_SHOOTOUT_P_HOME = 0.5  # default honesto: tanda 50/50
+
+
+def extra_time_prob(pmf_gh: np.ndarray, pmf_ga: np.ndarray) -> float:
+    """P(empate a 90') = P(hay prórroga) en un partido de eliminatoria."""
+    m = score_matrix(pmf_gh, pmf_ga)
+    return float(np.trace(m))
+
+
+def pmf_te(pmf90: np.ndarray, p_et: float, *, fatigue: float = ET_FATIGUE) -> np.ndarray:
+    """pmf de una cantidad al horizonte TE (90' + prórroga condicional).
+
+    Mixtura: sin prórroga (prob 1−p_et) la cantidad es la de 90'; con prórroga
+    (prob p_et) se le suman ~30' extra a tasa reducida por fatiga.
+    """
+    from scipy.stats import poisson as _poisson
+
+    mean90 = float(np.dot(np.arange(len(pmf90)), pmf90))
+    extra_mean = max(mean90 * ET_FRACTION * fatigue, 1e-9)
+    k = np.arange(len(pmf90))
+    extra = _poisson.pmf(k, extra_mean)
+    extra[-1] += max(0.0, 1.0 - float(extra.sum()))
+    with_et = convolve_pmf(pmf90, extra, k_max=len(pmf90) - 1)
+    return (1.0 - p_et) * pmf90 + p_et * with_et
+
+
+def _et_win_probs(pmf_gh: np.ndarray, pmf_ga: np.ndarray, *, fatigue: float = ET_FATIGUE):
+    """(P(local gana la prórroga), P(empate en prórroga), P(visita gana))."""
+    from scipy.stats import poisson as _poisson
+
+    mh = float(np.dot(np.arange(len(pmf_gh)), pmf_gh)) * ET_FRACTION * fatigue
+    ma = float(np.dot(np.arange(len(pmf_ga)), pmf_ga)) * ET_FRACTION * fatigue
+    k = np.arange(8)  # goles en 30': 0..7 cubre todo
+    ph = _poisson.pmf(k, max(mh, 1e-9))
+    pa = _poisson.pmf(k, max(ma, 1e-9))
+    m = np.outer(ph, pa)
+    m = m / m.sum()
+    i = k.reshape(-1, 1)
+    j = k.reshape(1, -1)
+    return float(m[i > j].sum()), float(m[i == j].sum()), float(m[i < j].sum())
+
+
+def to_qualify(
+    pmf_gh: np.ndarray, pmf_ga: np.ndarray, *, p_pens_home: float = PENALTY_SHOOTOUT_P_HOME
+) -> dict[str, float]:
+    """"Se clasificará": P(avanza) = P(gana 90') + P(empate)·[P(gana ET) + P(empate ET)·P(pens)]."""
+    p90 = one_x_two(pmf_gh, pmf_ga)
+    et_h, et_d, et_a = _et_win_probs(pmf_gh, pmf_ga)
+    home = p90["home"] + p90["draw"] * (et_h + et_d * p_pens_home)
+    away = p90["away"] + p90["draw"] * (et_a + et_d * (1.0 - p_pens_home))
+    return {"home": home, "away": away}
+
+
+def method_of_victory(
+    pmf_gh: np.ndarray, pmf_ga: np.ndarray, *, p_pens_home: float = PENALTY_SHOOTOUT_P_HOME
+) -> dict[str, float]:
+    """Método de victoria: reglamentario / prórroga / penales, por equipo."""
+    p90 = one_x_two(pmf_gh, pmf_ga)
+    et_h, et_d, et_a = _et_win_probs(pmf_gh, pmf_ga)
+    return {
+        "home_90": p90["home"],
+        "away_90": p90["away"],
+        "home_et": p90["draw"] * et_h,
+        "away_et": p90["draw"] * et_a,
+        "home_pens": p90["draw"] * et_d * p_pens_home,
+        "away_pens": p90["draw"] * et_d * (1.0 - p_pens_home),
+    }
+
+
+def knockout_markets(unified_pmfs: dict[str, np.ndarray]) -> dict:
+    """Mercados de ELIMINATORIA + versiones TE de los totales.
+
+    Devuelve: p_prorroga, se_clasifica, metodo_victoria, y O/U TE de
+    goles/córners/tarjetas/remates/al arco (mixtura condicional al empate 90').
+    Los mercados reglamentarios (1X2, marcador, etc.) siguen siendo los de
+    `project_all` — liquidan a 90' por convención.
+    """
+    gh, ga = unified_pmfs["goals_h"], unified_pmfs["goals_a"]
+    p_et = extra_time_prob(gh, ga)
+    out: dict = {
+        "p_prorroga": p_et,
+        "se_clasifica": to_qualify(gh, ga),
+        "metodo_victoria": method_of_victory(gh, ga),
+        "te": {},
+    }
+    te_lines = {
+        "goles": ((("goals_h", "goals_a")), (1.5, 2.5, 3.5)),
+        "corners": ((("corners_h", "corners_a")), (9.5, 10.5, 11.5)),
+        "tarjetas": ((("yellows_h", "yellows_a")), (3.5, 4.5, 5.5)),
+        "remates": ((("shots_h", "shots_a")), (24.5, 27.5)),
+        "remates_arco": ((("sot_h", "sot_a")), (8.5, 9.5)),
+    }
+    for name, ((qh, qa), lines) in te_lines.items():
+        th = pmf_te(unified_pmfs[qh], p_et)
+        ta = pmf_te(unified_pmfs[qa], p_et)
+        total = convolve_pmf(th, ta)
+        out["te"][name] = {ln: {"over": p_over(total, ln), "under": 1.0 - p_over(total, ln)}
+                           for ln in lines}
+    # Ambos con tarjeta / alguna amonestación en versión TE.
+    yh_te = pmf_te(unified_pmfs["yellows_h"], p_et)
+    ya_te = pmf_te(unified_pmfs["yellows_a"], p_et)
+    out["te"]["ambos_con_tarjeta"] = {
+        "yes": (1.0 - float(yh_te[0])) * (1.0 - float(ya_te[0])),
+    }
+    out["te"]["alguna_amonestacion"] = 1.0 - float(convolve_pmf(yh_te, ya_te)[0])
+    return out
+
+
+def team_total_at_horizon(mean90: float, p_et: float, *, fatigue: float = ET_FATIGUE) -> float:
+    """Media de equipo al horizonte TE: media_90 × (1 + p_et·(30/90)·fatigue).
+
+    Es el total que la capa de props debe recibir para mercados TE — el reparto
+    por jugador (share × total) conserva la coherencia en el MISMO horizonte.
+    """
+    return mean90 * (1.0 + p_et * ET_FRACTION * fatigue)
