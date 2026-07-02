@@ -13,6 +13,7 @@ __pycache__/
 serviceAccount*.json
 
 # Datos cacheados y base de datos local
+data/nt_cache/
 data/cache/*
 !data/cache/.gitkeep
 # ...pero SÍ versionamos los datos que el deploy necesita para entrenar:
@@ -34,3 +35,7 @@ ledger.sqlite
 .idea/
 .DS_Store
 Thumbs.db
+
+# Fase B: cache de stats por jugador y log del forward test (no se commitean)
+data/players_cache/
+data/forward_test.sqlite

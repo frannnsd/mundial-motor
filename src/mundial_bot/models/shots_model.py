@@ -40,14 +40,24 @@ class ShotsModel:
     calibration: float = 1.0
 
     @classmethod
-    def from_events(cls, events: pd.DataFrame) -> ShotsModel | None:
-        """Construye el modelo si están las columnas sot_for/sot_against; si no, None."""
+    def from_events(
+        cls, events: pd.DataFrame, *, as_of: pd.Timestamp | str | None = None
+    ) -> ShotsModel | None:
+        """Construye el modelo si están las columnas sot_for/sot_against; si no, None.
+
+        ``as_of`` (POINT-IN-TIME): descarta partidos con fecha >= kickoff. ``None`` =
+        comportamiento histórico (path live intacto).
+        """
         if not {"sot_for", "sot_against"}.issubset(events.columns):
             return None
+        if as_of is not None and "date" in events.columns:
+            events = events.loc[
+                pd.to_datetime(events["date"], errors="coerce") < pd.Timestamp(as_of)
+            ].copy()
         ev = events.dropna(subset=["sot_for", "sot_against"])
         if ev.empty or float(ev["sot_for"].sum()) <= 0:
             return None
-        means, eff = weighted_means(ev, ["sot_for", "sot_against"])
+        means, eff = weighted_means(ev, ["sot_for", "sot_against"], as_of=as_of)
         for_w, against_w = means["sot_for"], means["sot_against"]
         league_avg = float(ev["sot_for"].mean())
         team_for = {t: shrink(for_w[t], eff[t], league_avg) for t in for_w}
