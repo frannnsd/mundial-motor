@@ -11,8 +11,8 @@ Convención del payload: claves JSON siempre string (las líneas O/U son "2.5", 
 
 from __future__ import annotations
 
-import json
 import hmac
+import json
 import os
 import threading
 from datetime import datetime
