@@ -131,6 +131,68 @@ def _run_job(name: str, fn: Callable[[], dict]) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Datos en la nube: los CSV/JSON locales están gitignored → en Render no existen.
+# Fallback: leer las tablas consolidadas desde Supabase (seed de la migración +
+# lo que agrega el settle nocturno). Paginado (PostgREST corta en 1000 filas).
+# ---------------------------------------------------------------------------
+
+def _select_all(table: str) -> list[dict]:
+    rows: list[dict] = []
+    offset = 0
+    while True:
+        page = store.select(table, {"select": "payload", "limit": "1000",
+                                    "offset": str(offset), "order": _pk_of(table)})
+        rows.extend(page)
+        if len(page) < 1000:
+            return rows
+        offset += 1000
+
+
+def _pk_of(table: str) -> str:
+    return "match_id.asc" if table == "nt_matches" else "id.asc"
+
+
+def _nt_table() -> pd.DataFrame:
+    """Tabla de selecciones: local si existe (dev), si no desde Supabase (nube)."""
+    try:
+        from mundial_bot.collectors.nt_data import build_nt_match_table
+        df = build_nt_match_table()
+        if not df.empty:
+            return df
+    except (SystemExit, FileNotFoundError, OSError):
+        pass
+    df = pd.DataFrame([r["payload"] for r in _select_all("nt_matches")])
+    if df.empty:
+        raise RuntimeError("Sin datos de selecciones ni locales ni en Supabase.")
+    for col in ("date", "kickoff_utc"):
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors="coerce", utc=True).dt.tz_localize(None)
+    df["season"] = df["season"].astype(str)
+    return df.sort_values("date").reset_index(drop=True)
+
+
+def _players_table() -> pd.DataFrame:
+    """Tabla jugador-partido: local si existe, si no desde Supabase (0 llamadas API)."""
+    try:
+        df = daily._player_table()  # noqa: SLF001
+        if not df.empty:
+            return df
+    except Exception:  # noqa: BLE001 — sin cache local ni API accesible → Supabase
+        pass
+    df = pd.DataFrame([r["payload"] for r in _select_all("player_matches")])
+    if df.empty:
+        raise RuntimeError("Sin datos de jugadores ni locales ni en Supabase.")
+    if "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"], errors="coerce", utc=True).dt.tz_localize(None)
+    return df
+
+
+def _engine():
+    from mundial_bot.wc.engine import WcEngine
+    return WcEngine(_nt_table())
+
+
+# ---------------------------------------------------------------------------
 # daily — reporte + predicciones del día (espejo cloud de cmd_pre_day)
 # ---------------------------------------------------------------------------
 
@@ -146,8 +208,8 @@ def _daily(date_str: str | None) -> dict:
                 if f["fixture"]["status"]["short"] == "NS"]
     if not fixtures:
         return {"date": date_str, "matches": 0, "predictions": 0}
-    engine = daily._build_engine()  # noqa: SLF001
-    table = daily._player_table()  # noqa: SLF001
+    engine = _engine()
+    table = _players_table()
 
     total_logged = 0
     for fx in fixtures:
@@ -287,8 +349,8 @@ def _lineups(candidates: list[dict]) -> dict:
             logger.info("lineups: fixture %d todavía sin XI publicado.", fid)
             continue
         if engine is None:
-            engine = daily._build_engine()  # noqa: SLF001
-            table = daily._player_table()  # noqa: SLF001
+            engine = _engine()
+            table = _players_table()
         confirmed += int(_confirm_xi(rep, teams_lu, engine, table))
     return {"in_window": len(candidates), "attempts": attempts, "confirmed": confirmed}
 

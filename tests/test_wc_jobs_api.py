@@ -122,8 +122,8 @@ def test_api_sin_web_access_key_devuelve_503(monkeypatch, fake_store):
 
 def test_run_daily_guarda_payload_y_loguea(fake_store, monkeypatch):
     monkeypatch.setattr(daily, "_day_fixtures", lambda *a, **k: [_fx()])
-    monkeypatch.setattr(daily, "_build_engine", lambda: _FakeEngine())
-    monkeypatch.setattr(daily, "_player_table", lambda: pd.DataFrame())
+    monkeypatch.setattr(jobs, "_engine", lambda: _FakeEngine())
+    monkeypatch.setattr(jobs, "_players_table", lambda: pd.DataFrame())
     monkeypatch.setattr(daily, "_props_for", _fake_props)
 
     out = jobs.run_daily("2026-07-02")
