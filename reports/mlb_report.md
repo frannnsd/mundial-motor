@@ -88,3 +88,17 @@ las ofensivas no comparten pelota).
 halflife 180d · form 40d · shrink_k 10 · starter_shrink_k 4 · starter_weight 0.6 ·
 park_clip [0.80, 1.25] · GLM refit 30d ridge 1e-3 · Fano de liga como dispersión.
 Pesos del unificado committeados en `data/mlb_weights.json`.
+
+## M4 — Pipeline vivo + web (deployado y VERIFICADO e2e)
+
+| | |
+|---|---|
+| Jobs | `mlb_daily` 12:00 AR (predicciones+props del día) · `mlb_settle` 06:00 AR (liquida lo de anoche contra linescore/boxscore; el probable rascado queda pendiente, no se liquida en 0) |
+| Storage | multi-deporte: columna `sport` + PK compuesta (migración aplicada ANTES del deploy — gate del guardian) · compat WC intacta (309 tests) |
+| API | `/mlb/today`, `/mlb/match/{gamePk}`, `/mlb/live-odds` (usa-mlb vía odds-api.io), `/mlb/odds`, `/mlb/forward-test`, `/mlb/admin/run` — misma clave |
+| Web | tab **MLB ⚾**: cards con abridores y moneyline display, detalle con mercados+cuotas tocables al MISMO cupón (patas mlb → /mlb/odds), sección F5, props Ks/bateadores, toggle Mundial/MLB en el forward-test |
+| **Verificación e2e (2026-07-03)** | 01:11:56 UTC job OK: **13 partidos, 402 predicciones** · /mlb/today con abridores reales (Gerrit Cole → Yankees 56.6%) · web /mlb HTTP 200 |
+| Forward-test | corre desde HOY: el settle de mañana 06:00 AR liquida las 402 primeras predicciones solo |
+
+**Guardian final: 0 críticos de código.** El único CRÍTICO era operativo (migración antes
+del deploy) y se ejecutó en ese orden, en ventana sin jobs WC activos.
