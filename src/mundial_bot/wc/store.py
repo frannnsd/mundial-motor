@@ -105,10 +105,16 @@ def update(table: str, filters: dict[str, str], patch: dict) -> int:
 # ---------------------------------------------------------------------------
 
 def ft_log_prediction(**kw: Any) -> bool:
-    """Registra una predicción (inmutable: si ya existe, NO se pisa)."""
+    """Registra una predicción (inmutable: si ya existe, NO se pisa).
+
+    ``sport`` viaja en la fila (default 'wc'); el on_conflict SIGUE siendo
+    (fixture_id, player_id, market): los mercados MLB usan nombres disjuntos
+    (prefijo mlb_/ks) por diseño, así que nunca colisionan con los del Mundial.
+    """
     row = {k: v for k, v in kw.items() if v is not None}
     row.setdefault("player_id", 0)
     row.setdefault("player_name", "-")
+    row.setdefault("sport", "wc")
     n = insert_ignore("props_log", [row], on_conflict="fixture_id,player_id,market")
     return n > 0
 
@@ -116,6 +122,7 @@ def ft_log_prediction(**kw: Any) -> bool:
 def ft_attach_odds(
     fixture_id: int, player_id: int, market: str,
     *, line: float | None, odds: float, stake: float | None = None,
+    sport: str = "wc",
 ) -> int:
     """Adjunta la cuota de bet365 a la predicción VIGENTE (snapshot inmutable: los
     campos pred_* de la fila no se tocan — el EV se calcula contra lo que el modelo
@@ -129,6 +136,7 @@ def ft_attach_odds(
     if stake is not None:
         patch["stake"] = stake
     return update("props_log", {
+        "sport": f"eq.{sport}",
         "fixture_id": f"eq.{fixture_id}",
         "player_id": f"eq.{player_id}",
         "market": f"eq.{market}",
@@ -157,17 +165,23 @@ def ft_pending(fixture_id: int) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def save_daily_report(row: dict) -> None:
-    upsert("daily_reports", [row], on_conflict="fixture_id")
+    """Upsert del reporte diario; los callers WC no mandan sport → default 'wc'."""
+    row = {**row}  # copia: no mutar la fila del caller
+    row.setdefault("sport", "wc")
+    upsert("daily_reports", [row], on_conflict="sport,fixture_id")
 
 
-def get_reports(date_str: str) -> list[dict]:
+def get_reports(date_str: str, sport: str = "wc") -> list[dict]:
     return select("daily_reports", {
-        "report_date": f"eq.{date_str}", "order": "kickoff_utc.asc",
+        "report_date": f"eq.{date_str}", "sport": f"eq.{sport}",
+        "order": "kickoff_utc.asc",
     })
 
 
-def get_report(fixture_id: int) -> dict | None:
-    rows = select("daily_reports", {"fixture_id": f"eq.{fixture_id}"})
+def get_report(fixture_id: int, sport: str = "wc") -> dict | None:
+    rows = select("daily_reports", {
+        "fixture_id": f"eq.{fixture_id}", "sport": f"eq.{sport}",
+    })
     return rows[0] if rows else None
 
 

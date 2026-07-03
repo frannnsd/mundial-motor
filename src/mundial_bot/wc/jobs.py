@@ -568,13 +568,16 @@ def _mean(values: list[float]) -> float | None:
     return round(sum(values) / len(values), 4) if values else None
 
 
-def compute_forward_test(rows: list[dict]) -> dict:
+def compute_forward_test(rows: list[dict], sport: str | None = None) -> dict:
     """Resumen del forward-test desde filas de props_log (puro, sin red).
 
     ROI a stake plano por fila liquidada con cuota: acierto → odds−1, si no → −1.
     EV teórico por fila con cuota y pred_prob: pred_prob·odds − 1.
     Calibración por mercado: pred_avg vs real_avg (frecuencia real) y su gap.
+    ``sport``: si se pasa, filtra las filas por su sport (sin sport = 'wc').
     """
+    if sport is not None:
+        rows = [r for r in rows if r.get("sport", "wc") == sport]
     settled = [r for r in rows if r.get("settled_at")]
     briers = [float(r["brier"]) for r in rows if r.get("brier") is not None]
     maes = [abs(float(r["pred_mean"]) - float(r["actual"])) for r in rows
