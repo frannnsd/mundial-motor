@@ -294,9 +294,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Mundial Stats API", version="1.0.0", lifespan=lifespan)
 # API del sistema Mundial automatizado (predicciones/cuotas/forward-test para la web).
+from mundial_bot.api.mlb_api import router as _mlb_router  # noqa: E402
 from mundial_bot.api.wc_api import router as _wc_router  # noqa: E402
 
 app.include_router(_wc_router)
+app.include_router(_mlb_router)
 # Permite localhost y cualquier IP de red local (para abrir desde el celu en la WiFi).
 app.add_middleware(
     CORSMiddleware,
